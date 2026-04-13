@@ -1,0 +1,93 @@
+// ===========================================
+// PRISMA SCHEMA - Axion Fire Back
+// ===========================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===========================================
+// MODELOS DE EJEMPLO - Reemplazá con los tuyos
+// ===========================================
+
+enum user_roles{
+  USER,
+  ADMIN
+}
+
+enum tipos_respuesta{
+  ACEPTADO,
+  RECHAZADO
+}
+
+model usuarios {
+  id           String      @id
+  nombre_usuario     String   @unique
+  password     String?
+  rol          user_roles
+  @@map("users")
+}
+
+model bomberos_rangos{
+  id String @id
+  nombre_rol String
+  bomberos bomberos[]
+}
+
+model bomberos{
+  id    String @id
+  usuarioId usuarios @relation(fields:[usuario_id],references[id])
+  usuario_id String @unique
+  rangoBombero bomberos_rangos @relation(fields:[rango],references[id])
+  rango
+  nombre String
+  apellido String
+}
+
+model categorias_alerta{
+  id String @id
+  nombre_categoria String @unique
+  subcategorias_alerta subcategoria_alerta[]
+}
+
+model subcategoria_alerta{
+  id String @id
+  categoriaAlerta categoria_alerta @relation(fields:[categoria_alerta],references[id])
+  categoria_alerta String 
+  nombre_sub_categoria String @unique
+  alertas alerta[]
+}
+
+model estados_alerta{
+  id String @id
+  nombre_estado String @unique
+  alertas alerta[]
+}
+
+model alerta{
+  id String @id
+  subCategoriaAlerta subcategoria_alerta @relation(fields:[sub_categoria_alerta],references[id])
+  sub_categoria_alerta String
+  ubicacion String
+  --O latitud string 
+  --O longitud string
+  observaciones String
+  estadoAlerta estados_alerta @relation(fields:[estados_alerta], references[id])
+  estado_alerta String
+  fecha_hora datetime
+}
+
+model respuestas_alertas{
+  id String @id
+  alertaId alerta @relation(field:[alerta_id],references[id])
+  alerta_id String
+  usuarioId usuarios @relation(field:[usuario_id],references[id])
+  usuario_id String
+  estado_respuesta tipos_respuesta
+  fecha_hora datetime
+}
