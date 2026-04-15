@@ -1,16 +1,32 @@
+import express from 'express';
 import 'dotenv/config';
 import { prisma } from './lib/prisma';
+import { verificarHeaders } from './middlewares/auth.middleware';
 
+import rutasUsuarios from './routes/user.routes';
+import rutaAuth from './routes/auth.route'
+import rutaAlerta from './routes/alerta.route'
+
+const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
 
 async function main() {
   try {
-    // Verificar conexión con la DB
+    // 1. Verificar conexión con la DB
     await prisma.$connect();
     console.log('✅ Conectado a PostgreSQL correctamente');
 
-    // Tu lógica de servidor va acá (express, fastify, etc.)
-    console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
+    // 2. Asociar nuestras rutas a Express
+    app.use('/usuarios', verificarHeaders, rutasUsuarios);
+    app.use('/auth', rutaAuth);
+    app.use('/alerta', rutaAlerta)
+
+    // 3. Poner el servidor a escuchar peticiones
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor Express corriendo en http://localhost:${PORT}`);
+    });
   } catch (error) {
     console.error('❌ Error al conectar con la base de datos:', error);
     process.exit(1);
