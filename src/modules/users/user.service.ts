@@ -1,5 +1,5 @@
 import { UsuarioRepositorio } from "./user.repository";
-import { crearUsuarioDTO } from "./DTO/CrearUsuarioDTO";
+import { crearUsuarioDTO } from "./DTO/crear_usuario_dto";
 
 export class UsuarioService {
     private usuarioRepo: UsuarioRepositorio;

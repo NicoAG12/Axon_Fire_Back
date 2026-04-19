@@ -6,6 +6,7 @@ import { verificarHeaders } from './middlewares/auth.middleware';
 import rutasUsuarios from './routes/user.routes';
 import rutaAuth from './routes/auth.route'
 import rutaAlerta from './routes/alerta.route'
+import rutaRespuestasAlertas from './routes/respuestas_alertas.route'
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,7 +22,8 @@ async function main() {
     // 2. Asociar nuestras rutas a Express
     app.use('/usuarios', verificarHeaders, rutasUsuarios);
     app.use('/auth', rutaAuth);
-    app.use('/alerta', rutaAlerta)
+    app.use('/alerta', rutaAlerta);
+    app.use('/respuestas_alertas', rutaRespuestasAlertas);
 
     // 3. Poner el servidor a escuchar peticiones
     app.listen(PORT, () => {

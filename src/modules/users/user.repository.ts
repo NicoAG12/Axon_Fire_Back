@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma"
-import { crearUsuarioDTO } from "./DTO/CrearUsuarioDTO"
+import { crearUsuarioDTO } from "./DTO/crear_usuario_dto"
 import { randomUUID } from "crypto"
 import bcrypt from "bcrypt"
 
@@ -24,6 +24,9 @@ export class UsuarioRepositorio {
             rango: data.bombero.rango,
           }
         } : undefined
+      },
+      include: {
+        bombero: true
       }
     })
   }

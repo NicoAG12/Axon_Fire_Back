@@ -222,7 +222,6 @@ export type alertaOrderByWithRelationInput = {
 
 export type alertaWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  usuario_alta_alerta?: string
   AND?: Prisma.alertaWhereInput | Prisma.alertaWhereInput[]
   OR?: Prisma.alertaWhereInput[]
   NOT?: Prisma.alertaWhereInput | Prisma.alertaWhereInput[]
@@ -231,12 +230,13 @@ export type alertaWhereUniqueInput = Prisma.AtLeast<{
   observaciones?: Prisma.StringFilter<"alerta"> | string
   estado_alerta_id?: Prisma.StringFilter<"alerta"> | string
   fecha_hora?: Prisma.DateTimeFilter<"alerta"> | Date | string
+  usuario_alta_alerta?: Prisma.StringFilter<"alerta"> | string
   subCategoriaAlerta?: Prisma.XOR<Prisma.Subcategoria_alertaScalarRelationFilter, Prisma.subcategoria_alertaWhereInput>
   estadoAlerta?: Prisma.XOR<Prisma.Estados_alertaScalarRelationFilter, Prisma.estados_alertaWhereInput>
   respuestas?: Prisma.Respuestas_alertasListRelationFilter
   registros_comunicacion?: Prisma.Registros_comunicacionListRelationFilter
   usuarioID?: Prisma.XOR<Prisma.UsuariosScalarRelationFilter, Prisma.usuariosWhereInput>
-}, "id" | "usuario_alta_alerta">
+}, "id">
 
 export type alertaOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

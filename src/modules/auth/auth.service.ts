@@ -1,5 +1,5 @@
 import { UsuarioRepositorio } from "../users/user.repository";
-import { loginDTO, tokenDTO } from "../users/DTO/loginDTO";
+import { loginDTO, tokenDTO } from "../users/DTO/login_dto";
 import bcrypt from "bcrypt"
 import jsonwebtoken from 'jsonwebtoken'
 export class AuthService {
