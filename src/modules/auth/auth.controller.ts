@@ -17,7 +17,8 @@ export class AuthController {
             return res.json({
                 id: usuarioLogueado.id,
                 rol: usuarioLogueado.rol,
-                token
+                token,
+                msj: "Usuario Logueado Correctamente"
             });
         } catch (error: any) {
             return res.status(500).json({ error: error.message });

@@ -50,8 +50,9 @@ async function seed() {
   // ── Estados de alerta ────────────────────────────────────────────────────
   await prisma.estados_alerta.createMany({
     data: [
-      { id: '1', nombre_estado: 'EN PROCESO' },
-      { id: '2', nombre_estado: 'FINALIZADO' },
+      { id: '1', nombre_estado: 'PENDIENTE' },
+      { id: '2', nombre_estado: 'EN CURSO' },
+      { id: '3', nombre_estado: 'FINALIZADO' }
     ],
   });
 

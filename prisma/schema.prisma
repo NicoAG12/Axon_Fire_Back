@@ -83,7 +83,7 @@ model alerta {
   respuestas              respuestas_alertas[]
   registros_comunicacion  registros_comunicacion[]
   usuarioID               usuarios                 @relation(fields: [usuario_alta_alerta], references: [id])
-  usuario_alta_alerta     String                   @unique
+  usuario_alta_alerta     String                   
 }
 
 model respuestas_alertas {
