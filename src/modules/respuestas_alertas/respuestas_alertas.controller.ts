@@ -61,4 +61,15 @@ export class RespuestasAlertasController {
             return res.status(500).json({ error: error.message });
         }
     }
+
+    responderAviso = async (req: Request<{ alerta_id: string, usuario_id: string }>, res: Response) => {
+        try {
+            const { alerta_id, usuario_id } = req.params;
+            const data: modificarRespuestaAlertaDTO = req.body;
+            const respuesta = await this.service.responderAviso(alerta_id, usuario_id, data);
+            return res.status(200).json(respuesta);
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
 }

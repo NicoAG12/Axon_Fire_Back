@@ -178,6 +178,7 @@ export type usuariosWhereInput = {
   respuestas_alertas?: Prisma.Respuestas_alertasListRelationFilter
   registros_comunicacion?: Prisma.Registros_comunicacionListRelationFilter
   alertas?: Prisma.AlertaListRelationFilter
+  tokens_dispositivos?: Prisma.Tokens_dispositivosListRelationFilter
 }
 
 export type usuariosOrderByWithRelationInput = {
@@ -189,6 +190,7 @@ export type usuariosOrderByWithRelationInput = {
   respuestas_alertas?: Prisma.respuestas_alertasOrderByRelationAggregateInput
   registros_comunicacion?: Prisma.registros_comunicacionOrderByRelationAggregateInput
   alertas?: Prisma.alertaOrderByRelationAggregateInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosOrderByRelationAggregateInput
 }
 
 export type usuariosWhereUniqueInput = Prisma.AtLeast<{
@@ -203,6 +205,7 @@ export type usuariosWhereUniqueInput = Prisma.AtLeast<{
   respuestas_alertas?: Prisma.Respuestas_alertasListRelationFilter
   registros_comunicacion?: Prisma.Registros_comunicacionListRelationFilter
   alertas?: Prisma.AlertaListRelationFilter
+  tokens_dispositivos?: Prisma.Tokens_dispositivosListRelationFilter
 }, "id" | "nombre_usuario">
 
 export type usuariosOrderByWithAggregationInput = {
@@ -234,6 +237,7 @@ export type usuariosCreateInput = {
   respuestas_alertas?: Prisma.respuestas_alertasCreateNestedManyWithoutUsuarioIdInput
   registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutUsuarioIdInput
   alertas?: Prisma.alertaCreateNestedManyWithoutUsuarioIDInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosCreateNestedManyWithoutUsuarioIdInput
 }
 
 export type usuariosUncheckedCreateInput = {
@@ -245,6 +249,7 @@ export type usuariosUncheckedCreateInput = {
   respuestas_alertas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutUsuarioIdInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutUsuarioIdInput
   alertas?: Prisma.alertaUncheckedCreateNestedManyWithoutUsuarioIDInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedCreateNestedManyWithoutUsuarioIdInput
 }
 
 export type usuariosUpdateInput = {
@@ -256,6 +261,7 @@ export type usuariosUpdateInput = {
   respuestas_alertas?: Prisma.respuestas_alertasUpdateManyWithoutUsuarioIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutUsuarioIdNestedInput
   alertas?: Prisma.alertaUpdateManyWithoutUsuarioIDNestedInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUpdateManyWithoutUsuarioIdNestedInput
 }
 
 export type usuariosUncheckedUpdateInput = {
@@ -267,6 +273,7 @@ export type usuariosUncheckedUpdateInput = {
   respuestas_alertas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutUsuarioIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutUsuarioIdNestedInput
   alertas?: Prisma.alertaUncheckedUpdateManyWithoutUsuarioIDNestedInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedUpdateManyWithoutUsuarioIdNestedInput
 }
 
 export type usuariosCreateManyInput = {
@@ -290,6 +297,11 @@ export type usuariosUncheckedUpdateManyInput = {
   rol?: Prisma.Enumuser_rolesFieldUpdateOperationsInput | $Enums.user_roles
 }
 
+export type UsuariosScalarRelationFilter = {
+  is?: Prisma.usuariosWhereInput
+  isNot?: Prisma.usuariosWhereInput
+}
+
 export type usuariosCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nombre_usuario?: Prisma.SortOrder
@@ -311,13 +323,18 @@ export type usuariosMinOrderByAggregateInput = {
   rol?: Prisma.SortOrder
 }
 
-export type UsuariosScalarRelationFilter = {
-  is?: Prisma.usuariosWhereInput
-  isNot?: Prisma.usuariosWhereInput
+export type usuariosCreateNestedOneWithoutTokens_dispositivosInput = {
+  create?: Prisma.XOR<Prisma.usuariosCreateWithoutTokens_dispositivosInput, Prisma.usuariosUncheckedCreateWithoutTokens_dispositivosInput>
+  connectOrCreate?: Prisma.usuariosCreateOrConnectWithoutTokens_dispositivosInput
+  connect?: Prisma.usuariosWhereUniqueInput
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type usuariosUpdateOneRequiredWithoutTokens_dispositivosNestedInput = {
+  create?: Prisma.XOR<Prisma.usuariosCreateWithoutTokens_dispositivosInput, Prisma.usuariosUncheckedCreateWithoutTokens_dispositivosInput>
+  connectOrCreate?: Prisma.usuariosCreateOrConnectWithoutTokens_dispositivosInput
+  upsert?: Prisma.usuariosUpsertWithoutTokens_dispositivosInput
+  connect?: Prisma.usuariosWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.usuariosUpdateToOneWithWhereWithoutTokens_dispositivosInput, Prisma.usuariosUpdateWithoutTokens_dispositivosInput>, Prisma.usuariosUncheckedUpdateWithoutTokens_dispositivosInput>
 }
 
 export type Enumuser_rolesFieldUpdateOperationsInput = {
@@ -380,6 +397,66 @@ export type usuariosUpdateOneRequiredWithoutRegistros_comunicacionNestedInput = 
   update?: Prisma.XOR<Prisma.XOR<Prisma.usuariosUpdateToOneWithWhereWithoutRegistros_comunicacionInput, Prisma.usuariosUpdateWithoutRegistros_comunicacionInput>, Prisma.usuariosUncheckedUpdateWithoutRegistros_comunicacionInput>
 }
 
+export type usuariosCreateWithoutTokens_dispositivosInput = {
+  id?: string
+  nombre_usuario: string
+  password: string
+  rol: $Enums.user_roles
+  bombero?: Prisma.bomberosCreateNestedOneWithoutUsuarioIdInput
+  respuestas_alertas?: Prisma.respuestas_alertasCreateNestedManyWithoutUsuarioIdInput
+  registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutUsuarioIdInput
+  alertas?: Prisma.alertaCreateNestedManyWithoutUsuarioIDInput
+}
+
+export type usuariosUncheckedCreateWithoutTokens_dispositivosInput = {
+  id?: string
+  nombre_usuario: string
+  password: string
+  rol: $Enums.user_roles
+  bombero?: Prisma.bomberosUncheckedCreateNestedOneWithoutUsuarioIdInput
+  respuestas_alertas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutUsuarioIdInput
+  registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutUsuarioIdInput
+  alertas?: Prisma.alertaUncheckedCreateNestedManyWithoutUsuarioIDInput
+}
+
+export type usuariosCreateOrConnectWithoutTokens_dispositivosInput = {
+  where: Prisma.usuariosWhereUniqueInput
+  create: Prisma.XOR<Prisma.usuariosCreateWithoutTokens_dispositivosInput, Prisma.usuariosUncheckedCreateWithoutTokens_dispositivosInput>
+}
+
+export type usuariosUpsertWithoutTokens_dispositivosInput = {
+  update: Prisma.XOR<Prisma.usuariosUpdateWithoutTokens_dispositivosInput, Prisma.usuariosUncheckedUpdateWithoutTokens_dispositivosInput>
+  create: Prisma.XOR<Prisma.usuariosCreateWithoutTokens_dispositivosInput, Prisma.usuariosUncheckedCreateWithoutTokens_dispositivosInput>
+  where?: Prisma.usuariosWhereInput
+}
+
+export type usuariosUpdateToOneWithWhereWithoutTokens_dispositivosInput = {
+  where?: Prisma.usuariosWhereInput
+  data: Prisma.XOR<Prisma.usuariosUpdateWithoutTokens_dispositivosInput, Prisma.usuariosUncheckedUpdateWithoutTokens_dispositivosInput>
+}
+
+export type usuariosUpdateWithoutTokens_dispositivosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre_usuario?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  rol?: Prisma.Enumuser_rolesFieldUpdateOperationsInput | $Enums.user_roles
+  bombero?: Prisma.bomberosUpdateOneWithoutUsuarioIdNestedInput
+  respuestas_alertas?: Prisma.respuestas_alertasUpdateManyWithoutUsuarioIdNestedInput
+  registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutUsuarioIdNestedInput
+  alertas?: Prisma.alertaUpdateManyWithoutUsuarioIDNestedInput
+}
+
+export type usuariosUncheckedUpdateWithoutTokens_dispositivosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre_usuario?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  rol?: Prisma.Enumuser_rolesFieldUpdateOperationsInput | $Enums.user_roles
+  bombero?: Prisma.bomberosUncheckedUpdateOneWithoutUsuarioIdNestedInput
+  respuestas_alertas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  alertas?: Prisma.alertaUncheckedUpdateManyWithoutUsuarioIDNestedInput
+}
+
 export type usuariosCreateWithoutBomberoInput = {
   id?: string
   nombre_usuario: string
@@ -388,6 +465,7 @@ export type usuariosCreateWithoutBomberoInput = {
   respuestas_alertas?: Prisma.respuestas_alertasCreateNestedManyWithoutUsuarioIdInput
   registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutUsuarioIdInput
   alertas?: Prisma.alertaCreateNestedManyWithoutUsuarioIDInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosCreateNestedManyWithoutUsuarioIdInput
 }
 
 export type usuariosUncheckedCreateWithoutBomberoInput = {
@@ -398,6 +476,7 @@ export type usuariosUncheckedCreateWithoutBomberoInput = {
   respuestas_alertas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutUsuarioIdInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutUsuarioIdInput
   alertas?: Prisma.alertaUncheckedCreateNestedManyWithoutUsuarioIDInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedCreateNestedManyWithoutUsuarioIdInput
 }
 
 export type usuariosCreateOrConnectWithoutBomberoInput = {
@@ -424,6 +503,7 @@ export type usuariosUpdateWithoutBomberoInput = {
   respuestas_alertas?: Prisma.respuestas_alertasUpdateManyWithoutUsuarioIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutUsuarioIdNestedInput
   alertas?: Prisma.alertaUpdateManyWithoutUsuarioIDNestedInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUpdateManyWithoutUsuarioIdNestedInput
 }
 
 export type usuariosUncheckedUpdateWithoutBomberoInput = {
@@ -434,6 +514,7 @@ export type usuariosUncheckedUpdateWithoutBomberoInput = {
   respuestas_alertas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutUsuarioIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutUsuarioIdNestedInput
   alertas?: Prisma.alertaUncheckedUpdateManyWithoutUsuarioIDNestedInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedUpdateManyWithoutUsuarioIdNestedInput
 }
 
 export type usuariosCreateWithoutAlertasInput = {
@@ -444,6 +525,7 @@ export type usuariosCreateWithoutAlertasInput = {
   bombero?: Prisma.bomberosCreateNestedOneWithoutUsuarioIdInput
   respuestas_alertas?: Prisma.respuestas_alertasCreateNestedManyWithoutUsuarioIdInput
   registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutUsuarioIdInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosCreateNestedManyWithoutUsuarioIdInput
 }
 
 export type usuariosUncheckedCreateWithoutAlertasInput = {
@@ -454,6 +536,7 @@ export type usuariosUncheckedCreateWithoutAlertasInput = {
   bombero?: Prisma.bomberosUncheckedCreateNestedOneWithoutUsuarioIdInput
   respuestas_alertas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutUsuarioIdInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutUsuarioIdInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedCreateNestedManyWithoutUsuarioIdInput
 }
 
 export type usuariosCreateOrConnectWithoutAlertasInput = {
@@ -480,6 +563,7 @@ export type usuariosUpdateWithoutAlertasInput = {
   bombero?: Prisma.bomberosUpdateOneWithoutUsuarioIdNestedInput
   respuestas_alertas?: Prisma.respuestas_alertasUpdateManyWithoutUsuarioIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutUsuarioIdNestedInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUpdateManyWithoutUsuarioIdNestedInput
 }
 
 export type usuariosUncheckedUpdateWithoutAlertasInput = {
@@ -490,6 +574,7 @@ export type usuariosUncheckedUpdateWithoutAlertasInput = {
   bombero?: Prisma.bomberosUncheckedUpdateOneWithoutUsuarioIdNestedInput
   respuestas_alertas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutUsuarioIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedUpdateManyWithoutUsuarioIdNestedInput
 }
 
 export type usuariosCreateWithoutRespuestas_alertasInput = {
@@ -500,6 +585,7 @@ export type usuariosCreateWithoutRespuestas_alertasInput = {
   bombero?: Prisma.bomberosCreateNestedOneWithoutUsuarioIdInput
   registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutUsuarioIdInput
   alertas?: Prisma.alertaCreateNestedManyWithoutUsuarioIDInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosCreateNestedManyWithoutUsuarioIdInput
 }
 
 export type usuariosUncheckedCreateWithoutRespuestas_alertasInput = {
@@ -510,6 +596,7 @@ export type usuariosUncheckedCreateWithoutRespuestas_alertasInput = {
   bombero?: Prisma.bomberosUncheckedCreateNestedOneWithoutUsuarioIdInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutUsuarioIdInput
   alertas?: Prisma.alertaUncheckedCreateNestedManyWithoutUsuarioIDInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedCreateNestedManyWithoutUsuarioIdInput
 }
 
 export type usuariosCreateOrConnectWithoutRespuestas_alertasInput = {
@@ -536,6 +623,7 @@ export type usuariosUpdateWithoutRespuestas_alertasInput = {
   bombero?: Prisma.bomberosUpdateOneWithoutUsuarioIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutUsuarioIdNestedInput
   alertas?: Prisma.alertaUpdateManyWithoutUsuarioIDNestedInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUpdateManyWithoutUsuarioIdNestedInput
 }
 
 export type usuariosUncheckedUpdateWithoutRespuestas_alertasInput = {
@@ -546,6 +634,7 @@ export type usuariosUncheckedUpdateWithoutRespuestas_alertasInput = {
   bombero?: Prisma.bomberosUncheckedUpdateOneWithoutUsuarioIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutUsuarioIdNestedInput
   alertas?: Prisma.alertaUncheckedUpdateManyWithoutUsuarioIDNestedInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedUpdateManyWithoutUsuarioIdNestedInput
 }
 
 export type usuariosCreateWithoutRegistros_comunicacionInput = {
@@ -556,6 +645,7 @@ export type usuariosCreateWithoutRegistros_comunicacionInput = {
   bombero?: Prisma.bomberosCreateNestedOneWithoutUsuarioIdInput
   respuestas_alertas?: Prisma.respuestas_alertasCreateNestedManyWithoutUsuarioIdInput
   alertas?: Prisma.alertaCreateNestedManyWithoutUsuarioIDInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosCreateNestedManyWithoutUsuarioIdInput
 }
 
 export type usuariosUncheckedCreateWithoutRegistros_comunicacionInput = {
@@ -566,6 +656,7 @@ export type usuariosUncheckedCreateWithoutRegistros_comunicacionInput = {
   bombero?: Prisma.bomberosUncheckedCreateNestedOneWithoutUsuarioIdInput
   respuestas_alertas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutUsuarioIdInput
   alertas?: Prisma.alertaUncheckedCreateNestedManyWithoutUsuarioIDInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedCreateNestedManyWithoutUsuarioIdInput
 }
 
 export type usuariosCreateOrConnectWithoutRegistros_comunicacionInput = {
@@ -592,6 +683,7 @@ export type usuariosUpdateWithoutRegistros_comunicacionInput = {
   bombero?: Prisma.bomberosUpdateOneWithoutUsuarioIdNestedInput
   respuestas_alertas?: Prisma.respuestas_alertasUpdateManyWithoutUsuarioIdNestedInput
   alertas?: Prisma.alertaUpdateManyWithoutUsuarioIDNestedInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUpdateManyWithoutUsuarioIdNestedInput
 }
 
 export type usuariosUncheckedUpdateWithoutRegistros_comunicacionInput = {
@@ -602,6 +694,7 @@ export type usuariosUncheckedUpdateWithoutRegistros_comunicacionInput = {
   bombero?: Prisma.bomberosUncheckedUpdateOneWithoutUsuarioIdNestedInput
   respuestas_alertas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutUsuarioIdNestedInput
   alertas?: Prisma.alertaUncheckedUpdateManyWithoutUsuarioIDNestedInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedUpdateManyWithoutUsuarioIdNestedInput
 }
 
 
@@ -613,12 +706,14 @@ export type UsuariosCountOutputType = {
   respuestas_alertas: number
   registros_comunicacion: number
   alertas: number
+  tokens_dispositivos: number
 }
 
 export type UsuariosCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   respuestas_alertas?: boolean | UsuariosCountOutputTypeCountRespuestas_alertasArgs
   registros_comunicacion?: boolean | UsuariosCountOutputTypeCountRegistros_comunicacionArgs
   alertas?: boolean | UsuariosCountOutputTypeCountAlertasArgs
+  tokens_dispositivos?: boolean | UsuariosCountOutputTypeCountTokens_dispositivosArgs
 }
 
 /**
@@ -652,6 +747,13 @@ export type UsuariosCountOutputTypeCountAlertasArgs<ExtArgs extends runtime.Type
   where?: Prisma.alertaWhereInput
 }
 
+/**
+ * UsuariosCountOutputType without action
+ */
+export type UsuariosCountOutputTypeCountTokens_dispositivosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.tokens_dispositivosWhereInput
+}
+
 
 export type usuariosSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -662,6 +764,7 @@ export type usuariosSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   respuestas_alertas?: boolean | Prisma.usuarios$respuestas_alertasArgs<ExtArgs>
   registros_comunicacion?: boolean | Prisma.usuarios$registros_comunicacionArgs<ExtArgs>
   alertas?: boolean | Prisma.usuarios$alertasArgs<ExtArgs>
+  tokens_dispositivos?: boolean | Prisma.usuarios$tokens_dispositivosArgs<ExtArgs>
   _count?: boolean | Prisma.UsuariosCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["usuarios"]>
 
@@ -692,6 +795,7 @@ export type usuariosInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   respuestas_alertas?: boolean | Prisma.usuarios$respuestas_alertasArgs<ExtArgs>
   registros_comunicacion?: boolean | Prisma.usuarios$registros_comunicacionArgs<ExtArgs>
   alertas?: boolean | Prisma.usuarios$alertasArgs<ExtArgs>
+  tokens_dispositivos?: boolean | Prisma.usuarios$tokens_dispositivosArgs<ExtArgs>
   _count?: boolean | Prisma.UsuariosCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type usuariosIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -704,6 +808,7 @@ export type $usuariosPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     respuestas_alertas: Prisma.$respuestas_alertasPayload<ExtArgs>[]
     registros_comunicacion: Prisma.$registros_comunicacionPayload<ExtArgs>[]
     alertas: Prisma.$alertaPayload<ExtArgs>[]
+    tokens_dispositivos: Prisma.$tokens_dispositivosPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1108,6 +1213,7 @@ export interface Prisma__usuariosClient<T, Null = never, ExtArgs extends runtime
   respuestas_alertas<T extends Prisma.usuarios$respuestas_alertasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usuarios$respuestas_alertasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$respuestas_alertasPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   registros_comunicacion<T extends Prisma.usuarios$registros_comunicacionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usuarios$registros_comunicacionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$registros_comunicacionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   alertas<T extends Prisma.usuarios$alertasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usuarios$alertasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$alertaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tokens_dispositivos<T extends Prisma.usuarios$tokens_dispositivosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usuarios$tokens_dispositivosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$tokens_dispositivosPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1622,6 +1728,30 @@ export type usuarios$alertasArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.AlertaScalarFieldEnum | Prisma.AlertaScalarFieldEnum[]
+}
+
+/**
+ * usuarios.tokens_dispositivos
+ */
+export type usuarios$tokens_dispositivosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the tokens_dispositivos
+   */
+  select?: Prisma.tokens_dispositivosSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the tokens_dispositivos
+   */
+  omit?: Prisma.tokens_dispositivosOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.tokens_dispositivosInclude<ExtArgs> | null
+  where?: Prisma.tokens_dispositivosWhereInput
+  orderBy?: Prisma.tokens_dispositivosOrderByWithRelationInput | Prisma.tokens_dispositivosOrderByWithRelationInput[]
+  cursor?: Prisma.tokens_dispositivosWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Tokens_dispositivosScalarFieldEnum | Prisma.Tokens_dispositivosScalarFieldEnum[]
 }
 
 /**

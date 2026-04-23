@@ -8,6 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/tokens_dispositivos'
 export type * from './models/usuarios'
 export type * from './models/bomberos_rangos'
 export type * from './models/bomberos'

@@ -9,5 +9,6 @@ router.get("/", controller.obtenerRespuestas);
 router.get("/:id", controller.obtenerRespuestaPorId);
 router.put("/:id", controller.actualizarRespuesta);
 router.delete("/:id", controller.eliminarRespuesta);
+router.post("/responder/:alerta_id/:usuario_id", controller.responderAviso);
 
 export default router;

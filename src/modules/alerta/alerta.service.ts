@@ -1,17 +1,37 @@
 import { AlertaRepositorio } from "./alerta.repository";
-import { crearAlertaDTO } from "./DTO/crear_alerta_dto";
+import { crearAlertaDTO, crearAlertaConNotificacionDTO } from "./DTO/crear_alerta_dto";
+import { NotificacionesService } from "../notificaciones/notificaciones.service";
 
 export class AlertaService {
     private alertaRepo: AlertaRepositorio;
+    private notiService: NotificacionesService;
 
     constructor() {
         this.alertaRepo = new AlertaRepositorio()
+        this.notiService = new NotificacionesService()
     }
 
 
     crearAlerta = async (data: crearAlertaDTO) => {
         const alerta = await this.alertaRepo.crearAlerta(data);
         return alerta;
+    }
+
+    crearAlertaYNotificar = async (data: crearAlertaConNotificacionDTO) => {
+        let idsNotificar = data.destinatariosIds;
+
+        if (!idsNotificar || idsNotificar.length === 0) {
+            idsNotificar = await this.alertaRepo.buscarTodosLosBomberosIds();
+        }
+
+        const estadoInicial = await this.alertaRepo.buscarEstadoPorNombre('PENDIENTE');
+        if (!estadoInicial) throw new Error("Estado inicial no configurado en DB");
+
+        const nuevaAlerta = await this.alertaRepo.crearAlertaCompletaTx(data, idsNotificar, estadoInicial.id);
+
+        this.notiService.enviarPush(idsNotificar, nuevaAlerta).catch(console.error);
+
+        return nuevaAlerta;
     }
 
     obtenerAlertasPorFechas = async (fecha_desde: string, fecha_hasta: string) => {

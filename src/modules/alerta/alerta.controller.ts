@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { AlertaService } from './alerta.service'
-import { crearAlertaDTO } from './DTO/crear_alerta_dto'
+import { crearAlertaDTO, crearAlertaConNotificacionDTO } from './DTO/crear_alerta_dto'
 
 export class AlertaController {
     private alertaService: AlertaService;
@@ -21,6 +21,16 @@ export class AlertaController {
                 sub_categoria_alerta_id: nuevaAlerta.sub_categoria_alerta_id,
                 estado_alerta_id: nuevaAlerta.estado_alerta_id
             });
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
+    crearAlertaYNotificar = async (req: Request, res: Response) => {
+        try {
+            const data: crearAlertaConNotificacionDTO = req.body;
+            const alerta = await this.alertaService.crearAlertaYNotificar(data);
+            return res.status(201).json(alerta);
         } catch (error: any) {
             return res.status(500).json({ error: error.message });
         }

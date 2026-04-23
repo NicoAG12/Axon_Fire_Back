@@ -30,4 +30,8 @@ export class RespuestasAlertasService {
         return await this.repo.eliminarRespuestaAlerta(id);
     }
 
+    responderAviso = async (alertaId: string, usuarioId: string, data: modificarRespuestaAlertaDTO) => {
+        return await this.repo.transaccionResponderAviso(alertaId, usuarioId, data);
+    }
+
 }

@@ -384,6 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  tokens_dispositivos: 'tokens_dispositivos',
   usuarios: 'usuarios',
   bomberos_rangos: 'bomberos_rangos',
   bomberos: 'bomberos',
@@ -408,10 +409,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "usuarios" | "bomberos_rangos" | "bomberos" | "categorias_alerta" | "subcategoria_alerta" | "estados_alerta" | "alerta" | "respuestas_alertas" | "registros_comunicacion"
+    modelProps: "tokens_dispositivos" | "usuarios" | "bomberos_rangos" | "bomberos" | "categorias_alerta" | "subcategoria_alerta" | "estados_alerta" | "alerta" | "respuestas_alertas" | "registros_comunicacion"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    tokens_dispositivos: {
+      payload: Prisma.$tokens_dispositivosPayload<ExtArgs>
+      fields: Prisma.tokens_dispositivosFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.tokens_dispositivosFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$tokens_dispositivosPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.tokens_dispositivosFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$tokens_dispositivosPayload>
+        }
+        findFirst: {
+          args: Prisma.tokens_dispositivosFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$tokens_dispositivosPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.tokens_dispositivosFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$tokens_dispositivosPayload>
+        }
+        findMany: {
+          args: Prisma.tokens_dispositivosFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$tokens_dispositivosPayload>[]
+        }
+        create: {
+          args: Prisma.tokens_dispositivosCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$tokens_dispositivosPayload>
+        }
+        createMany: {
+          args: Prisma.tokens_dispositivosCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.tokens_dispositivosCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$tokens_dispositivosPayload>[]
+        }
+        delete: {
+          args: Prisma.tokens_dispositivosDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$tokens_dispositivosPayload>
+        }
+        update: {
+          args: Prisma.tokens_dispositivosUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$tokens_dispositivosPayload>
+        }
+        deleteMany: {
+          args: Prisma.tokens_dispositivosDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.tokens_dispositivosUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.tokens_dispositivosUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$tokens_dispositivosPayload>[]
+        }
+        upsert: {
+          args: Prisma.tokens_dispositivosUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$tokens_dispositivosPayload>
+        }
+        aggregate: {
+          args: Prisma.Tokens_dispositivosAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTokens_dispositivos>
+        }
+        groupBy: {
+          args: Prisma.tokens_dispositivosGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Tokens_dispositivosGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.tokens_dispositivosCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Tokens_dispositivosCountAggregateOutputType> | number
+        }
+      }
+    }
     usuarios: {
       payload: Prisma.$usuariosPayload<ExtArgs>
       fields: Prisma.usuariosFieldRefs
@@ -1117,6 +1192,17 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const Tokens_dispositivosScalarFieldEnum = {
+  id: 'id',
+  usuario_id: 'usuario_id',
+  token: 'token',
+  plataforma: 'plataforma',
+  fecha_alta: 'fecha_alta'
+} as const
+
+export type Tokens_dispositivosScalarFieldEnum = (typeof Tokens_dispositivosScalarFieldEnum)[keyof typeof Tokens_dispositivosScalarFieldEnum]
+
+
 export const UsuariosScalarFieldEnum = {
   id: 'id',
   nombre_usuario: 'nombre_usuario',
@@ -1223,6 +1309,14 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
 
 /**
  * Field references
@@ -1244,20 +1338,6 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'user_roles'
- */
-export type Enumuser_rolesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'user_roles'>
-    
-
-
-/**
- * Reference to a field of type 'user_roles[]'
- */
-export type ListEnumuser_rolesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'user_roles[]'>
-    
-
-
-/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -1268,6 +1348,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'user_roles'
+ */
+export type Enumuser_rolesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'user_roles'>
+    
+
+
+/**
+ * Reference to a field of type 'user_roles[]'
+ */
+export type ListEnumuser_rolesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'user_roles[]'>
     
 
 
@@ -1407,6 +1501,7 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
+  tokens_dispositivos?: Prisma.tokens_dispositivosOmit
   usuarios?: Prisma.usuariosOmit
   bomberos_rangos?: Prisma.bomberos_rangosOmit
   bomberos?: Prisma.bomberosOmit

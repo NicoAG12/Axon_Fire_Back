@@ -1,5 +1,6 @@
 import { prisma } from "../../lib/prisma";
 import { crearRespuestaAlertaDTO, modificarRespuestaAlertaDTO } from "./DTO/respuestas_alertas_DTO";
+import { tipos_comunicacion, tipos_respuesta } from "@prisma/client";
 
 export class RespuestasAlertasRepositorio {
 
@@ -45,6 +46,49 @@ export class RespuestasAlertasRepositorio {
     async eliminarRespuestaAlerta(id: string) {
         return await prisma.respuestas_alertas.delete({
             where: { id }
+        });
+    }
+
+    async transaccionResponderAviso(alertaId: string, usuarioId: string, data: modificarRespuestaAlertaDTO) {
+        return await prisma.$transaction(async (tx) => {
+            const respuestaActual = await tx.respuestas_alertas.findFirst({
+                where: { alerta_id: alertaId, usuario_id: usuarioId }
+            });
+
+            if (!respuestaActual) throw new Error("Aviso no encontrado");
+
+            const respuestaActualizada = await tx.respuestas_alertas.update({
+                where: { id: respuestaActual.id },
+                data: {
+                    estado_respuesta: data.estado_respuesta,
+                    fecha_hora: data.fecha_hora
+                }
+            });
+
+            if (data.estado_respuesta !== 'ACEPTADO') return respuestaActualizada;
+
+            const alerta = await tx.alerta.findUnique({ where: { id: alertaId }});
+            const estadoInicial = await tx.estados_alerta.findUnique({ where: { nombre_estado: 'PENDIENTE' }});
+            const estadoEnCurso = await tx.estados_alerta.findUnique({ where: { nombre_estado: 'EN CURSO' }});
+
+            if (alerta && estadoInicial && estadoEnCurso && alerta.estado_alerta_id === estadoInicial.id) {
+                await tx.alerta.update({
+                    where: { id: alertaId },
+                    data: { estado_alerta_id: estadoEnCurso.id }
+                });
+
+                await tx.registros_comunicacion.create({
+                    data: {
+                        alerta_id: alertaId,
+                        usuario_id: usuarioId,
+                        mensaje: `El bombero aceptó. Estado cambiado a En Curso.`,
+                        tipo_comunicacion: 'INFORMACION' as tipos_comunicacion,
+                        fecha_hora: new Date()
+                    }
+                });
+            }
+
+            return respuestaActualizada;
         });
     }
 

@@ -13,6 +13,7 @@ enum user_roles {
 }
 
 enum tipos_respuesta {
+  PENDIENTE
   ACEPTADO
   RECHAZADO
 }
@@ -21,6 +22,15 @@ enum tipos_comunicacion {
   SUMINISTROS
   APOYO
   INFORMACION
+}
+
+model tokens_dispositivos {
+  id         String   @id @default(uuid())
+  usuarioId  usuarios @relation(fields: [usuario_id], references: [id])
+  usuario_id String
+  token      String   @unique
+  plataforma String?
+  fecha_alta DateTime @default(now())
 }
 
 model usuarios {
@@ -32,6 +42,7 @@ model usuarios {
   respuestas_alertas     respuestas_alertas[]
   registros_comunicacion registros_comunicacion[]
   alertas                alerta[]
+  tokens_dispositivos    tokens_dispositivos[]
   @@map("users")
 }
 

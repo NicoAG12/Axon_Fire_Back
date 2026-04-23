@@ -18,6 +18,7 @@ export type user_roles = (typeof user_roles)[keyof typeof user_roles]
 
 
 export const tipos_respuesta = {
+  PENDIENTE: 'PENDIENTE',
   ACEPTADO: 'ACEPTADO',
   RECHAZADO: 'RECHAZADO'
 } as const

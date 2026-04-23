@@ -510,10 +510,6 @@ export type alertaUncheckedUpdateManyWithoutEstadoAlertaNestedInput = {
   deleteMany?: Prisma.alertaScalarWhereInput | Prisma.alertaScalarWhereInput[]
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type alertaCreateNestedOneWithoutRespuestasInput = {
   create?: Prisma.XOR<Prisma.alertaCreateWithoutRespuestasInput, Prisma.alertaUncheckedCreateWithoutRespuestasInput>
   connectOrCreate?: Prisma.alertaCreateOrConnectWithoutRespuestasInput

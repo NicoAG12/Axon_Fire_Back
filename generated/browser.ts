@@ -18,6 +18,11 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
+ * Model tokens_dispositivos
+ * 
+ */
+export type tokens_dispositivos = Prisma.tokens_dispositivosModel
+/**
  * Model usuarios
  * 
  */
