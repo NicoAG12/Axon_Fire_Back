@@ -1,5 +1,6 @@
 import express from 'express';
 import 'dotenv/config';
+import cors from 'cors';
 import { prisma } from './lib/prisma';
 import { verificarHeaders } from './middlewares/auth.middleware';
 
@@ -10,9 +11,10 @@ import rutaRespuestasAlertas from './routes/respuestas_alertas.route'
 import rutaNotificaciones from './routes/notificaciones.route'
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT || '3000', 10);
 
 app.use(express.json());
+app.use(cors());
 
 async function main() {
   try {
@@ -28,8 +30,9 @@ async function main() {
     app.use('/notificaciones', rutaNotificaciones);
 
     // 3. Poner el servidor a escuchar peticiones
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚀 Servidor Express corriendo en http://localhost:${PORT}`);
+      console.log(`   Y accesible desde la red en http://0.0.0.0:${PORT}`);
     });
   } catch (error) {
     console.error('❌ Error al conectar con la base de datos:', error);
