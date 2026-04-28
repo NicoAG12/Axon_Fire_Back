@@ -53,8 +53,36 @@ Este documento detalla todos los endpoints disponibles actualmente en el backend
     }
   }
   ```
-- **Respuesta:**
   Variará ligeramente según si se creó con bombero o sin bombero. Devolverá el `id`, `nombre_usuario`, `rol` y un mensaje de éxito.
+
+### Obtener Todos los Bomberos
+- **Ruta:** `GET /usuarios/bomberos`
+- **Descripción:** Obtiene una lista de todos los bomberos registrados en la base de datos, incluyendo la información de usuario relacionada y el rango.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Permisos Requeridos:** El usuario que hace la petición debe tener rol `ADMIN`.
+- **Respuesta (200 OK):**
+  ```json
+  [
+    {
+      "id": "uuid-del-bombero",
+      "usuario_id": "uuid-del-usuario",
+      "rango": "uuid-del-rango",
+      "nombre": "Matias",
+      "apellido": "Perez",
+      "usuarioId": {
+        "nombre_usuario": "matias.bombero",
+        "rol": "BOMBERO"
+      },
+      "rangoBombero": {
+        "id": "uuid-del-rango",
+        "nombre_rol": "Capitán"
+      }
+    }
+  ]
+  ```
+- **Errores Posibles:**
+  - `401 Unauthorized`: "No existe autorizacion" o "No autenticado" (falta token o no válido).
+  - `403 Forbidden`: "No tiene permisos de administrador" (el rol no es ADMIN).
 
 ---
 

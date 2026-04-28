@@ -10,16 +10,31 @@ export class NotificacionesService {
 
     async enviarPush(usuariosIds: string[], payload: any) {
         const tokens = await this.repositorio.obtenerTokensPorUsuarios(usuariosIds);
-        const response = await fetch('https://exp.host/--/api/v2/push/send', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                to: tokens, // array de tokens
-                title: payload.title || 'Nueva Alerta',
-                body: payload.body || `Ubicación: ${payload.ubicacion}`,
-                data: { alertaId: payload.id }
-            })
-        });
-        return response.json();
+        
+        if (!tokens || tokens.length === 0) {
+            console.log('No hay tokens para enviar push');
+            return null;
+        }
+
+        try {
+            const response = await fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    to: tokens, // array de tokens
+                    title: payload.title || 'Nueva Alerta',
+                    body: payload.body || `Ubicación: ${payload.ubicacion}`,
+                    sound: 'default', // Importante para iOS
+                    data: { alertaId: payload.id }
+                })
+            });
+            
+            const data = await response.json();
+            console.log('Respuesta de Expo Push:', data);
+            return data;
+        } catch (error) {
+            console.error('Error enviando push notification:', error);
+            return null;
+        }
     }
 }

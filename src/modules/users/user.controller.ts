@@ -26,4 +26,13 @@ export class UsuarioController {
             return res.status(500).json({ error: error.message });
         }
     }
+
+    obtenerBomberos = async (req: Request, res: Response) => {
+        try {
+            const bomberos = await this.usuarioService.obtenerBomberos();
+            return res.json(bomberos);
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
 }

@@ -39,4 +39,18 @@ export class UsuarioRepositorio {
     })
   }
 
+  async obtenerBomberos() {
+    return await prisma.bomberos.findMany({
+      include: {
+        usuarioId: {
+          select: {
+            nombre_usuario: true,
+            rol: true
+          }
+        },
+        rangoBombero: true
+      }
+    });
+  }
+
 }

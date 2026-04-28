@@ -25,3 +25,17 @@ export const verificarHeaders = (req: AuthRequest, res: Response, next: NextFunc
         return res.status(401).json({ message: 'Token invalido o expirado' });
     }
 };
+
+export const verificarRolAdmin = (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user) {
+        return res.status(401).json({ message: 'No autenticado' });
+    }
+
+    const user = req.user as jsonwebtoken.JwtPayload;
+    
+    if (user.rol !== 'ADMIN') {
+        return res.status(403).json({ message: 'No tiene permisos de administrador' });
+    }
+
+    next();
+};

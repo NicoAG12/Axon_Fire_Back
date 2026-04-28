@@ -16,4 +16,8 @@ export class UsuarioService {
         const nuevoUsuario = await this.usuarioRepo.crearUsuario(data);
         return nuevoUsuario;
     }
+
+    obtenerBomberos = async () => {
+        return await this.usuarioRepo.obtenerBomberos();
+    }
 } 
