@@ -10,27 +10,38 @@ export class NotificacionesService {
 
     async enviarPush(usuariosIds: string[], payload: any) {
         const tokens = await this.repositorio.obtenerTokensPorUsuarios(usuariosIds);
-        
+        if (payload.sub_categoria_alerta_id == '1') {
+            payload.sub_categoria_alerta_id = 'INCENDIO ESTRUCTURAL'
+        } else if (payload.sub_categoria_alerta_id == '2') {
+            payload.sub_categoria_alerta_id = 'RESCATE AUTOMOVIL'
+        }
+
         if (!tokens || tokens.length === 0) {
-            console.log('No hay tokens para enviar push');
             return null;
         }
+
+        const messages = tokens.map(token => ({
+            to: token,
+            title: payload.sub_categoria_alerta_id,
+            body: payload.body || `Ubicación: ${payload.ubicacion}`,
+            sound: 'default' as const,
+            priority: 'high' as const,
+            channelId: 'emergency',
+            data: { alertaId: payload.id }
+        }));
 
         try {
             const response = await fetch('https://exp.host/--/api/v2/push/send', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    to: tokens, // array de tokens
-                    title: payload.title || 'Nueva Alerta',
-                    body: payload.body || `Ubicación: ${payload.ubicacion}`,
-                    sound: 'default', // Importante para iOS
-                    data: { alertaId: payload.id }
-                })
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Accept-Encoding': 'gzip, deflate',
+                },
+                body: JSON.stringify(messages)
             });
-            
+
             const data = await response.json();
-            console.log('Respuesta de Expo Push:', data);
             return data;
         } catch (error) {
             console.error('Error enviando push notification:', error);
