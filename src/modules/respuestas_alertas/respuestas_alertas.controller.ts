@@ -20,6 +20,16 @@ export class RespuestasAlertasController {
         }
     }
 
+    obtenerCantidadAsistentes = async (req: Request<{ id_alerta: string }>, res: Response) => {
+        try {
+            const { id_alerta } = req.params;
+            const resultado = await this.service.obtenerCantidadAsistentes(id_alerta);
+            return res.json(resultado);
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
     obtenerRespuestaPorId = async (req: Request<{ id_respuesta: string }>, res: Response) => {
         try {
             const { id_respuesta } = req.params

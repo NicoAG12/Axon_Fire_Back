@@ -253,6 +253,62 @@
 						"description": "Elimina una respuesta por su ID."
 					},
 					"response": []
+				},
+				{
+					"name": "GET /respuestas_alertas/:id_alerta/asistencias/count",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/respuestas_alertas/:id_alerta/asistencias/count",
+							"host": ["{{baseUrl}}"],
+							"path": ["respuestas_alertas", ":id_alerta", "asistencias", "count"]
+						},
+						"description": "Retorna la cantidad de bomberos que han confirmado asistencia a una alerta."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Registros de Comunicación",
+			"item": [
+				{
+					"name": "POST /registros_comunicacion/crear",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"alerta_id\": \"uuid-alerta\",\n    \"usuario_id\": \"uuid-usuario\",\n    \"mensaje\": \"Se necesitan 3 extintores adicionales\",\n    \"tipo_comunicacion\": \"SUMINISTROS\",\n    \"fecha_hora\": \"2026-04-26T22:00:00.000Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/registros_comunicacion/crear",
+							"host": ["{{baseUrl}}"],
+							"path": ["registros_comunicacion", "crear"]
+						},
+						"description": "Crea un registro de comunicación (suministros, apoyo o información) asociado a una alerta."
+					},
+					"response": []
+				},
+				{
+					"name": "GET /registros_comunicacion/alerta/:id_alerta",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/registros_comunicacion/alerta/:id_alerta",
+							"host": ["{{baseUrl}}"],
+							"path": ["registros_comunicacion", "alerta", ":id_alerta"]
+						},
+						"description": "Obtiene todos los registros de comunicación de una alerta, ordenados por fecha descendente."
+					},
+					"response": []
 				}
 			]
 		},

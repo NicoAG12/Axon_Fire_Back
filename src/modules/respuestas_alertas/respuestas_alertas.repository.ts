@@ -60,6 +60,15 @@ export class RespuestasAlertasRepositorio {
         });
     }
 
+    async contarAsistenciasPorAlerta(alertaId: string) {
+        return await prisma.respuestas_alertas.count({
+            where: {
+                alerta_id: alertaId,
+                estado_respuesta: 'ACEPTADO'
+            }
+        });
+    }
+
     async transaccionResponderAviso(alertaId: string, usuarioId: string, data: modificarRespuestaAlertaDTO) {
         return await prisma.$transaction(async (tx) => {
             const respuestaActual = await tx.respuestas_alertas.findFirst({

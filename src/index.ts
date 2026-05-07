@@ -9,6 +9,7 @@ import rutaAuth from './routes/auth.route'
 import rutaAlerta from './routes/alerta.route'
 import rutaRespuestasAlertas from './routes/respuestas_alertas.route'
 import rutaNotificaciones from './routes/notificaciones.route'
+import rutaRegistrosComunicacion from './routes/registros_comunicacion.route'
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '3000', 10);
@@ -27,6 +28,7 @@ async function main() {
     app.use('/auth', rutaAuth);
     app.use('/alerta', rutaAlerta);
     app.use('/respuestas_alertas', rutaRespuestasAlertas);
+    app.use('/registros_comunicacion', rutaRegistrosComunicacion);
     app.use('/notificaciones', rutaNotificaciones);
 
     // 3. Poner el servidor a escuchar peticiones

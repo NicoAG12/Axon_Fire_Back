@@ -199,9 +199,81 @@ Este módulo maneja si los bomberos confirman o rechazan la asistencia al llamad
 - **Errores Posibles:**
   - `500`: Error al eliminar.
 
+### Contar Asistencias por Alerta
+- **Ruta:** `GET /respuestas_alertas/:id_alerta/asistencias/count`
+- **Descripción:** Retorna la cantidad de bomberos que han confirmado asistencia (`ACEPTADO`) a una alerta específica.
+- **Parámetros en URL:**
+  - `id_alerta`: UUID de la alerta.
+- **Respuesta (200 OK):**
+  ```json
+  {
+    "cantidad": 5
+  }
+  ```
+
 ---
 
-## 🔔 5. Notificaciones PUSH (`/notificaciones`)
+## 📝 5. Registros de Comunicación (`/registros_comunicacion`)
+
+Este módulo permite gestionar mensajes/solicitudes relacionados con una alerta (suministros, apoyo, información). Funciona como un historial en vivo de la comunicación durante una alerta.
+
+### Crear Registro de Comunicación
+- **Ruta:** `POST /registros_comunicacion/crear`
+- **Descripción:** Crea un nuevo registro de comunicación asociado a una alerta. Puede ser una solicitud de suministros, pedido de apoyo o mensaje informativo.
+- **Body request:**
+  ```json
+  {
+    "alerta_id": "uuid-alerta",
+    "usuario_id": "uuid-usuario",
+    "mensaje": "Se necesitan 3 extintores adicionales",
+    "tipo_comunicacion": "SUMINISTROS",
+    "fecha_hora": "2026-04-26T22:00:00.000Z"
+  }
+  ```
+- **Valores válidos para `tipo_comunicacion`:** `SUMINISTROS`, `APOYO`, `INFORMACION`
+- **Respuesta (201 Created):**
+  ```json
+  {
+    "id": "uuid-registro",
+    "alerta_id": "uuid-alerta",
+    "usuario_id": "uuid-usuario",
+    "mensaje": "Se necesitan 3 extintores adicionales",
+    "tipo_comunicacion": "SUMINISTROS",
+    "fecha_hora": "2026-04-26T22:00:00.000Z"
+  }
+  ```
+- **Errores Posibles:**
+  - `500`: "No se encontro alerta"
+
+### Obtener Registros por Alerta
+- **Ruta:** `GET /registros_comunicacion/alerta/:id_alerta`
+- **Descripción:** Retorna todos los registros de comunicación de una alerta, ordenados por fecha descendente.
+- **Parámetros en URL:**
+  - `id_alerta`: UUID de la alerta.
+- **Respuesta (200 OK):**
+  ```json
+  [
+    {
+      "id": "uuid-registro",
+      "alerta_id": "uuid-alerta",
+      "usuario_id": "uuid-usuario",
+      "mensaje": "Se necesitan 3 extintores adicionales",
+      "tipo_comunicacion": "SUMINISTROS",
+      "fecha_hora": "2026-04-26T22:00:00.000Z",
+      "usuarioId": {
+        "nombre_usuario": "juan.bombero",
+        "bombero": {
+          "nombre": "Juan",
+          "apellido": "Perez"
+        }
+      }
+    }
+  ]
+  ```
+
+---
+
+## 🔔 6. Notificaciones PUSH (`/notificaciones`)
 
 ### Registrar Token de Dispositivo
 - **Ruta:** `POST /notificaciones/registrar-token`

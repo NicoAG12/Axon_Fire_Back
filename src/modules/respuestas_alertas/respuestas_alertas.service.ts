@@ -39,4 +39,8 @@ export class RespuestasAlertasService {
         return await this.repo.transaccionResponderAviso(alertaId, usuarioId, data);
     }
 
+    obtenerCantidadAsistentes = async (alertaId: string) => {
+        return { cantidad: await this.repo.contarAsistenciasPorAlerta(alertaId) };
+    }
+
 }
