@@ -91,6 +91,7 @@ Este documento detalla todos los endpoints disponibles actualmente en el backend
 ### Crear Alerta Simple
 - **Ruta:** `POST /alerta/crear`
 - **Descripción:** Registra una nueva alerta en el sistema sin disparar notificaciones masivas.
+- **Autorización:** `JWT Requerido` (Header `Authorization: Bearer <token>`)
 - **Body request:**
   ```json
   {
@@ -106,6 +107,7 @@ Este documento detalla todos los endpoints disponibles actualmente en el backend
 ### Crear Alerta y Notificar
 - **Ruta:** `POST /alerta/crear-con-notificacion`
 - **Descripción:** Registra la alerta y además dispara las notificaciones a los correspondientes destinatarios (utilizando el servicio de notificaciones / Firebase).
+- **Autorización:** `JWT Requerido` (Header `Authorization: Bearer <token>`)
 - **Body request:**
   ```json
   {
@@ -120,6 +122,7 @@ Este documento detalla todos los endpoints disponibles actualmente en el backend
 ### Obtener Alertas por Rango de Fecha
 - **Ruta:** `GET /alerta/rango`
 - **Descripción:** Retorna una lista de alertas filtradas por fecha.
+- **Autorización:** `JWT Requerido` (Header `Authorization: Bearer <token>`)
 - ⚠️ **Nota para el Front:** Actualmente este endpoint requiere enviar los parámetros en el **Body** (según el código actual del controller).
 - **Body request:**
   ```json
@@ -132,6 +135,7 @@ Este documento detalla todos los endpoints disponibles actualmente en el backend
 ### Obtener Alerta por ID
 - **Ruta:** `GET /alerta/:id_alerta`
 - **Descripción:** Detalles de una alerta específica.
+- **Autorización:** `JWT Requerido` (Header `Authorization: Bearer <token>`)
 - **Respuesta:** Devuelve un objeto con todas las propiedades de la alerta solicitada. Retorna `404` si no se encuentra.
 
 ---
@@ -143,6 +147,7 @@ Este módulo maneja si los bomberos confirman o rechazan la asistencia al llamad
 ### Obtener Respuestas por Alerta
 - **Ruta:** `GET /respuestas_alertas/:id_alerta`
 - **Descripción:** Retorna todas las respuestas asociadas a una alerta específica.
+- **Autorización:** `JWT Requerido` (Header `Authorization: Bearer <token>`)
 - **Parámetros en URL:**
   - `id_alerta`: UUID de la alerta.
 - **Respuesta (200 OK):**
@@ -165,6 +170,7 @@ Este módulo maneja si los bomberos confirman o rechazan la asistencia al llamad
 ### Responder a un Aviso
 - **Ruta:** `POST /respuestas_alertas/responder/:alerta_id/:usuario_id`
 - **Descripción:** Permite al bombero aceptar o rechazar una alerta. Si el estado es "ACEPTADO" y la alerta está en estado "PENDIENTE", cambia automáticamente el estado de la alerta a "EN CURSO" y crea un registro de comunicación.
+- **Autorización:** `JWT Requerido` (Header `Authorization: Bearer <token>`)
 - **Parámetros en URL:**
   - `alerta_id`: UUID de la alerta.
   - `usuario_id`: UUID del bombero respondiendo.
@@ -193,6 +199,8 @@ Este módulo maneja si los bomberos confirman o rechazan la asistencia al llamad
 ### Eliminar Respuesta
 - **Ruta:** `DELETE /respuestas_alertas/:id`
 - **Descripción:** Elimina una respuesta por su ID.
+- **Autorización:** `JWT Requerido` (Header `Authorization: Bearer <token>`)
+- **Permisos Requeridos:** `ADMIN`
 - **Parámetros en URL:**
   - `id`: UUID de la respuesta a eliminar.
 - **Respuesta:** `204 No Content`
@@ -202,6 +210,7 @@ Este módulo maneja si los bomberos confirman o rechazan la asistencia al llamad
 ### Contar Asistencias por Alerta
 - **Ruta:** `GET /respuestas_alertas/:id_alerta/asistencias/count`
 - **Descripción:** Retorna la cantidad de bomberos que han confirmado asistencia (`ACEPTADO`) a una alerta específica.
+- **Autorización:** `JWT Requerido` (Header `Authorization: Bearer <token>`)
 - **Parámetros en URL:**
   - `id_alerta`: UUID de la alerta.
 - **Respuesta (200 OK):**
@@ -220,6 +229,7 @@ Este módulo permite gestionar mensajes/solicitudes relacionados con una alerta 
 ### Crear Registro de Comunicación
 - **Ruta:** `POST /registros_comunicacion/crear`
 - **Descripción:** Crea un nuevo registro de comunicación asociado a una alerta. Puede ser una solicitud de suministros, pedido de apoyo o mensaje informativo.
+- **Autorización:** `JWT Requerido` (Header `Authorization: Bearer <token>`)
 - **Body request:**
   ```json
   {
@@ -248,6 +258,7 @@ Este módulo permite gestionar mensajes/solicitudes relacionados con una alerta 
 ### Obtener Registros por Alerta
 - **Ruta:** `GET /registros_comunicacion/alerta/:id_alerta`
 - **Descripción:** Retorna todos los registros de comunicación de una alerta, ordenados por fecha descendente.
+- **Autorización:** `JWT Requerido` (Header `Authorization: Bearer <token>`)
 - **Parámetros en URL:**
   - `id_alerta`: UUID de la alerta.
 - **Respuesta (200 OK):**
