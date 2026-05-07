@@ -140,26 +140,64 @@ Este documento detalla todos los endpoints disponibles actualmente en el backend
 
 Este módulo maneja si los bomberos confirman o rechazan la asistencia al llamado (alerta).
 
-### Responder a un Aviso (Endpoint Principal para Front)
-- **Ruta:** `POST /respuestas_alertas/responder/:alerta_id/:usuario_id`
-- **Descripción:** Es la ruta que utilizará la app móvil/web del bombero para aceptar o rechazar una alerta despachada.
+### Obtener Respuestas por Alerta
+- **Ruta:** `GET /respuestas_alertas/:id_alerta`
+- **Descripción:** Retorna todas las respuestas asociadas a una alerta específica.
 - **Parámetros en URL:**
-  - `alerta_id`: ID de la alerta.
-  - `usuario_id`: ID del bombero respondiendo.
+  - `id_alerta`: UUID de la alerta.
+- **Respuesta (200 OK):**
+  ```json
+  [
+    {
+      "id": "uuid-respuesta",
+      "alerta_id": "uuid-alerta",
+      "usuario_id": "uuid-usuario",
+      "estado_respuesta": "ACEPTADO",
+      "fecha_hora": "2026-04-26T21:05:00.000Z",
+      "alertaId": { ... },
+      "usuarioId": { ... }
+    }
+  ]
+  ```
+- **Errores Posibles:**
+  - `500`: "No se encontro alerta"
+
+### Responder a un Aviso
+- **Ruta:** `POST /respuestas_alertas/responder/:alerta_id/:usuario_id`
+- **Descripción:** Permite al bombero aceptar o rechazar una alerta. Si el estado es "ACEPTADO" y la alerta está en estado "PENDIENTE", cambia automáticamente el estado de la alerta a "EN CURSO" y crea un registro de comunicación.
+- **Parámetros en URL:**
+  - `alerta_id`: UUID de la alerta.
+  - `usuario_id`: UUID del bombero respondiendo.
 - **Body request:**
   ```json
   {
-    "estado_respuesta": "ACEPTADO", // Valores válidos: "PENDIENTE", "ACEPTADO", "RECHAZADO"
+    "estado_respuesta": "ACEPTADO",
     "fecha_hora": "2026-04-26T21:05:00.000Z"
   }
   ```
+- **Valores válidos para `estado_respuesta`:** "PENDIENTE", "ACEPTADO", "RECHAZADO"
+- **Respuesta (200 OK):**
+  ```json
+  {
+    "id": "uuid-respuesta",
+    "alerta_id": "uuid-alerta",
+    "usuario_id": "uuid-usuario",
+    "estado_respuesta": "ACEPTADO",
+    "fecha_hora": "2026-04-26T21:05:00.000Z"
+  }
+  ```
+- **Errores Posibles:**
+  - `500`: "Aviso no encontrado" - No existe una respuesta previa para esta alerta/usuario.
+  - `500`: "No se puede responder una alerta ya finalizada" - La alerta está en estado "FINALIZADO".
 
-*Adicionalmente, este módulo cuenta con rutas CRUD completas por si desde un panel admin se necesita visualizar, crear o modificar respuestas individualmente:*
-- `GET /respuestas_alertas/`: Obtiene todas las respuestas realizadas.
-- `GET /respuestas_alertas/:id`: Detalle de una respuesta por su ID.
-- `POST /respuestas_alertas/`: Crea una respuesta de forma directa pasando todos los IDs (alerta, usuario) en el body.
-- `PUT /respuestas_alertas/:id`: Actualiza una respuesta existente por ID.
-- `DELETE /respuestas_alertas/:id`: Elimina una respuesta.
+### Eliminar Respuesta
+- **Ruta:** `DELETE /respuestas_alertas/:id`
+- **Descripción:** Elimina una respuesta por su ID.
+- **Parámetros en URL:**
+  - `id`: UUID de la respuesta a eliminar.
+- **Respuesta:** `204 No Content`
+- **Errores Posibles:**
+  - `500`: Error al eliminar.
 
 ---
 

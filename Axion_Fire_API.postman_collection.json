@@ -1,0 +1,288 @@
+{
+	"info": {
+		"_postman_id": "axion-fire-api",
+		"name": "Axion Fire API",
+		"description": "Colección de endpoints para Axion Fire Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000"
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	],
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "POST /auth/login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.token) {",
+									"        pm.collectionVariables.set('token', jsonData.token);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre_usuario\": \"\",\n    \"password\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "login"]
+						},
+						"description": "Verifica las credenciales del usuario y genera un JWT para mantener la sesión."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "POST /usuarios/crear",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre_usuario\": \"\",\n    \"password\": \"\",\n    \"rol\": \"BOMBERO\",\n    \"bombero\": {\n        \"nombre\": \"\",\n        \"apellido\": \"\",\n        \"rango\": \"Capitán\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/crear",
+							"host": ["{{baseUrl}}"],
+							"path": ["usuarios", "crear"]
+						},
+						"description": "Crea un nuevo usuario en el sistema. Opcionalmente, se pueden pasar los datos de bombero para crear su perfil."
+					},
+					"response": []
+				},
+				{
+					"name": "GET /usuarios/bomberos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/bomberos",
+							"host": ["{{baseUrl}}"],
+							"path": ["usuarios", "bomberos"]
+						},
+						"description": "Obtiene una lista de todos los bomberos registrados. Requiere rol ADMIN."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Alertas",
+			"item": [
+				{
+					"name": "POST /alerta/crear",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sub_categoria_alerta_id\": \"uuid-subcategoria\",\n    \"ubicacion\": \"Calle Falsa 123\",\n    \"observaciones\": \"Incendio de pastizales pequeños\",\n    \"fecha_hora\": \"2026-04-26T20:00:00.000Z\",\n    \"estado_alerta_id\": \"uuid-estado\",\n    \"usuario_alta_alerta\": \"uuid-usuario-creador\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/alerta/crear",
+							"host": ["{{baseUrl}}"],
+							"path": ["alerta", "crear"]
+						},
+						"description": "Registra una nueva alerta sin disparar notificaciones masivas."
+					},
+					"response": []
+				},
+				{
+					"name": "POST /alerta/crear-con-notificacion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sub_categoria_alerta_id\": \"uuid-subcategoria\",\n    \"ubicacion\": \"Av. Siempreviva 742\",\n    \"observaciones\": \"Fuego en estructura\",\n    \"usuario_alta_alerta\": \"uuid-usuario-creador\",\n    \"destinatariosIds\": [\"uuid-usuario-1\", \"uuid-usuario-2\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/alerta/crear-con-notificacion",
+							"host": ["{{baseUrl}}"],
+							"path": ["alerta", "crear-con-notificacion"]
+						},
+						"description": "Registra la alerta y dispara notificaciones a los destinatarios."
+					},
+					"response": []
+				},
+				{
+					"name": "GET /alerta/rango",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fecha_desde\": \"2026-04-01T00:00:00.000Z\",\n    \"fecha_hasta\": \"2026-04-30T23:59:59.000Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/alerta/rango",
+							"host": ["{{baseUrl}}"],
+							"path": ["alerta", "rango"]
+						},
+						"description": "Retorna alertas filtradas por rango de fecha. Params van en el body."
+					},
+					"response": []
+				},
+				{
+					"name": "GET /alerta/:id_alerta",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/alerta/:id_alerta",
+							"host": ["{{baseUrl}}"],
+							"path": ["alerta", ":id_alerta"]
+						},
+						"description": "Obtiene detalles de una alerta específica por ID."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Respuestas Alertas",
+			"item": [
+				{
+					"name": "GET /respuestas_alertas/:id_alerta",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/respuestas_alertas/:id_alerta",
+							"host": ["{{baseUrl}}"],
+							"path": ["respuestas_alertas", ":id_alerta"]
+						},
+						"description": "Obtiene todas las respuestas asociadas a una alerta específica."
+					},
+					"response": []
+				},
+				{
+					"name": "POST /respuestas_alertas/responder/:alerta_id/:usuario_id",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"estado_respuesta\": \"ACEPTADO\",\n    \"fecha_hora\": \"2026-04-26T21:05:00.000Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/respuestas_alertas/responder/:alerta_id/:usuario_id",
+							"host": ["{{baseUrl}}"],
+							"path": ["respuestas_alertas", "responder", ":alerta_id", ":usuario_id"]
+						},
+						"description": "Permite al bombero aceptar o rechazar una alerta. Si acepta y la alerta está en PENDIENTE, cambia estado a EN CURSO."
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /respuestas_alertas/:id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/respuestas_alertas/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["respuestas_alertas", ":id"]
+						},
+						"description": "Elimina una respuesta por su ID."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notificaciones",
+			"item": [
+				{
+					"name": "POST /notificaciones/registrar-token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuario_id\": \"uuid-del-usuario\",\n    \"token\": \"token-firebase-dispositivo\",\n    \"plataforma\": \"android\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/notificaciones/registrar-token",
+							"host": ["{{baseUrl}}"],
+							"path": ["notificaciones", "registrar-token"]
+						},
+						"description": "Registra el token FCM del dispositivo para recibir notificaciones push."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

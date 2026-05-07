@@ -1,6 +1,6 @@
 import { prisma } from "../../lib/prisma";
 import { crearRespuestaAlertaDTO, modificarRespuestaAlertaDTO } from "./DTO/respuestas_alertas_DTO";
-import { tipos_comunicacion, tipos_respuesta } from "@prisma/client";
+import { tipos_comunicacion, tipos_respuesta } from "../../../generated/client";
 
 export class RespuestasAlertasRepositorio {
 
@@ -15,8 +15,9 @@ export class RespuestasAlertasRepositorio {
         });
     }
 
-    async obtenerRespuestasAlertas() {
+    async obtenerRespuestasPorAlerta(id_alerta: string) {
         return await prisma.respuestas_alertas.findMany({
+            where: { alerta_id: id_alerta },
             include: {
                 alertaId: true,
                 usuarioId: true
@@ -29,10 +30,20 @@ export class RespuestasAlertasRepositorio {
             where: { id },
             include: {
                 alertaId: true,
-                usuarioId: true
+                usuarioId: {
+                    select: {
+                        nombre_usuario: true,
+                        bombero: {
+                            select: {
+                                nombre: true
+                            }
+                        }
+                    }
+                }
             }
         });
     }
+
 
     async actualizarRespuestaAlerta(id: string, data: Partial<modificarRespuestaAlertaDTO>) {
         return await prisma.respuestas_alertas.update({
@@ -67,9 +78,13 @@ export class RespuestasAlertasRepositorio {
 
             if (data.estado_respuesta !== 'ACEPTADO') return respuestaActualizada;
 
-            const alerta = await tx.alerta.findUnique({ where: { id: alertaId }});
-            const estadoInicial = await tx.estados_alerta.findUnique({ where: { nombre_estado: 'PENDIENTE' }});
-            const estadoEnCurso = await tx.estados_alerta.findUnique({ where: { nombre_estado: 'EN CURSO' }});
+            const alerta = await tx.alerta.findUnique({ where: { id: alertaId } });
+            const estadoInicial = await tx.estados_alerta.findUnique({ where: { nombre_estado: 'PENDIENTE' } });
+            const estadoEnCurso = await tx.estados_alerta.findUnique({ where: { nombre_estado: 'EN CURSO' } });
+            const estadoFinalizado = await tx.estados_alerta.findUnique({ where: { nombre_estado: 'FINALIZADO' } })
+            if (alerta?.estado_alerta_id === estadoFinalizado?.id) {
+                throw new Error("No se puede responder una alerta ya finalizada")
+            }
 
             if (alerta && estadoInicial && estadoEnCurso && alerta.estado_alerta_id === estadoInicial.id) {
                 await tx.alerta.update({

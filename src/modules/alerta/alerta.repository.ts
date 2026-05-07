@@ -1,8 +1,7 @@
 import { prisma } from "../../lib/prisma"
 import { crearAlertaDTO, crearAlertaConNotificacionDTO } from "./DTO/crear_alerta_dto"
 import { randomUUID } from "crypto"
-import { tipos_respuesta } from "@prisma/client"
-
+import { tipos_respuesta } from "../../../generated/client"
 export class AlertaRepositorio {
 
     async crearAlerta(data: crearAlertaDTO) {
@@ -50,11 +49,11 @@ export class AlertaRepositorio {
     }
 
     async buscarEstadoPorNombre(nombre: string) {
-        return await prisma.estados_alerta.findUnique({ where: { nombre_estado: nombre }});
+        return await prisma.estados_alerta.findUnique({ where: { nombre_estado: nombre } });
     }
 
     async buscarTodosLosBomberosIds() {
-        const bomberos = await prisma.usuarios.findMany({ select: { id: true }});
+        const bomberos = await prisma.usuarios.findMany({ select: { id: true } });
         return bomberos.map(b => b.id);
     }
 
