@@ -19,8 +19,16 @@ export class RespuestasAlertasRepositorio {
         return await prisma.respuestas_alertas.findMany({
             where: { alerta_id: id_alerta },
             include: {
-                alertaId: true,
-                usuarioId: true
+                usuarioId: {
+                    select: {
+                        nombre_usuario: true,
+                        bombero: {
+                            select: {
+                                nombre: true
+                            }
+                        }
+                    }
+                }
             }
         });
     }
