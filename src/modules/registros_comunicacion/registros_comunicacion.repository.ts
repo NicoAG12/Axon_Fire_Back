@@ -23,6 +23,7 @@ export class RegistrosComunicacionRepositorio {
                 usuarioId: {
                     select: {
                         nombre_usuario: true,
+                        rol: true,
                         bombero: {
                             select: {
                                 nombre: true,

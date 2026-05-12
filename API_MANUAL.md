@@ -159,8 +159,20 @@ Este módulo maneja si los bomberos confirman o rechazan la asistencia al llamad
       "usuario_id": "uuid-usuario",
       "estado_respuesta": "ACEPTADO",
       "fecha_hora": "2026-04-26T21:05:00.000Z",
-      "alertaId": { ... },
-      "usuarioId": { ... }
+      "usuarioId": {
+        "nombre_usuario": "juan.bombero",
+        "rol": "BOMBERO",
+        "bombero": {
+          "id": "uuid-bombero",
+          "nombre": "Juan",
+          "apellido": "Perez",
+          "rango": "uuid-rango",
+          "rangoBombero": {
+            "id": "uuid-rango",
+            "nombre_rol": "Capitán"
+          }
+        }
+      }
     }
   ]
   ```

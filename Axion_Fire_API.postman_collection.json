@@ -119,7 +119,12 @@
 					"name": "POST /alerta/crear",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"sub_categoria_alerta_id\": \"uuid-subcategoria\",\n    \"ubicacion\": \"Calle Falsa 123\",\n    \"observaciones\": \"Incendio de pastizales pequeños\",\n    \"fecha_hora\": \"2026-04-26T20:00:00.000Z\",\n    \"estado_alerta_id\": \"uuid-estado\",\n    \"usuario_alta_alerta\": \"uuid-usuario-creador\"\n}",
@@ -142,7 +147,12 @@
 					"name": "POST /alerta/crear-con-notificacion",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"sub_categoria_alerta_id\": \"uuid-subcategoria\",\n    \"ubicacion\": \"Av. Siempreviva 742\",\n    \"observaciones\": \"Fuego en estructura\",\n    \"usuario_alta_alerta\": \"uuid-usuario-creador\",\n    \"destinatariosIds\": [\"uuid-usuario-1\", \"uuid-usuario-2\"]\n}",
@@ -165,7 +175,12 @@
 					"name": "GET /alerta/rango",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"fecha_desde\": \"2026-04-01T00:00:00.000Z\",\n    \"fecha_hasta\": \"2026-04-30T23:59:59.000Z\"\n}",
@@ -188,7 +203,12 @@
 					"name": "GET /alerta/:id_alerta",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
 						"url": {
 							"raw": "{{baseUrl}}/alerta/:id_alerta",
 							"host": ["{{baseUrl}}"],
@@ -207,7 +227,12 @@
 					"name": "GET /respuestas_alertas/:id_alerta",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
 						"url": {
 							"raw": "{{baseUrl}}/respuestas_alertas/:id_alerta",
 							"host": ["{{baseUrl}}"],
@@ -221,7 +246,12 @@
 					"name": "POST /respuestas_alertas/responder/:alerta_id/:usuario_id",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"estado_respuesta\": \"ACEPTADO\",\n    \"fecha_hora\": \"2026-04-26T21:05:00.000Z\"\n}",
@@ -244,7 +274,12 @@
 					"name": "DELETE /respuestas_alertas/:id",
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
 						"url": {
 							"raw": "{{baseUrl}}/respuestas_alertas/:id",
 							"host": ["{{baseUrl}}"],
@@ -258,7 +293,12 @@
 					"name": "GET /respuestas_alertas/:id_alerta/asistencias/count",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
 						"url": {
 							"raw": "{{baseUrl}}/respuestas_alertas/:id_alerta/asistencias/count",
 							"host": ["{{baseUrl}}"],
@@ -277,7 +317,12 @@
 					"name": "POST /registros_comunicacion/crear",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"alerta_id\": \"uuid-alerta\",\n    \"usuario_id\": \"uuid-usuario\",\n    \"mensaje\": \"Se necesitan 3 extintores adicionales\",\n    \"tipo_comunicacion\": \"SUMINISTROS\",\n    \"fecha_hora\": \"2026-04-26T22:00:00.000Z\"\n}",
@@ -300,7 +345,12 @@
 					"name": "GET /registros_comunicacion/alerta/:id_alerta",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
 						"url": {
 							"raw": "{{baseUrl}}/registros_comunicacion/alerta/:id_alerta",
 							"host": ["{{baseUrl}}"],

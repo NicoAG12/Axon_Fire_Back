@@ -22,9 +22,12 @@ export class RespuestasAlertasRepositorio {
                 usuarioId: {
                     select: {
                         nombre_usuario: true,
+                        rol: true,
                         bombero: {
                             select: {
-                                nombre: true
+                                nombre: true,
+                                rangoBombero: true,
+                                apellido: true,
                             }
                         }
                     }
