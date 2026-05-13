@@ -94,6 +94,9 @@ export class AlertaRepositorio {
             where: {
                 usuario_alta_alerta: usuario_id
             },
+            include: {
+                estadoAlerta: true
+            },
             orderBy: {
                 fecha_hora: 'desc'
             }

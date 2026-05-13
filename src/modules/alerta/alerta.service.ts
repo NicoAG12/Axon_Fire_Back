@@ -27,6 +27,11 @@ export class AlertaService {
         const estadoInicial = await this.alertaRepo.buscarEstadoPorNombre('PENDIENTE');
         if (!estadoInicial) throw new Error("Estado inicial no configurado en DB");
 
+        // Fallback for missing subcategory (e.g. from PedidosSuministroScreen)
+        if (!data.sub_categoria_alerta_id) {
+            data.sub_categoria_alerta_id = '3'; // Default to OTRO TIPO
+        }
+
         const nuevaAlerta = await this.alertaRepo.crearAlertaCompletaTx(data, idsNotificar, estadoInicial.id);
 
         this.notiService.enviarPush(idsNotificar, nuevaAlerta).catch(console.error);
