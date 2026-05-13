@@ -42,4 +42,14 @@ export class AlertaService {
         const alerta = await this.alertaRepo.buscarAlertaPorID(alerta_id)
         return alerta
     }
+
+    obtenerAlertasPorUsuario = async (usuario_id: string) => {
+        return await this.alertaRepo.buscarAlertaPorUsuario(usuario_id)
+    }
+
+    finalizarAlerta = async (alertaId: string) => {
+        const estadoFinalizado = await this.alertaRepo.buscarEstadoPorNombre('FINALIZADO');
+        if (!estadoFinalizado) throw new Error("Estado FINALIZADO no configurado en DB");
+        return await this.alertaRepo.actualizarEstadoAlerta(alertaId, estadoFinalizado.id);
+    }
 }

@@ -53,8 +53,15 @@ export class AlertaRepositorio {
     }
 
     async buscarTodosLosBomberosIds() {
-        const bomberos = await prisma.usuarios.findMany({ select: { id: true } });
-        return bomberos.map(b => b.id);
+        const bomberos = await prisma.bomberos.findMany({ select: { usuario_id: true } });
+        return bomberos.map(b => b.usuario_id);
+    }
+
+    async actualizarEstadoAlerta(alertaId: string, idEstadoNuevo: string) {
+        return await prisma.alerta.update({
+            where: { id: alertaId },
+            data: { estado_alerta_id: idEstadoNuevo }
+        });
     }
 
     async buscarAlertaPorFecha(fecha_desde: string, fecha_hasta: string) {
@@ -72,6 +79,17 @@ export class AlertaRepositorio {
         return await prisma.alerta.findUnique({
             where: {
                 id: id_alerta
+            }
+        })
+    }
+
+    async buscarAlertaPorUsuario(usuario_id: string) {
+        return await prisma.alerta.findMany({
+            where: {
+                usuario_alta_alerta: usuario_id
+            },
+            orderBy: {
+                fecha_hora: 'desc'
             }
         })
     }

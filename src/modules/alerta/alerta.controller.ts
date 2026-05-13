@@ -44,8 +44,8 @@ export class AlertaController {
                 alertas
             })
 
-        } catch (error) {
-
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
         }
     }
 
@@ -60,6 +60,26 @@ export class AlertaController {
 
             return res.json(alerta);
 
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
+    obtenerAlertasPorUsuario = async (req: Request, res: Response) => {
+        try {
+            const { id_usuario } = req.params;
+            const alertas = await this.alertaService.obtenerAlertasPorUsuario(id_usuario as string);
+            return res.json(alertas);
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
+    finalizarAlerta = async (req: Request<{ id_alerta: string }>, res: Response) => {
+        try {
+            const { id_alerta } = req.params;
+            const alerta = await this.alertaService.finalizarAlerta(id_alerta);
+            return res.json(alerta);
         } catch (error: any) {
             return res.status(500).json({ error: error.message });
         }
