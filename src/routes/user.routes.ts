@@ -6,6 +6,6 @@ const router = express.Router();
 const usuarioController = new UsuarioController();
 
 router.post('/crear', verificarHeaders, usuarioController.crearUsuario);
-router.get('/bomberos', verificarHeaders, verificarRolAdmin, usuarioController.obtenerBomberos);
+router.get('/bomberos', verificarHeaders, usuarioController.obtenerBomberos);
 
 export default router;

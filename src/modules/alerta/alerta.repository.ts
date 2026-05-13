@@ -72,6 +72,9 @@ export class AlertaRepositorio {
                     gte: new Date(fecha_desde),
                     lte: new Date(fecha_hasta)
                 }
+            },
+            include: {
+                estadoAlerta: true
             }
         })
     }
@@ -79,6 +82,9 @@ export class AlertaRepositorio {
         return await prisma.alerta.findUnique({
             where: {
                 id: id_alerta
+            },
+            include: {
+                estadoAlerta: true
             }
         })
     }

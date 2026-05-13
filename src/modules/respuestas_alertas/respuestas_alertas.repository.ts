@@ -10,7 +10,7 @@ export class RespuestasAlertasRepositorio {
                 alerta_id: data.alerta_id,
                 usuario_id: data.usuario_id,
                 estado_respuesta: data.estado_respuesta,
-                fecha_hora: data.fecha_hora
+                fecha_hora: new Date(data.fecha_hora)
             }
         });
     }
@@ -92,7 +92,7 @@ export class RespuestasAlertasRepositorio {
                 where: { id: respuestaActual.id },
                 data: {
                     estado_respuesta: data.estado_respuesta,
-                    fecha_hora: data.fecha_hora
+                    fecha_hora: new Date(data.fecha_hora)
                 }
             });
 
