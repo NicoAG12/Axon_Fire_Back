@@ -84,4 +84,13 @@ export class AlertaController {
             return res.status(500).json({ error: error.message });
         }
     }
+
+    limpiarTodo = async (req: Request, res: Response) => {
+        try {
+            const resultado = await this.alertaService.limpiarTodo();
+            return res.json(resultado);
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
 }

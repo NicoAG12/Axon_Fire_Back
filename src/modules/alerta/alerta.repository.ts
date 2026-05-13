@@ -102,4 +102,13 @@ export class AlertaRepositorio {
             }
         })
     }
+
+    async limpiarTodo() {
+        return await prisma.$transaction(async (tx) => {
+            await tx.registros_comunicacion.deleteMany({});
+            await tx.respuestas_alertas.deleteMany({});
+            await tx.alerta.deleteMany({});
+            return { message: "Todo limpio" };
+        });
+    }
 }

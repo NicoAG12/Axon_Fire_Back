@@ -57,4 +57,8 @@ export class AlertaService {
         if (!estadoFinalizado) throw new Error("Estado FINALIZADO no configurado en DB");
         return await this.alertaRepo.actualizarEstadoAlerta(alertaId, estadoFinalizado.id);
     }
+
+    limpiarTodo = async () => {
+        return await this.alertaRepo.limpiarTodo();
+    }
 }

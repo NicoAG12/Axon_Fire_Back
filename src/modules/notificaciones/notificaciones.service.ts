@@ -22,12 +22,12 @@ export class NotificacionesService {
 
         const messages = tokens.map(token => ({
             to: token,
-            title: payload.sub_categoria_alerta_id,
+            title: payload.title || payload.sub_categoria_alerta_id,
             body: payload.body || `Ubicación: ${payload.ubicacion}`,
-            sound: 'default' as const,
-            priority: 'high' as const,
-            channelId: 'emergency',
-            data: { alertaId: payload.id }
+            sound: (payload.silent ? null : 'default') as any,
+            priority: (payload.silent ? 'normal' : 'high') as any,
+            channelId: payload.silent ? 'default' : 'emergency',
+            data: { alertaId: payload.id, silent: !!payload.silent }
         }));
 
         try {
