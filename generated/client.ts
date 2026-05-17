@@ -139,3 +139,13 @@ export type checklist_bolsos_emergencia = Prisma.checklist_bolsos_emergenciaMode
  * 
  */
 export type checklist_detalle_bolso = Prisma.checklist_detalle_bolsoModel
+/**
+ * Model checklist_cuartel
+ * 
+ */
+export type checklist_cuartel = Prisma.checklist_cuartelModel
+/**
+ * Model checklist_detalle_cuartel
+ * 
+ */
+export type checklist_detalle_cuartel = Prisma.checklist_detalle_cuartelModel

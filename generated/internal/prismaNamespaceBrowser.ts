@@ -70,7 +70,9 @@ export const ModelName = {
   bolsos: 'bolsos',
   bolsos_inventario: 'bolsos_inventario',
   checklist_bolsos_emergencia: 'checklist_bolsos_emergencia',
-  checklist_detalle_bolso: 'checklist_detalle_bolso'
+  checklist_detalle_bolso: 'checklist_detalle_bolso',
+  checklist_cuartel: 'checklist_cuartel',
+  checklist_detalle_cuartel: 'checklist_detalle_cuartel'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -161,7 +163,9 @@ export const AlertaScalarFieldEnum = {
   observaciones: 'observaciones',
   estado_alerta_id: 'estado_alerta_id',
   fecha_hora: 'fecha_hora',
-  usuario_alta_alerta: 'usuario_alta_alerta'
+  usuario_alta_alerta: 'usuario_alta_alerta',
+  fecha_hora_finalizacion: 'fecha_hora_finalizacion',
+  duracion_total_alerta: 'duracion_total_alerta'
 } as const
 
 export type AlertaScalarFieldEnum = (typeof AlertaScalarFieldEnum)[keyof typeof AlertaScalarFieldEnum]
@@ -287,6 +291,26 @@ export const Checklist_detalle_bolsoScalarFieldEnum = {
 } as const
 
 export type Checklist_detalle_bolsoScalarFieldEnum = (typeof Checklist_detalle_bolsoScalarFieldEnum)[keyof typeof Checklist_detalle_bolsoScalarFieldEnum]
+
+
+export const Checklist_cuartelScalarFieldEnum = {
+  id: 'id',
+  fecha_control: 'fecha_control',
+  usuario_id: 'usuario_id'
+} as const
+
+export type Checklist_cuartelScalarFieldEnum = (typeof Checklist_cuartelScalarFieldEnum)[keyof typeof Checklist_cuartelScalarFieldEnum]
+
+
+export const Checklist_detalle_cuartelScalarFieldEnum = {
+  id: 'id',
+  checklist_id: 'checklist_id',
+  herramienta_id: 'herramienta_id',
+  controlado: 'controlado',
+  observaciones: 'observaciones'
+} as const
+
+export type Checklist_detalle_cuartelScalarFieldEnum = (typeof Checklist_detalle_cuartelScalarFieldEnum)[keyof typeof Checklist_detalle_cuartelScalarFieldEnum]
 
 
 export const SortOrder = {

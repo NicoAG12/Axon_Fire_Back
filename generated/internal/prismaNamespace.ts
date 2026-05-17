@@ -403,7 +403,9 @@ export const ModelName = {
   bolsos: 'bolsos',
   bolsos_inventario: 'bolsos_inventario',
   checklist_bolsos_emergencia: 'checklist_bolsos_emergencia',
-  checklist_detalle_bolso: 'checklist_detalle_bolso'
+  checklist_detalle_bolso: 'checklist_detalle_bolso',
+  checklist_cuartel: 'checklist_cuartel',
+  checklist_detalle_cuartel: 'checklist_detalle_cuartel'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -419,7 +421,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "tokens_dispositivos" | "usuarios" | "bomberos_rangos" | "bomberos" | "categorias_alerta" | "subcategoria_alerta" | "estados_alerta" | "alerta" | "respuestas_alertas" | "registros_comunicacion" | "camiones" | "sectores_camion" | "herramientas" | "camiones_inventario" | "checklist_camiones_diario" | "checklist_detalle" | "bolsos" | "bolsos_inventario" | "checklist_bolsos_emergencia" | "checklist_detalle_bolso"
+    modelProps: "tokens_dispositivos" | "usuarios" | "bomberos_rangos" | "bomberos" | "categorias_alerta" | "subcategoria_alerta" | "estados_alerta" | "alerta" | "respuestas_alertas" | "registros_comunicacion" | "camiones" | "sectores_camion" | "herramientas" | "camiones_inventario" | "checklist_camiones_diario" | "checklist_detalle" | "bolsos" | "bolsos_inventario" | "checklist_bolsos_emergencia" | "checklist_detalle_bolso" | "checklist_cuartel" | "checklist_detalle_cuartel"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1903,6 +1905,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    checklist_cuartel: {
+      payload: Prisma.$checklist_cuartelPayload<ExtArgs>
+      fields: Prisma.checklist_cuartelFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.checklist_cuartelFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_cuartelPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.checklist_cuartelFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_cuartelPayload>
+        }
+        findFirst: {
+          args: Prisma.checklist_cuartelFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_cuartelPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.checklist_cuartelFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_cuartelPayload>
+        }
+        findMany: {
+          args: Prisma.checklist_cuartelFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_cuartelPayload>[]
+        }
+        create: {
+          args: Prisma.checklist_cuartelCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_cuartelPayload>
+        }
+        createMany: {
+          args: Prisma.checklist_cuartelCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.checklist_cuartelCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_cuartelPayload>[]
+        }
+        delete: {
+          args: Prisma.checklist_cuartelDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_cuartelPayload>
+        }
+        update: {
+          args: Prisma.checklist_cuartelUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_cuartelPayload>
+        }
+        deleteMany: {
+          args: Prisma.checklist_cuartelDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.checklist_cuartelUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.checklist_cuartelUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_cuartelPayload>[]
+        }
+        upsert: {
+          args: Prisma.checklist_cuartelUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_cuartelPayload>
+        }
+        aggregate: {
+          args: Prisma.Checklist_cuartelAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateChecklist_cuartel>
+        }
+        groupBy: {
+          args: Prisma.checklist_cuartelGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Checklist_cuartelGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.checklist_cuartelCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Checklist_cuartelCountAggregateOutputType> | number
+        }
+      }
+    }
+    checklist_detalle_cuartel: {
+      payload: Prisma.$checklist_detalle_cuartelPayload<ExtArgs>
+      fields: Prisma.checklist_detalle_cuartelFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.checklist_detalle_cuartelFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_detalle_cuartelPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.checklist_detalle_cuartelFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_detalle_cuartelPayload>
+        }
+        findFirst: {
+          args: Prisma.checklist_detalle_cuartelFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_detalle_cuartelPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.checklist_detalle_cuartelFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_detalle_cuartelPayload>
+        }
+        findMany: {
+          args: Prisma.checklist_detalle_cuartelFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_detalle_cuartelPayload>[]
+        }
+        create: {
+          args: Prisma.checklist_detalle_cuartelCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_detalle_cuartelPayload>
+        }
+        createMany: {
+          args: Prisma.checklist_detalle_cuartelCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.checklist_detalle_cuartelCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_detalle_cuartelPayload>[]
+        }
+        delete: {
+          args: Prisma.checklist_detalle_cuartelDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_detalle_cuartelPayload>
+        }
+        update: {
+          args: Prisma.checklist_detalle_cuartelUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_detalle_cuartelPayload>
+        }
+        deleteMany: {
+          args: Prisma.checklist_detalle_cuartelDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.checklist_detalle_cuartelUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.checklist_detalle_cuartelUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_detalle_cuartelPayload>[]
+        }
+        upsert: {
+          args: Prisma.checklist_detalle_cuartelUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$checklist_detalle_cuartelPayload>
+        }
+        aggregate: {
+          args: Prisma.Checklist_detalle_cuartelAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateChecklist_detalle_cuartel>
+        }
+        groupBy: {
+          args: Prisma.checklist_detalle_cuartelGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Checklist_detalle_cuartelGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.checklist_detalle_cuartelCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Checklist_detalle_cuartelCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2014,7 +2164,9 @@ export const AlertaScalarFieldEnum = {
   observaciones: 'observaciones',
   estado_alerta_id: 'estado_alerta_id',
   fecha_hora: 'fecha_hora',
-  usuario_alta_alerta: 'usuario_alta_alerta'
+  usuario_alta_alerta: 'usuario_alta_alerta',
+  fecha_hora_finalizacion: 'fecha_hora_finalizacion',
+  duracion_total_alerta: 'duracion_total_alerta'
 } as const
 
 export type AlertaScalarFieldEnum = (typeof AlertaScalarFieldEnum)[keyof typeof AlertaScalarFieldEnum]
@@ -2142,6 +2294,26 @@ export const Checklist_detalle_bolsoScalarFieldEnum = {
 export type Checklist_detalle_bolsoScalarFieldEnum = (typeof Checklist_detalle_bolsoScalarFieldEnum)[keyof typeof Checklist_detalle_bolsoScalarFieldEnum]
 
 
+export const Checklist_cuartelScalarFieldEnum = {
+  id: 'id',
+  fecha_control: 'fecha_control',
+  usuario_id: 'usuario_id'
+} as const
+
+export type Checklist_cuartelScalarFieldEnum = (typeof Checklist_cuartelScalarFieldEnum)[keyof typeof Checklist_cuartelScalarFieldEnum]
+
+
+export const Checklist_detalle_cuartelScalarFieldEnum = {
+  id: 'id',
+  checklist_id: 'checklist_id',
+  herramienta_id: 'herramienta_id',
+  controlado: 'controlado',
+  observaciones: 'observaciones'
+} as const
+
+export type Checklist_detalle_cuartelScalarFieldEnum = (typeof Checklist_detalle_cuartelScalarFieldEnum)[keyof typeof Checklist_detalle_cuartelScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2215,6 +2387,20 @@ export type ListEnumuser_rolesFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
  * Reference to a field of type 'tipos_respuesta'
  */
 export type Enumtipos_respuestaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'tipos_respuesta'>
@@ -2281,20 +2467,6 @@ export type Enumestado_control_herramientaFieldRefInput<$PrismaModel> = FieldRef
  * Reference to a field of type 'estado_control_herramienta[]'
  */
 export type ListEnumestado_control_herramientaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'estado_control_herramienta[]'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -2412,6 +2584,8 @@ export type GlobalOmitConfig = {
   bolsos_inventario?: Prisma.bolsos_inventarioOmit
   checklist_bolsos_emergencia?: Prisma.checklist_bolsos_emergenciaOmit
   checklist_detalle_bolso?: Prisma.checklist_detalle_bolsoOmit
+  checklist_cuartel?: Prisma.checklist_cuartelOmit
+  checklist_detalle_cuartel?: Prisma.checklist_detalle_cuartelOmit
 }
 
 /* Types for Logging */

@@ -55,6 +55,7 @@ model usuarios {
   tokens_dispositivos       tokens_dispositivos[]
   checklistCamionesDiarios  checklist_camiones_diario[]
   checklistBolsosEmergencia checklist_bolsos_emergencia[]
+  checklistsCuartel         checklist_cuartel[]
 
   @@map("users")
 }
@@ -108,6 +109,8 @@ model alerta {
   registros_comunicacion     registros_comunicacion[]
   usuarioID                  usuarios                      @relation(fields: [usuario_alta_alerta], references: [id])
   usuario_alta_alerta        String
+  fecha_hora_finalizacion    DateTime?                     @updatedAt
+  duracion_total_alerta      Float?                          @default(0)
   checklistBolsosEmergencias checklist_bolsos_emergencia[]
 }
 
@@ -155,6 +158,7 @@ model herramientas {
   cantidad_disponible Int
   inventarios         camiones_inventario[]
   bolsos_inventarios  bolsos_inventario[]
+  detalles_checklist  checklist_detalle_cuartel[]
 }
 
 model camiones_inventario {
@@ -226,4 +230,24 @@ model checklist_detalle_bolso {
   inventario_id String
   controlado    estado_control_herramienta
   observaciones String?
+}
+
+model checklist_cuartel {
+  id            String   @id @default(uuid())
+  fecha_control DateTime @default(now())
+  usuario_id    String
+
+  usuario     usuarios                    @relation(fields: [usuario_id], references: [id])
+  detalles    checklist_detalle_cuartel[]
+}
+
+model checklist_detalle_cuartel {
+  id             String                   @id @default(uuid())
+  checklist_id   String
+  herramienta_id String
+  controlado     estado_control_herramienta
+  observaciones  String?
+
+  checklist    checklist_cuartel      @relation(fields: [checklist_id], references: [id], onDelete: Cascade)
+  herramienta  herramientas           @relation(fields: [herramienta_id], references: [id])
 }
