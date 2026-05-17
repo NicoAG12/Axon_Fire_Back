@@ -203,6 +203,7 @@ export type alertaWhereInput = {
   respuestas?: Prisma.Respuestas_alertasListRelationFilter
   registros_comunicacion?: Prisma.Registros_comunicacionListRelationFilter
   usuarioID?: Prisma.XOR<Prisma.UsuariosScalarRelationFilter, Prisma.usuariosWhereInput>
+  checklistBolsosEmergencias?: Prisma.Checklist_bolsos_emergenciaListRelationFilter
 }
 
 export type alertaOrderByWithRelationInput = {
@@ -218,6 +219,7 @@ export type alertaOrderByWithRelationInput = {
   respuestas?: Prisma.respuestas_alertasOrderByRelationAggregateInput
   registros_comunicacion?: Prisma.registros_comunicacionOrderByRelationAggregateInput
   usuarioID?: Prisma.usuariosOrderByWithRelationInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaOrderByRelationAggregateInput
 }
 
 export type alertaWhereUniqueInput = Prisma.AtLeast<{
@@ -236,6 +238,7 @@ export type alertaWhereUniqueInput = Prisma.AtLeast<{
   respuestas?: Prisma.Respuestas_alertasListRelationFilter
   registros_comunicacion?: Prisma.Registros_comunicacionListRelationFilter
   usuarioID?: Prisma.XOR<Prisma.UsuariosScalarRelationFilter, Prisma.usuariosWhereInput>
+  checklistBolsosEmergencias?: Prisma.Checklist_bolsos_emergenciaListRelationFilter
 }, "id">
 
 export type alertaOrderByWithAggregationInput = {
@@ -274,6 +277,7 @@ export type alertaCreateInput = {
   respuestas?: Prisma.respuestas_alertasCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutAlertaIdInput
   usuarioID: Prisma.usuariosCreateNestedOneWithoutAlertasInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaCreateNestedManyWithoutAlertaIdInput
 }
 
 export type alertaUncheckedCreateInput = {
@@ -286,6 +290,7 @@ export type alertaUncheckedCreateInput = {
   usuario_alta_alerta: string
   respuestas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutAlertaIdInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutAlertaIdInput
 }
 
 export type alertaUpdateInput = {
@@ -298,6 +303,7 @@ export type alertaUpdateInput = {
   respuestas?: Prisma.respuestas_alertasUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutAlertaIdNestedInput
   usuarioID?: Prisma.usuariosUpdateOneRequiredWithoutAlertasNestedInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUpdateManyWithoutAlertaIdNestedInput
 }
 
 export type alertaUncheckedUpdateInput = {
@@ -310,6 +316,7 @@ export type alertaUncheckedUpdateInput = {
   usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
   respuestas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutAlertaIdNestedInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutAlertaIdNestedInput
 }
 
 export type alertaCreateManyInput = {
@@ -538,6 +545,20 @@ export type alertaUpdateOneRequiredWithoutRegistros_comunicacionNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.alertaUpdateToOneWithWhereWithoutRegistros_comunicacionInput, Prisma.alertaUpdateWithoutRegistros_comunicacionInput>, Prisma.alertaUncheckedUpdateWithoutRegistros_comunicacionInput>
 }
 
+export type alertaCreateNestedOneWithoutChecklistBolsosEmergenciasInput = {
+  create?: Prisma.XOR<Prisma.alertaCreateWithoutChecklistBolsosEmergenciasInput, Prisma.alertaUncheckedCreateWithoutChecklistBolsosEmergenciasInput>
+  connectOrCreate?: Prisma.alertaCreateOrConnectWithoutChecklistBolsosEmergenciasInput
+  connect?: Prisma.alertaWhereUniqueInput
+}
+
+export type alertaUpdateOneRequiredWithoutChecklistBolsosEmergenciasNestedInput = {
+  create?: Prisma.XOR<Prisma.alertaCreateWithoutChecklistBolsosEmergenciasInput, Prisma.alertaUncheckedCreateWithoutChecklistBolsosEmergenciasInput>
+  connectOrCreate?: Prisma.alertaCreateOrConnectWithoutChecklistBolsosEmergenciasInput
+  upsert?: Prisma.alertaUpsertWithoutChecklistBolsosEmergenciasInput
+  connect?: Prisma.alertaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.alertaUpdateToOneWithWhereWithoutChecklistBolsosEmergenciasInput, Prisma.alertaUpdateWithoutChecklistBolsosEmergenciasInput>, Prisma.alertaUncheckedUpdateWithoutChecklistBolsosEmergenciasInput>
+}
+
 export type alertaCreateWithoutUsuarioIDInput = {
   id?: string
   ubicacion: string
@@ -547,6 +568,7 @@ export type alertaCreateWithoutUsuarioIDInput = {
   estadoAlerta: Prisma.estados_alertaCreateNestedOneWithoutAlertasInput
   respuestas?: Prisma.respuestas_alertasCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutAlertaIdInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaCreateNestedManyWithoutAlertaIdInput
 }
 
 export type alertaUncheckedCreateWithoutUsuarioIDInput = {
@@ -558,6 +580,7 @@ export type alertaUncheckedCreateWithoutUsuarioIDInput = {
   fecha_hora: Date | string
   respuestas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutAlertaIdInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutAlertaIdInput
 }
 
 export type alertaCreateOrConnectWithoutUsuarioIDInput = {
@@ -608,6 +631,7 @@ export type alertaCreateWithoutSubCategoriaAlertaInput = {
   respuestas?: Prisma.respuestas_alertasCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutAlertaIdInput
   usuarioID: Prisma.usuariosCreateNestedOneWithoutAlertasInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaCreateNestedManyWithoutAlertaIdInput
 }
 
 export type alertaUncheckedCreateWithoutSubCategoriaAlertaInput = {
@@ -619,6 +643,7 @@ export type alertaUncheckedCreateWithoutSubCategoriaAlertaInput = {
   usuario_alta_alerta: string
   respuestas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutAlertaIdInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutAlertaIdInput
 }
 
 export type alertaCreateOrConnectWithoutSubCategoriaAlertaInput = {
@@ -656,6 +681,7 @@ export type alertaCreateWithoutEstadoAlertaInput = {
   respuestas?: Prisma.respuestas_alertasCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutAlertaIdInput
   usuarioID: Prisma.usuariosCreateNestedOneWithoutAlertasInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaCreateNestedManyWithoutAlertaIdInput
 }
 
 export type alertaUncheckedCreateWithoutEstadoAlertaInput = {
@@ -667,6 +693,7 @@ export type alertaUncheckedCreateWithoutEstadoAlertaInput = {
   usuario_alta_alerta: string
   respuestas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutAlertaIdInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutAlertaIdInput
 }
 
 export type alertaCreateOrConnectWithoutEstadoAlertaInput = {
@@ -704,6 +731,7 @@ export type alertaCreateWithoutRespuestasInput = {
   estadoAlerta: Prisma.estados_alertaCreateNestedOneWithoutAlertasInput
   registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutAlertaIdInput
   usuarioID: Prisma.usuariosCreateNestedOneWithoutAlertasInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaCreateNestedManyWithoutAlertaIdInput
 }
 
 export type alertaUncheckedCreateWithoutRespuestasInput = {
@@ -715,6 +743,7 @@ export type alertaUncheckedCreateWithoutRespuestasInput = {
   fecha_hora: Date | string
   usuario_alta_alerta: string
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutAlertaIdInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutAlertaIdInput
 }
 
 export type alertaCreateOrConnectWithoutRespuestasInput = {
@@ -742,6 +771,7 @@ export type alertaUpdateWithoutRespuestasInput = {
   estadoAlerta?: Prisma.estados_alertaUpdateOneRequiredWithoutAlertasNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutAlertaIdNestedInput
   usuarioID?: Prisma.usuariosUpdateOneRequiredWithoutAlertasNestedInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUpdateManyWithoutAlertaIdNestedInput
 }
 
 export type alertaUncheckedUpdateWithoutRespuestasInput = {
@@ -753,6 +783,7 @@ export type alertaUncheckedUpdateWithoutRespuestasInput = {
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutAlertaIdNestedInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutAlertaIdNestedInput
 }
 
 export type alertaCreateWithoutRegistros_comunicacionInput = {
@@ -764,6 +795,7 @@ export type alertaCreateWithoutRegistros_comunicacionInput = {
   estadoAlerta: Prisma.estados_alertaCreateNestedOneWithoutAlertasInput
   respuestas?: Prisma.respuestas_alertasCreateNestedManyWithoutAlertaIdInput
   usuarioID: Prisma.usuariosCreateNestedOneWithoutAlertasInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaCreateNestedManyWithoutAlertaIdInput
 }
 
 export type alertaUncheckedCreateWithoutRegistros_comunicacionInput = {
@@ -775,6 +807,7 @@ export type alertaUncheckedCreateWithoutRegistros_comunicacionInput = {
   fecha_hora: Date | string
   usuario_alta_alerta: string
   respuestas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutAlertaIdInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutAlertaIdInput
 }
 
 export type alertaCreateOrConnectWithoutRegistros_comunicacionInput = {
@@ -802,6 +835,7 @@ export type alertaUpdateWithoutRegistros_comunicacionInput = {
   estadoAlerta?: Prisma.estados_alertaUpdateOneRequiredWithoutAlertasNestedInput
   respuestas?: Prisma.respuestas_alertasUpdateManyWithoutAlertaIdNestedInput
   usuarioID?: Prisma.usuariosUpdateOneRequiredWithoutAlertasNestedInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUpdateManyWithoutAlertaIdNestedInput
 }
 
 export type alertaUncheckedUpdateWithoutRegistros_comunicacionInput = {
@@ -813,6 +847,71 @@ export type alertaUncheckedUpdateWithoutRegistros_comunicacionInput = {
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
   respuestas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutAlertaIdNestedInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutAlertaIdNestedInput
+}
+
+export type alertaCreateWithoutChecklistBolsosEmergenciasInput = {
+  id?: string
+  ubicacion: string
+  observaciones: string
+  fecha_hora: Date | string
+  subCategoriaAlerta: Prisma.subcategoria_alertaCreateNestedOneWithoutAlertasInput
+  estadoAlerta: Prisma.estados_alertaCreateNestedOneWithoutAlertasInput
+  respuestas?: Prisma.respuestas_alertasCreateNestedManyWithoutAlertaIdInput
+  registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutAlertaIdInput
+  usuarioID: Prisma.usuariosCreateNestedOneWithoutAlertasInput
+}
+
+export type alertaUncheckedCreateWithoutChecklistBolsosEmergenciasInput = {
+  id?: string
+  sub_categoria_alerta_id: string
+  ubicacion: string
+  observaciones: string
+  estado_alerta_id: string
+  fecha_hora: Date | string
+  usuario_alta_alerta: string
+  respuestas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutAlertaIdInput
+  registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutAlertaIdInput
+}
+
+export type alertaCreateOrConnectWithoutChecklistBolsosEmergenciasInput = {
+  where: Prisma.alertaWhereUniqueInput
+  create: Prisma.XOR<Prisma.alertaCreateWithoutChecklistBolsosEmergenciasInput, Prisma.alertaUncheckedCreateWithoutChecklistBolsosEmergenciasInput>
+}
+
+export type alertaUpsertWithoutChecklistBolsosEmergenciasInput = {
+  update: Prisma.XOR<Prisma.alertaUpdateWithoutChecklistBolsosEmergenciasInput, Prisma.alertaUncheckedUpdateWithoutChecklistBolsosEmergenciasInput>
+  create: Prisma.XOR<Prisma.alertaCreateWithoutChecklistBolsosEmergenciasInput, Prisma.alertaUncheckedCreateWithoutChecklistBolsosEmergenciasInput>
+  where?: Prisma.alertaWhereInput
+}
+
+export type alertaUpdateToOneWithWhereWithoutChecklistBolsosEmergenciasInput = {
+  where?: Prisma.alertaWhereInput
+  data: Prisma.XOR<Prisma.alertaUpdateWithoutChecklistBolsosEmergenciasInput, Prisma.alertaUncheckedUpdateWithoutChecklistBolsosEmergenciasInput>
+}
+
+export type alertaUpdateWithoutChecklistBolsosEmergenciasInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  ubicacion?: Prisma.StringFieldUpdateOperationsInput | string
+  observaciones?: Prisma.StringFieldUpdateOperationsInput | string
+  fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subCategoriaAlerta?: Prisma.subcategoria_alertaUpdateOneRequiredWithoutAlertasNestedInput
+  estadoAlerta?: Prisma.estados_alertaUpdateOneRequiredWithoutAlertasNestedInput
+  respuestas?: Prisma.respuestas_alertasUpdateManyWithoutAlertaIdNestedInput
+  registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutAlertaIdNestedInput
+  usuarioID?: Prisma.usuariosUpdateOneRequiredWithoutAlertasNestedInput
+}
+
+export type alertaUncheckedUpdateWithoutChecklistBolsosEmergenciasInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sub_categoria_alerta_id?: Prisma.StringFieldUpdateOperationsInput | string
+  ubicacion?: Prisma.StringFieldUpdateOperationsInput | string
+  observaciones?: Prisma.StringFieldUpdateOperationsInput | string
+  estado_alerta_id?: Prisma.StringFieldUpdateOperationsInput | string
+  fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
+  respuestas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutAlertaIdNestedInput
+  registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutAlertaIdNestedInput
 }
 
 export type alertaCreateManyUsuarioIDInput = {
@@ -833,6 +932,7 @@ export type alertaUpdateWithoutUsuarioIDInput = {
   estadoAlerta?: Prisma.estados_alertaUpdateOneRequiredWithoutAlertasNestedInput
   respuestas?: Prisma.respuestas_alertasUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutAlertaIdNestedInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUpdateManyWithoutAlertaIdNestedInput
 }
 
 export type alertaUncheckedUpdateWithoutUsuarioIDInput = {
@@ -844,6 +944,7 @@ export type alertaUncheckedUpdateWithoutUsuarioIDInput = {
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   respuestas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutAlertaIdNestedInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutAlertaIdNestedInput
 }
 
 export type alertaUncheckedUpdateManyWithoutUsuarioIDInput = {
@@ -873,6 +974,7 @@ export type alertaUpdateWithoutSubCategoriaAlertaInput = {
   respuestas?: Prisma.respuestas_alertasUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutAlertaIdNestedInput
   usuarioID?: Prisma.usuariosUpdateOneRequiredWithoutAlertasNestedInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUpdateManyWithoutAlertaIdNestedInput
 }
 
 export type alertaUncheckedUpdateWithoutSubCategoriaAlertaInput = {
@@ -884,6 +986,7 @@ export type alertaUncheckedUpdateWithoutSubCategoriaAlertaInput = {
   usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
   respuestas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutAlertaIdNestedInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutAlertaIdNestedInput
 }
 
 export type alertaUncheckedUpdateManyWithoutSubCategoriaAlertaInput = {
@@ -913,6 +1016,7 @@ export type alertaUpdateWithoutEstadoAlertaInput = {
   respuestas?: Prisma.respuestas_alertasUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutAlertaIdNestedInput
   usuarioID?: Prisma.usuariosUpdateOneRequiredWithoutAlertasNestedInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUpdateManyWithoutAlertaIdNestedInput
 }
 
 export type alertaUncheckedUpdateWithoutEstadoAlertaInput = {
@@ -924,6 +1028,7 @@ export type alertaUncheckedUpdateWithoutEstadoAlertaInput = {
   usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
   respuestas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutAlertaIdNestedInput
+  checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutAlertaIdNestedInput
 }
 
 export type alertaUncheckedUpdateManyWithoutEstadoAlertaInput = {
@@ -943,11 +1048,13 @@ export type alertaUncheckedUpdateManyWithoutEstadoAlertaInput = {
 export type AlertaCountOutputType = {
   respuestas: number
   registros_comunicacion: number
+  checklistBolsosEmergencias: number
 }
 
 export type AlertaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   respuestas?: boolean | AlertaCountOutputTypeCountRespuestasArgs
   registros_comunicacion?: boolean | AlertaCountOutputTypeCountRegistros_comunicacionArgs
+  checklistBolsosEmergencias?: boolean | AlertaCountOutputTypeCountChecklistBolsosEmergenciasArgs
 }
 
 /**
@@ -974,6 +1081,13 @@ export type AlertaCountOutputTypeCountRegistros_comunicacionArgs<ExtArgs extends
   where?: Prisma.registros_comunicacionWhereInput
 }
 
+/**
+ * AlertaCountOutputType without action
+ */
+export type AlertaCountOutputTypeCountChecklistBolsosEmergenciasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.checklist_bolsos_emergenciaWhereInput
+}
+
 
 export type alertaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -988,6 +1102,7 @@ export type alertaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   respuestas?: boolean | Prisma.alerta$respuestasArgs<ExtArgs>
   registros_comunicacion?: boolean | Prisma.alerta$registros_comunicacionArgs<ExtArgs>
   usuarioID?: boolean | Prisma.usuariosDefaultArgs<ExtArgs>
+  checklistBolsosEmergencias?: boolean | Prisma.alerta$checklistBolsosEmergenciasArgs<ExtArgs>
   _count?: boolean | Prisma.AlertaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["alerta"]>
 
@@ -1034,6 +1149,7 @@ export type alertaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   respuestas?: boolean | Prisma.alerta$respuestasArgs<ExtArgs>
   registros_comunicacion?: boolean | Prisma.alerta$registros_comunicacionArgs<ExtArgs>
   usuarioID?: boolean | Prisma.usuariosDefaultArgs<ExtArgs>
+  checklistBolsosEmergencias?: boolean | Prisma.alerta$checklistBolsosEmergenciasArgs<ExtArgs>
   _count?: boolean | Prisma.AlertaCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type alertaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1055,6 +1171,7 @@ export type $alertaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     respuestas: Prisma.$respuestas_alertasPayload<ExtArgs>[]
     registros_comunicacion: Prisma.$registros_comunicacionPayload<ExtArgs>[]
     usuarioID: Prisma.$usuariosPayload<ExtArgs>
+    checklistBolsosEmergencias: Prisma.$checklist_bolsos_emergenciaPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1463,6 +1580,7 @@ export interface Prisma__alertaClient<T, Null = never, ExtArgs extends runtime.T
   respuestas<T extends Prisma.alerta$respuestasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.alerta$respuestasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$respuestas_alertasPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   registros_comunicacion<T extends Prisma.alerta$registros_comunicacionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.alerta$registros_comunicacionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$registros_comunicacionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   usuarioID<T extends Prisma.usuariosDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usuariosDefaultArgs<ExtArgs>>): Prisma.Prisma__usuariosClient<runtime.Types.Result.GetResult<Prisma.$usuariosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  checklistBolsosEmergencias<T extends Prisma.alerta$checklistBolsosEmergenciasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.alerta$checklistBolsosEmergenciasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$checklist_bolsos_emergenciaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1945,6 +2063,30 @@ export type alerta$registros_comunicacionArgs<ExtArgs extends runtime.Types.Exte
   take?: number
   skip?: number
   distinct?: Prisma.Registros_comunicacionScalarFieldEnum | Prisma.Registros_comunicacionScalarFieldEnum[]
+}
+
+/**
+ * alerta.checklistBolsosEmergencias
+ */
+export type alerta$checklistBolsosEmergenciasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the checklist_bolsos_emergencia
+   */
+  select?: Prisma.checklist_bolsos_emergenciaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the checklist_bolsos_emergencia
+   */
+  omit?: Prisma.checklist_bolsos_emergenciaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.checklist_bolsos_emergenciaInclude<ExtArgs> | null
+  where?: Prisma.checklist_bolsos_emergenciaWhereInput
+  orderBy?: Prisma.checklist_bolsos_emergenciaOrderByWithRelationInput | Prisma.checklist_bolsos_emergenciaOrderByWithRelationInput[]
+  cursor?: Prisma.checklist_bolsos_emergenciaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Checklist_bolsos_emergenciaScalarFieldEnum | Prisma.Checklist_bolsos_emergenciaScalarFieldEnum[]
 }
 
 /**

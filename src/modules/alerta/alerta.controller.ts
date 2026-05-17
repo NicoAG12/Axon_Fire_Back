@@ -1,4 +1,5 @@
-import { Request, Response } from 'express'
+import { Response } from 'express';
+import { AuthRequest } from "../../middlewares/auth.middleware";
 import { AlertaService } from './alerta.service'
 import { crearAlertaDTO, crearAlertaConNotificacionDTO } from './DTO/crear_alerta_dto'
 
@@ -9,10 +10,14 @@ export class AlertaController {
         this.alertaService = new AlertaService();
     }
 
-    crearAlerta = async (req: Request, res: Response) => {
+    crearAlerta = async (req: AuthRequest, res: Response) => {
         try {
+            const usuarioId = (req.user as any).id_usuario;
+            if (!usuarioId) {
+                return res.status(401).json({ error: 'Usuario no autenticado en el token' });
+            }
             const data: crearAlertaDTO = req.body;
-            const nuevaAlerta = await this.alertaService.crearAlerta(data);
+            const nuevaAlerta = await this.alertaService.crearAlerta({ ...data, usuario_alta_alerta: usuarioId });
             return res.json({
                 id: nuevaAlerta.id, fecha_hora:
                     nuevaAlerta.fecha_hora,
@@ -26,17 +31,21 @@ export class AlertaController {
         }
     }
 
-    crearAlertaYNotificar = async (req: Request, res: Response) => {
+    crearAlertaYNotificar = async (req: AuthRequest, res: Response) => {
         try {
+            const usuarioId = (req.user as any).id_usuario;
+            if (!usuarioId) {
+                return res.status(401).json({ error: 'Usuario no autenticado en el token' });
+            }
             const data: crearAlertaConNotificacionDTO = req.body;
-            const alerta = await this.alertaService.crearAlertaYNotificar(data);
+            const alerta = await this.alertaService.crearAlertaYNotificar({ ...data, usuario_alta_alerta: usuarioId });
             return res.status(201).json(alerta);
         } catch (error: any) {
             return res.status(500).json({ error: error.message });
         }
     }
 
-    obtenerAlertasPorFecha = async (req: Request, res: Response) => {
+    obtenerAlertasPorFecha = async (req: AuthRequest, res: Response) => {
         try {
             const { fecha_desde, fecha_hasta } = req.body;
             const alertas = await this.alertaService.obtenerAlertasPorFechas(fecha_desde, fecha_hasta)
@@ -44,15 +53,15 @@ export class AlertaController {
                 alertas
             })
 
-        } catch (error) {
-
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
         }
     }
 
-    obtenerAlertaPorID = async (req: Request<{ id_alerta: string }>, res: Response) => {
+    obtenerAlertaPorID = async (req: AuthRequest, res: Response) => {
         try {
-            const { id_alerta } = req.params;
-            const alerta = await this.alertaService.obtenerAlertaPorID(id_alerta);
+            const id_alerta = req.params.id_alerta as string;
+            const alerta = await this.alertaService.obtenerAlertaPorID(id_alerta as string);
 
             if (!alerta) {
                 return res.status(404).json({ error: 'Alerta no encontrada' });
@@ -60,6 +69,35 @@ export class AlertaController {
 
             return res.json(alerta);
 
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
+    obtenerAlertasPorUsuario = async (req: AuthRequest, res: Response) => {
+        try {
+            const id_usuario = req.params.id_usuario as string;
+            const alertas = await this.alertaService.obtenerAlertasPorUsuario(id_usuario as string);
+            return res.json(alertas);
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
+    finalizarAlerta = async (req: AuthRequest, res: Response) => {
+        try {
+            const id_alerta = req.params.id_alerta as string;
+            const alerta = await this.alertaService.finalizarAlerta(id_alerta as string);
+            return res.json(alerta);
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
+    limpiarTodo = async (req: AuthRequest, res: Response) => {
+        try {
+            const resultado = await this.alertaService.limpiarTodo();
+            return res.json(resultado);
         } catch (error: any) {
             return res.status(500).json({ error: error.message });
         }
