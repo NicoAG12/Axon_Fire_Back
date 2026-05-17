@@ -89,3 +89,53 @@ export type respuestas_alertas = Prisma.respuestas_alertasModel
  * 
  */
 export type registros_comunicacion = Prisma.registros_comunicacionModel
+/**
+ * Model camiones
+ * 
+ */
+export type camiones = Prisma.camionesModel
+/**
+ * Model sectores_camion
+ * 
+ */
+export type sectores_camion = Prisma.sectores_camionModel
+/**
+ * Model herramientas
+ * 
+ */
+export type herramientas = Prisma.herramientasModel
+/**
+ * Model camiones_inventario
+ * 
+ */
+export type camiones_inventario = Prisma.camiones_inventarioModel
+/**
+ * Model checklist_camiones_diario
+ * 
+ */
+export type checklist_camiones_diario = Prisma.checklist_camiones_diarioModel
+/**
+ * Model checklist_detalle
+ * 
+ */
+export type checklist_detalle = Prisma.checklist_detalleModel
+/**
+ * Model bolsos
+ * 
+ */
+export type bolsos = Prisma.bolsosModel
+/**
+ * Model bolsos_inventario
+ * 
+ */
+export type bolsos_inventario = Prisma.bolsos_inventarioModel
+/**
+ * Model checklist_bolsos_emergencia
+ * 
+ */
+export type checklist_bolsos_emergencia = Prisma.checklist_bolsos_emergenciaModel
+/**
+ * Model checklist_detalle_bolso
+ * 
+ */
+export type checklist_detalle_bolso = Prisma.checklist_detalle_bolsoModel

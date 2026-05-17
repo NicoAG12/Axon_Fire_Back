@@ -1,6 +1,6 @@
 generator client {
-  provider   = "prisma-client"
-  output ="../generated"
+  provider = "prisma-client"
+  output   = "../generated"
 }
 
 datasource db {
@@ -24,6 +24,16 @@ enum tipos_comunicacion {
   INFORMACION
 }
 
+enum estado_camion {
+  ACTIVO
+  INACTIVO
+}
+
+enum estado_control_herramienta {
+  CHEQUEADO
+  FALTANTE
+}
+
 model tokens_dispositivos {
   id         String   @id @default(uuid())
   usuarioId  usuarios @relation(fields: [usuario_id], references: [id])
@@ -34,26 +44,29 @@ model tokens_dispositivos {
 }
 
 model usuarios {
-  id                     String                   @id @default(uuid())
-  nombre_usuario         String                   @unique
-  password               String
-  rol                    user_roles
-  bombero                bomberos?
-  respuestas_alertas     respuestas_alertas[]
-  registros_comunicacion registros_comunicacion[]
-  alertas                alerta[]
-  tokens_dispositivos    tokens_dispositivos[]
+  id                        String                        @id @default(uuid())
+  nombre_usuario            String                        @unique
+  password                  String
+  rol                       user_roles
+  bombero                   bomberos?
+  respuestas_alertas        respuestas_alertas[]
+  registros_comunicacion    registros_comunicacion[]
+  alertas                   alerta[]
+  tokens_dispositivos       tokens_dispositivos[]
+  checklistCamionesDiarios  checklist_camiones_diario[]
+  checklistBolsosEmergencia checklist_bolsos_emergencia[]
+
   @@map("users")
 }
 
 model bomberos_rangos {
-  id         String     @id   @default(uuid())
+  id         String     @id @default(uuid())
   nombre_rol String
   bomberos   bomberos[]
 }
 
 model bomberos {
-  id           String          @id  @default(uuid())
+  id           String          @id @default(uuid())
   usuarioId    usuarios        @relation(fields: [usuario_id], references: [id])
   usuario_id   String          @unique
   rangoBombero bomberos_rangos @relation(fields: [rango], references: [id])
@@ -83,22 +96,23 @@ model estados_alerta {
 }
 
 model alerta {
-  id                      String                   @id  @default(uuid())
-  subCategoriaAlerta      subcategoria_alerta      @relation(fields: [sub_categoria_alerta_id], references: [id])
-  sub_categoria_alerta_id String
-  ubicacion               String
-  observaciones           String
-  estadoAlerta            estados_alerta           @relation(fields: [estado_alerta_id], references: [id])
-  estado_alerta_id        String
-  fecha_hora              DateTime
-  respuestas              respuestas_alertas[]
-  registros_comunicacion  registros_comunicacion[]
-  usuarioID               usuarios                 @relation(fields: [usuario_alta_alerta], references: [id])
-  usuario_alta_alerta     String                   
+  id                         String                        @id @default(uuid())
+  subCategoriaAlerta         subcategoria_alerta           @relation(fields: [sub_categoria_alerta_id], references: [id])
+  sub_categoria_alerta_id    String
+  ubicacion                  String
+  observaciones              String
+  estadoAlerta               estados_alerta                @relation(fields: [estado_alerta_id], references: [id])
+  estado_alerta_id           String
+  fecha_hora                 DateTime
+  respuestas                 respuestas_alertas[]
+  registros_comunicacion     registros_comunicacion[]
+  usuarioID                  usuarios                      @relation(fields: [usuario_alta_alerta], references: [id])
+  usuario_alta_alerta        String
+  checklistBolsosEmergencias checklist_bolsos_emergencia[]
 }
 
 model respuestas_alertas {
-  id               String          @id  @default(uuid())
+  id               String          @id @default(uuid())
   alertaId         alerta          @relation(fields: [alerta_id], references: [id])
   alerta_id        String
   usuarioId        usuarios        @relation(fields: [usuario_id], references: [id])
@@ -116,4 +130,100 @@ model registros_comunicacion {
   mensaje           String
   fecha_hora        DateTime
   tipo_comunicacion tipos_comunicacion
+}
+
+model camiones {
+  id            String                      @id @default(uuid())
+  nombre_camion String
+  estado        estado_camion
+  sectores      sectores_camion[]
+  inventario    camiones_inventario[]
+  checklists    checklist_camiones_diario[]
+}
+
+model sectores_camion {
+  id            String                @id @default(uuid())
+  camionId      camiones              @relation(fields: [camion_id], references: [id], onDelete: Cascade)
+  camion_id     String
+  nombre_sector String
+  inventarios   camiones_inventario[]
+}
+
+model herramientas {
+  id                  String                @id @default(uuid())
+  nombre_herramienta  String
+  cantidad_disponible Int
+  inventarios         camiones_inventario[]
+  bolsos_inventarios  bolsos_inventario[]
+}
+
+model camiones_inventario {
+  id                   String              @id @default(uuid())
+  camionId             camiones            @relation(fields: [camion_id], references: [id], onDelete: Cascade)
+  camion_id            String
+  sectorId             sectores_camion     @relation(fields: [sector_id], references: [id], onDelete: Cascade)
+  sector_id            String
+  herramientaId        herramientas        @relation(fields: [herramienta_id], references: [id])
+  herramienta_id       String
+  cantidad_herramienta Int
+  checklists_detalle   checklist_detalle[]
+}
+
+model checklist_camiones_diario {
+  id            String              @id @default(uuid())
+  fecha_control DateTime            @default(now())
+  camionId      camiones            @relation(fields: [camion_id], references: [id])
+  camion_id     String
+  usuarioId     usuarios            @relation(fields: [usuario_id], references: [id])
+  usuario_id    String
+  detalles      checklist_detalle[]
+}
+
+model checklist_detalle {
+  id            String                     @id @default(uuid())
+  checklistId   checklist_camiones_diario  @relation(fields: [checklist_id], references: [id], onDelete: Cascade)
+  checklist_id  String
+  inventarioId  camiones_inventario        @relation(fields: [inventario_id], references: [id])
+  inventario_id String
+  controlado    estado_control_herramienta
+  observaciones String?
+}
+
+model bolsos {
+  id                 String                        @id @default(uuid())
+  nombre_bolso       String
+  bolsos_inventarios bolsos_inventario[]
+  checklists         checklist_bolsos_emergencia[]
+}
+
+model bolsos_inventario {
+  id                   String                    @id @default(uuid())
+  bolsoId              bolsos                    @relation(fields: [bolso_id], references: [id])
+  bolso_id             String
+  herramientaId        herramientas              @relation(fields: [herramienta_id], references: [id])
+  herramienta_id       String
+  cantidad_herramienta Int
+  checklists_detalle   checklist_detalle_bolso[]
+}
+
+model checklist_bolsos_emergencia {
+  id            String                    @id @default(uuid())
+  fecha_control DateTime                  @default(now())
+  usuarioId     usuarios                  @relation(fields: [usuario_id], references: [id])
+  usuario_id    String
+  alertaId      alerta                    @relation(fields: [alerta_id], references: [id])
+  alerta_id     String
+  bolsoId       bolsos                    @relation(fields: [bolso_id], references: [id])
+  bolso_id      String
+  detalles      checklist_detalle_bolso[]
+}
+
+model checklist_detalle_bolso {
+  id            String                      @id @default(uuid())
+  checklistId   checklist_bolsos_emergencia @relation(fields: [checklist_id], references: [id], onDelete: Cascade)
+  checklist_id  String
+  inventarioId  bolsos_inventario           @relation(fields: [inventario_id], references: [id])
+  inventario_id String
+  controlado    estado_control_herramienta
+  observaciones String?
 }

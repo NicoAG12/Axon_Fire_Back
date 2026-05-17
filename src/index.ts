@@ -10,6 +10,14 @@ import rutaAlerta from './routes/alerta.route'
 import rutaRespuestasAlertas from './routes/respuestas_alertas.route'
 import rutaNotificaciones from './routes/notificaciones.route'
 import rutaRegistrosComunicacion from './routes/registros_comunicacion.route'
+import rutaHerramientas from './routes/herramientas.route'
+import rutaCamiones from './routes/camiones.route'
+import rutaSectores from './routes/sectores.route'
+import rutaCamionesInventario from './routes/camiones_inventario.route'
+import rutaBolsos from './routes/bolsos.route'
+import rutaBolsosInventario from './routes/bolsos_inventario.route'
+import rutaChecklist from './routes/checklist.route'
+import rutaChecklistBolsos from './routes/checklist_bolsos.route'
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '3000', 10);
@@ -30,6 +38,14 @@ async function main() {
     app.use('/respuestas_alertas', rutaRespuestasAlertas);
     app.use('/registros_comunicacion', rutaRegistrosComunicacion);
     app.use('/notificaciones', rutaNotificaciones);
+    app.use('/herramientas', verificarHeaders, rutaHerramientas);
+    app.use('/camiones', verificarHeaders, rutaCamiones);
+    app.use('/sectores', verificarHeaders, rutaSectores);
+    app.use('/camiones_inventario', verificarHeaders, rutaCamionesInventario);
+    app.use('/bolsos', verificarHeaders, rutaBolsos);
+    app.use('/bolsos_inventario', verificarHeaders, rutaBolsosInventario);
+    app.use('/checklist', verificarHeaders, rutaChecklist);
+    app.use('/checklist_bolsos', verificarHeaders, rutaChecklistBolsos);
 
     // 3. Poner el servidor a escuchar peticiones
     app.listen(PORT, '0.0.0.0', () => {

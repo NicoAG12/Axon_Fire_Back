@@ -5,7 +5,7 @@ import { verificarHeaders, verificarRolAdmin } from '../middlewares/auth.middlew
 const router = express.Router();
 const usuarioController = new UsuarioController();
 
-router.post('/crear', verificarHeaders, usuarioController.crearUsuario);
-router.get('/bomberos', verificarHeaders, usuarioController.obtenerBomberos);
+router.post('/crear', verificarHeaders, verificarRolAdmin, usuarioController.crearUsuario);
+router.get('/bomberos', verificarHeaders, verificarRolAdmin, usuarioController.obtenerBomberos);
 
 export default router;
