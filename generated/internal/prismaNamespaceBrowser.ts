@@ -60,7 +60,17 @@ export const ModelName = {
   estados_alerta: 'estados_alerta',
   alerta: 'alerta',
   respuestas_alertas: 'respuestas_alertas',
-  registros_comunicacion: 'registros_comunicacion'
+  registros_comunicacion: 'registros_comunicacion',
+  camiones: 'camiones',
+  sectores_camion: 'sectores_camion',
+  herramientas: 'herramientas',
+  camiones_inventario: 'camiones_inventario',
+  checklist_camiones_diario: 'checklist_camiones_diario',
+  checklist_detalle: 'checklist_detalle',
+  bolsos: 'bolsos',
+  bolsos_inventario: 'bolsos_inventario',
+  checklist_bolsos_emergencia: 'checklist_bolsos_emergencia',
+  checklist_detalle_bolso: 'checklist_detalle_bolso'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -178,6 +188,105 @@ export const Registros_comunicacionScalarFieldEnum = {
 } as const
 
 export type Registros_comunicacionScalarFieldEnum = (typeof Registros_comunicacionScalarFieldEnum)[keyof typeof Registros_comunicacionScalarFieldEnum]
+
+
+export const CamionesScalarFieldEnum = {
+  id: 'id',
+  nombre_camion: 'nombre_camion',
+  estado: 'estado'
+} as const
+
+export type CamionesScalarFieldEnum = (typeof CamionesScalarFieldEnum)[keyof typeof CamionesScalarFieldEnum]
+
+
+export const Sectores_camionScalarFieldEnum = {
+  id: 'id',
+  camion_id: 'camion_id',
+  nombre_sector: 'nombre_sector'
+} as const
+
+export type Sectores_camionScalarFieldEnum = (typeof Sectores_camionScalarFieldEnum)[keyof typeof Sectores_camionScalarFieldEnum]
+
+
+export const HerramientasScalarFieldEnum = {
+  id: 'id',
+  nombre_herramienta: 'nombre_herramienta',
+  cantidad_disponible: 'cantidad_disponible'
+} as const
+
+export type HerramientasScalarFieldEnum = (typeof HerramientasScalarFieldEnum)[keyof typeof HerramientasScalarFieldEnum]
+
+
+export const Camiones_inventarioScalarFieldEnum = {
+  id: 'id',
+  camion_id: 'camion_id',
+  sector_id: 'sector_id',
+  herramienta_id: 'herramienta_id',
+  cantidad_herramienta: 'cantidad_herramienta'
+} as const
+
+export type Camiones_inventarioScalarFieldEnum = (typeof Camiones_inventarioScalarFieldEnum)[keyof typeof Camiones_inventarioScalarFieldEnum]
+
+
+export const Checklist_camiones_diarioScalarFieldEnum = {
+  id: 'id',
+  fecha_control: 'fecha_control',
+  camion_id: 'camion_id',
+  usuario_id: 'usuario_id'
+} as const
+
+export type Checklist_camiones_diarioScalarFieldEnum = (typeof Checklist_camiones_diarioScalarFieldEnum)[keyof typeof Checklist_camiones_diarioScalarFieldEnum]
+
+
+export const Checklist_detalleScalarFieldEnum = {
+  id: 'id',
+  checklist_id: 'checklist_id',
+  inventario_id: 'inventario_id',
+  controlado: 'controlado',
+  observaciones: 'observaciones'
+} as const
+
+export type Checklist_detalleScalarFieldEnum = (typeof Checklist_detalleScalarFieldEnum)[keyof typeof Checklist_detalleScalarFieldEnum]
+
+
+export const BolsosScalarFieldEnum = {
+  id: 'id',
+  nombre_bolso: 'nombre_bolso'
+} as const
+
+export type BolsosScalarFieldEnum = (typeof BolsosScalarFieldEnum)[keyof typeof BolsosScalarFieldEnum]
+
+
+export const Bolsos_inventarioScalarFieldEnum = {
+  id: 'id',
+  bolso_id: 'bolso_id',
+  herramienta_id: 'herramienta_id',
+  cantidad_herramienta: 'cantidad_herramienta'
+} as const
+
+export type Bolsos_inventarioScalarFieldEnum = (typeof Bolsos_inventarioScalarFieldEnum)[keyof typeof Bolsos_inventarioScalarFieldEnum]
+
+
+export const Checklist_bolsos_emergenciaScalarFieldEnum = {
+  id: 'id',
+  fecha_control: 'fecha_control',
+  usuario_id: 'usuario_id',
+  alerta_id: 'alerta_id',
+  bolso_id: 'bolso_id'
+} as const
+
+export type Checklist_bolsos_emergenciaScalarFieldEnum = (typeof Checklist_bolsos_emergenciaScalarFieldEnum)[keyof typeof Checklist_bolsos_emergenciaScalarFieldEnum]
+
+
+export const Checklist_detalle_bolsoScalarFieldEnum = {
+  id: 'id',
+  checklist_id: 'checklist_id',
+  inventario_id: 'inventario_id',
+  controlado: 'controlado',
+  observaciones: 'observaciones'
+} as const
+
+export type Checklist_detalle_bolsoScalarFieldEnum = (typeof Checklist_detalle_bolsoScalarFieldEnum)[keyof typeof Checklist_detalle_bolsoScalarFieldEnum]
 
 
 export const SortOrder = {

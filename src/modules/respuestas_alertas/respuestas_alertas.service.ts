@@ -10,21 +10,26 @@ export class RespuestasAlertasService {
     }
 
     crearRespuesta = async (data: crearRespuestaAlertaDTO) => {
-
+        const alerta_encontrada = this.alerta_repo.buscarAlertaPorID(data.alerta_id)
+        if (!alerta_encontrada) {
+            throw new Error("No se encontro alerta para esta respuesta")
+        }
         return await this.repo.crearRespuestaAlerta(data);
     }
 
-    obtenerRespuestas = async () => {
-        return await this.repo.obtenerRespuestasAlertas();
+    obtenerRespuestas = async (alerta_id: string) => {
+        const alerta_encontrada = this.alerta_repo.buscarAlertaPorID(alerta_id)
+        if (!alerta_encontrada) {
+            throw new Error("No se encontro alerta")
+        }
+        return await this.repo.obtenerRespuestasPorAlerta(alerta_id);
     }
 
     obtenerRespuestaPorId = async (id: string) => {
         return await this.repo.obtenerRespuestaAlertaPorId(id);
     }
 
-    actualizarRespuesta = async (id: string, data: Partial<modificarRespuestaAlertaDTO>) => {
-        return await this.repo.actualizarRespuestaAlerta(id, data);
-    }
+
 
     eliminarRespuesta = async (id: string) => {
         return await this.repo.eliminarRespuestaAlerta(id);
@@ -32,6 +37,10 @@ export class RespuestasAlertasService {
 
     responderAviso = async (alertaId: string, usuarioId: string, data: modificarRespuestaAlertaDTO) => {
         return await this.repo.transaccionResponderAviso(alertaId, usuarioId, data);
+    }
+
+    obtenerCantidadAsistentes = async (alertaId: string) => {
+        return { cantidad: await this.repo.contarAsistenciasPorAlerta(alertaId) };
     }
 
 }

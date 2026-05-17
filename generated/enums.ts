@@ -33,3 +33,19 @@ export const tipos_comunicacion = {
 } as const
 
 export type tipos_comunicacion = (typeof tipos_comunicacion)[keyof typeof tipos_comunicacion]
+
+
+export const estado_camion = {
+  ACTIVO: 'ACTIVO',
+  INACTIVO: 'INACTIVO'
+} as const
+
+export type estado_camion = (typeof estado_camion)[keyof typeof estado_camion]
+
+
+export const estado_control_herramienta = {
+  CHEQUEADO: 'CHEQUEADO',
+  FALTANTE: 'FALTANTE'
+} as const
+
+export type estado_control_herramienta = (typeof estado_control_herramienta)[keyof typeof estado_control_herramienta]

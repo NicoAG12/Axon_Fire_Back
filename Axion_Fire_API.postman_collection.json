@@ -1,0 +1,1556 @@
+{
+	"info": {
+		"_postman_id": "axion-fire-api",
+		"name": "Axion Fire API",
+		"description": "Colección completa de endpoints para Axion Fire Backend. Incluye gestión de inventario, camiones, herramientas, bolsos, checklist y alertas.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000"
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	],
+	"item": [
+		{
+			"name": "AUTH",
+			"item": [
+				{
+					"name": "1. Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.token) {",
+									"        pm.collectionVariables.set('token', jsonData.token);",
+									"        pm.collectionVariables.set('userId', jsonData.id);",
+									"        pm.collectionVariables.set('userRole', jsonData.rol);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre_usuario\": \"admin\",\n    \"password\": \"admin123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "PASO 1 DEL FLUJO DE AUTENTICACIÓN\n=================================\nVerifica credenciales y genera JWT.\n\nPASO A PASO:\n1. Ingresar nombre_usuario y password\n2. Ejecutar request\n3. Verificar respuesta 200 OK con token\n4. El token se guarda automáticamente en {{token}}\n\nRESPUESTA:\n{\n    \"id\": \"uuid-usuario\",\n    \"rol\": \"ADMIN|BOMBERO\",\n    \"token\": \"eyJhbG...\",\n    \"msj\": \"Usuario Logueado Correctamente\"\n}\n\nNOTA: El token se guarda automáticamente para usar en requests protegidas."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "USUARIOS",
+			"item": [
+				{
+					"name": "1. Crear Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre_usuario\": \"nuevo.bombero\",\n    \"password\": \"password123\",\n    \"rol\": \"BOMBERO\",\n    \"bombero\": {\n        \"nombre\": \"Juan\",\n        \"apellido\": \"Perez\",\n        \"rango\": \"Capitán\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/crear",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios",
+								"crear"
+							]
+						},
+						"description": "CREAR NUEVO USUARIO EN EL SISTEMA\n=================================\nPermite crear un usuario con rol BOMBERO o ADMIN.\n\nPASO A PASO:\n1. Asegurarse de tener token válido (ver Login)\n2. Completar los datos del body\n3. Si rol es BOMBERO, incluir objeto 'bombero' con datos\n4. Ejecutar request\n\nBODY:\n- nombre_usuario:string\n- password:string\n- rol: \"BOMBERO\" | \"ADMIN\"\n- bombero (opcional): { nombre, apellido, rango }\n\nNOTA: Requiere token de ADMIN (middleware verificarRolAdmin) para ejecutar."
+					},
+					"response": []
+				},
+				{
+					"name": "2. Obtener Todos los Bomberos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/bomberos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios",
+								"bomberos"
+							]
+						},
+						"description": "LISTAR TODOS LOS BOMBEROS REGISTRADOS\n=======================================\nObtiene lista completa de bomberos con su usuario y rango.\n\nPASO A PASO:\n1. Ejecutar request con token válido\n2. Revisar array de bomberos en respuesta\n3. Copiar IDs necesarios para otras operaciones\n\nRESPUESTA:\n[\n  {\n    \"id\": \"uuid-bombero\",\n    \"usuario_id\": \"uuid-usuario\",\n    \"nombre\": \"Juan\",\n    \"apellido\": \"Perez\",\n    \"usuarioId\": { \"nombre_usuario\": \"...\", \"rol\": \"BOMBERO\" },\n    \"rangoBombero\": { \"nombre_rol\": \"Capitán\" }\n  }\n]\n\nNOTA: Requiere token de ADMIN (middleware verificarRolAdmin)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "HERRAMIENTAS",
+			"item": [
+				{
+					"name": "1. Obtener Todas las Herramientas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/herramientas/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"herramientas",
+								""
+							]
+						},
+						"description": "LISTAR INVENTARIO MAESTRO DE HERRAMIENTAS\n==========================================\nObtiene todas las herramientas disponibles en el cuartel.\n\nPASO A PASO:\n1. Ejecutar request\n2. Revisar lista de herramientas\n3. Copiar 'id' y 'cantidad_disponible' para asignaciones\n\nRESPUESTA:\n[\n  {\n    \"id\": \"uuid-herramienta\",\n    \"nombre_herramienta\": \"Extintor 5kg\",\n    \"cantidad_disponible\": 15\n  }\n]"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Crear Herramienta",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre_herramienta\": \"Manguera de 1.5\\\"\",\n    \"cantidad_disponible\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/herramientas/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"herramientas",
+								""
+							]
+						},
+						"description": "AGREGAR HERRAMIENTA AL INVENTARIO MAESTRO\n==========================================\nCrea una nueva herramienta en el stock del cuartel.\n\nPASO A PASO:\n1. Definir nombre y cantidad inicial\n2. Ejecutar request\n3. Guardar 'id' retornado para asignaciones\n\nBODY:\n- nombre_herramienta: string\n- cantidad_disponible: number (stock inicial)"
+					},
+					"response": []
+				},
+				{
+					"name": "3. Obtener Herramienta por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/herramientas/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"herramientas",
+								":id"
+							]
+						},
+						"description": "OBTENER DETALLES DE HERRAMIENTA ESPECIFICA\n============================================\nBusca una herramienta por su ID.\n\nPASO A PASO:\n1. Reemplazar :id con UUID de herramienta\n2. Ejecutar request"
+					},
+					"response": []
+				},
+				{
+					"name": "4. Actualizar Herramienta",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre_herramienta\": \"Manguera de 2\\\"\",\n    \"cantidad_disponible\": 8\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/herramientas/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"herramientas",
+								":id"
+							]
+						},
+						"description": "MODIFICAR DATOS DE HERRAMIENTA\n================================\nActualiza nombre o stock de una herramienta.\n\nPASO A PASO:\n1. Reemplazar :id con UUID de herramienta\n2. Enviar campos a actualizar\n3. Ejecutar request\n\nBODY (campos opcionales):\n- nombre_herramienta: string\n- cantidad_disponible: number"
+					},
+					"response": []
+				},
+				{
+					"name": "5. Eliminar Herramienta",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/herramientas/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"herramientas",
+								":id"
+							]
+						},
+						"description": "ELIMINAR HERRAMIENTA DEL SISTEMA\n================================\nElimina una herramienta del inventario maestro.\n\n⚠️ PRECAUCIÓN: No eliminar si está asignada a camiones o bolsos.\n\nPASO A PASO:\n1. Reemplazar :id con UUID de herramienta\n2. Ejecutar request"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CAMIONES",
+			"item": [
+				{
+					"name": "1. Obtener Todos los Camiones",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/camiones/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"camiones",
+								""
+							]
+						},
+						"description": "LISTAR TODOS LOS CAMIONES\n==============================\nObtiene todos los camiones registrados con sus sectores.\n\nPASO A PASO:\n1. Ejecutar request\n2. Revisar array de camiones\n3. Copiar 'id' para crear sectores o inventario\n\nRESPUESTA:\n[\n  {\n    \"id\": \"uuid-camion\",\n    \"nombre_camion\": \"Unidad 1\",\n    \"estado\": \"ACTIVO\",\n    \"sectores\": []\n  }\n]"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Obtener Camiones Activos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/camiones/activos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"camiones",
+								"activos"
+							]
+						},
+						"description": "LISTAR SOLO CAMIONES ACTIVOS\n===============================\nFiltra camiones con estado = ACTIVO.\n\nÚtil para listar solo unidades disponibles."
+					},
+					"response": []
+				},
+				{
+					"name": "3. Crear Camión",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre_camion\": \"Unidad de Rescate\",\n    \"estado\": \"ACTIVO\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/camiones/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"camiones",
+								""
+							]
+						},
+						"description": "CREAR NUEVO CAMIÓN\n=====================\nRegistra una nueva unidad de camión.\n\nPASO A PASO:\n1. Definir nombre y estado\n2. Ejecutar request\n3. Guardar 'id' para crear sectores\n\nBODY:\n- nombre_camion: string\n- estado: \"ACTIVO\" | \"INACTIVO\""
+					},
+					"response": []
+				},
+				{
+					"name": "4. Obtener Camión por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/camiones/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"camiones",
+								":id"
+							]
+						},
+						"description": "OBTENER DETALLES DE CAMIÓN ESPECIFICO\n========================================\nBusca un camión por su ID."
+					},
+					"response": []
+				},
+				{
+					"name": "5. Actualizar Camión",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre_camion\": \"Unidad de Rescate 2\",\n    \"estado\": \"INACTIVO\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/camiones/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"camiones",
+								":id"
+							]
+						},
+						"description": "MODIFICAR DATOS DE CAMIÓN\n==============================\nActualiza nombre o estado de un camión.\n\nBODY (campos opcionales):\n- nombre_camion: string\n- estado: \"ACTIVO\" | \"INACTIVO\""
+					},
+					"response": []
+				},
+				{
+					"name": "6. Eliminar Camión",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/camiones/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"camiones",
+								":id"
+							]
+						},
+						"description": "ELIMINAR CAMIÓN DEL SISTEMA\n==============================\n⚠️ PRECAUCIÓN: Elimina en cascada sectores e inventario asociado.\n\nPASO A PASO:\n1. Reemplazar :id con UUID de camión\n2. Ejecutar request"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SECTORES",
+			"item": [
+				{
+					"name": "1. Crear Sector",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"camionId\": \"uuid-camion\",\n    \"nombre_sector\": \"Compartimento Lateral Izquierdo 1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sectores/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sectores",
+								""
+							]
+						},
+						"description": "CREAR SECTOR/COMPARTIMENTO EN CAMIÓN\n======================================\nLos sectores son las zonas físicas dentro del camión donde se almacenan herramientas.\n\nPASO A PASO:\n1. Obtener ID del camión (ver Camiones > Obtener Todos)\n2. Definir nombre descriptivo del sector\n3. Ejecutar request\n4. Guardar 'id' del sector para asignar inventario\n\nBODY:\n- camionId: UUID del camión\n- nombre_sector: string (ej: \"Compartimento Lateral 1\")"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Obtener Sectores por Camión",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sectores/camion/:camionId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sectores",
+								"camion",
+								":camionId"
+							]
+						},
+						"description": "LISTAR SECTORES DE UN CAMIÓN\n==============================\nObtiene todos los sectores/compartimentos de un camión específico.\n\nPASO A PASO:\n1. Reemplazar :camionId con UUID del camión\n2. Ejecutar request\n3. Revisar sectores y copiar IDs para inventario"
+					},
+					"response": []
+				},
+				{
+					"name": "3. Eliminar Sector",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sectores/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sectores",
+								":id"
+							]
+						},
+						"description": "ELIMINAR SECTOR DE CAMIÓN\n============================\n⚠️ PRECAUCIÓN: Si tiene inventario asociado, se elimina en cascada.\n\nPASO A PASO:\n1. Reemplazar :id con UUID del sector\n2. Ejecutar request"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "INVENTARIO CAMIONES",
+			"item": [
+				{
+					"name": "1. Agregar Herramienta a Inventario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"camionId\": \"uuid-camion\",\n    \"herramientaId\": \"uuid-herramienta\",\n    \"sectorId\": \"uuid-sector\",\n    \"cantidad\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/camiones_inventario/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"camiones_inventario",
+								""
+							]
+						},
+						"description": "ASIGNAR HERRAMIENTA A CAMIÓN (PASO 1)\n========================================\nToma una herramienta del stock maestro y la asigna a un sector del camión.\n\n⚠️ IMPORTANTE: Decrementa automaticamente cantidad_disponible en herramientas.\n\nPASO A PASO:\n1. Obtener IDs necesarios:\n   - GET /camiones/ → copiar id del camión\n   - GET /herramientas/ → copiar id de herramienta\n   - GET /sectores/camion/:camionId → copiar id del sector\n2. Definir cantidad a asignar\n3. Ejecutar request\n\nBODY:\n- camionId: UUID del camión\n- herramientaId: UUID de herramienta\n- sectorId: UUID del sector\n- cantidad: number\n\nVALIDACIÓN: Error 400 si no hay stock suficiente."
+					},
+					"response": []
+				},
+				{
+					"name": "2. Obtener Inventario por Camión",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/camiones_inventario/camion/:camionId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"camiones_inventario",
+								"camion",
+								":camionId"
+							]
+						},
+						"description": "LISTAR INVENTARIO COMPLETO DE UN CAMIÓN\n===========================================\nObtiene todas las herramientas asignadas a un camión con sector y cantidad.\n\nPASO A PASO:\n1. Reemplazar :camionId con UUID del camión\n2. Ejecutar request\n3. Revisar array de inventario\n\nRESPUESTA:\n[\n  {\n    \"id\": \"uuid-inventario\",\n    \"camion_id\": \"uuid-camion\",\n    \"sector_id\": \"uuid-sector\",\n    \"herramienta_id\": \"uuid-herramienta\",\n    \"cantidad_herramienta\": 2,\n    \"sectorId\": { \"nombre_sector\": \"...\" },\n    \"herramientaId\": { \"nombre_herramienta\": \"...\" }\n  }\n]"
+					},
+					"response": []
+				},
+				{
+					"name": "3. Obtener Inventario Agrupado por Sector",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/camiones_inventario/camion/:camionId/agrupado",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"camiones_inventario",
+								"camion",
+								":camionId",
+								"agrupado"
+							]
+						},
+						"description": "LISTAR INVENTARIO AGRUPADO POR SECTOR\n==========================================\nAgrupa las herramientas por nombre de sector para mejor visualización.\n\nPASO A PASO:\n1. Reemplazar :camionId con UUID del camión\n2. Ejecutar request\n\nRESPUESTA:\n[\n  {\n    \"nombre_sector\": \"Compartimento Lateral 1\",\n    \"herramientas\": [\n      {\n        \"id\": \"uuid-inventario\",\n        \"herramienta\": \"Extintor 5kg\",\n        \"cantidad_herramienta\": 2\n      }\n    ]\n  }\n]"
+					},
+					"response": []
+				},
+				{
+					"name": "4. Actualizar Cantidad de Inventario",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cantidad\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/camiones_inventario/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"camiones_inventario",
+								":id"
+							]
+						},
+						"description": "ACTUALIZAR CANTIDAD DE HERRAMIENTA EN CAMIÓN\n=============================================\nModifica la cantidad de una herramienta específica en el inventario.\n\n\nPASO A PASO:\n1. Obtener ID del inventario (de GET /camiones_inventario/camion/:camionId)\n2. Definir nueva cantidad\n3. Ejecutar request\n\nBODY:\n- cantidad: number (nueva cantidad)"
+					},
+					"response": []
+				},
+				{
+					"name": "5. Eliminar del Inventario (Restaura Stock)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/camiones_inventario/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"camiones_inventario",
+								":id"
+							]
+						},
+						"description": "ELIMINAR HERRAMIENTA DEL INVENTARIO\n====================================\n⚠️ IMPORTANTE: Restaura automáticamente el stock en herramientas.cantidad_disponible.\n\nÚtil cuando se retira una herramienta del camión para devolverla al stock.\n\nPASO A PASO:\n1. Reemplazar :id con UUID del item de inventario\n2. Ejecutar request\n3. Verificar que cantidad_disponible en herramientas aumentó"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BOLSOS",
+			"item": [
+				{
+					"name": "1. Obtener Todos los Bolsos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/bolsos/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bolsos",
+								""
+							]
+						},
+						"description": "LISTAR TODOS LOS BOLSOS DE EMERGENCIA\n=======================================\nObtiene todos los bolsos/bolsones registrados.\n\nPASO A PASO:\n1. Ejecutar request\n2. Revisar array de bolsos\n3. Copiar 'id' para crear inventario o checklist"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Obtener Bolso por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/bolsos/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bolsos",
+								":id"
+							]
+						},
+						"description": "OBTENER DETALLES DE BOLSO ESPECIFICO\n=======================================\nBusca un bolso por su ID."
+					},
+					"response": []
+				},
+				{
+					"name": "3. Crear Bolso",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre_bolso\": \"Kit de Rescate\",\n    \"estado\": \"ACTIVO\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bolsos/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bolsos",
+								""
+							]
+						},
+						"description": "CREAR NUEVO BOLSO DE EMERGENCIA\n===================================\nRegistra un nuevo bolso/bolson para intervención.\n\nPASO A PASO:\n1. Definir nombre y estado\n2. Ejecutar request\n3. Guardar 'id' para asignar inventario\n\nBODY:\n- nombre_bolso: string\n- estado: \"ACTIVO\" | \"INACTIVO\""
+					},
+					"response": []
+				},
+				{
+					"name": "4. Actualizar Bolso",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre_bolso\": \"Kit de Rescate 2\",\n    \"estado\": \"INACTIVO\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bolsos/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bolsos",
+								":id"
+							]
+						},
+						"description": "MODIFICAR DATOS DE BOLSO\n==============================\nActualiza nombre o estado de un bolso.\n\nBODY (campos opcionales):\n- nombre_bolso: string\n- estado: \"ACTIVO\" | \"INACTIVO\""
+					},
+					"response": []
+				},
+				{
+					"name": "5. Eliminar Bolso",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/bolsos/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bolsos",
+								":id"
+							]
+						},
+						"description": "ELIMINAR BOLSO DEL SISTEMA\n==============================\n⚠️ PRECAUCIÓN: Elimina en cascada inventario asociado.\n\n\nPASO A PASO:\n1. Reemplazar :id con UUID del bolso\n2. Ejecutar request"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "INVENTARIO BOLSOS",
+			"item": [
+				{
+					"name": "1. Agregar Herramienta a Bolso",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bolsoId\": \"uuid-bolso\",\n    \"herramientaId\": \"uuid-herramienta\",\n    \"cantidad\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bolsos_inventario/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bolsos_inventario",
+								""
+							]
+						},
+						"description": "ASIGNAR HERRAMIENTA A BOLSO (PASO 1)\n========================================\nToma una herramienta del stock maestro y la asigna a un bolso de emergencia.\n\n⚠️ IMPORTANTE: Decrementa cantidad_disponible en herramientas.\n\nPASO A PASO:\n1. Obtener IDs necesarios:\n   - GET /bolsos/ → copiar id del bolso\n   - GET /herramientas/ → copiar id de herramienta\n2. Definir cantidad a asignar\n3. Ejecutar request\n\nBODY:\n- bolsoId: UUID del bolso\n- herramientaId: UUID de herramienta\n- cantidad: number"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Obtener Inventario por Bolso",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/bolsos_inventario/bolso/:bolsoId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bolsos_inventario",
+								"bolso",
+								":bolsoId"
+							]
+						},
+						"description": "LISTAR INVENTARIO DE UN BOLSO\n===============================\nObtiene todas las herramientas asignadas a un bolso.\n\nPASO A PASO:\n1. Reemplazar :bolsoId con UUID del bolso\n2. Ejecutar request"
+					},
+					"response": []
+				},
+				{
+					"name": "3. Actualizar Cantidad de Inventario",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cantidad\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bolsos_inventario/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bolsos_inventario",
+								":id"
+							]
+						},
+						"description": "ACTUALIZAR CANTIDAD DE HERRAMIENTA EN BOLSO\n=============================================\nModifica la cantidad de una herramienta específica.\n\nPASO A PASO:\n1. Obtener ID del inventario (de GET /bolsos_inventario/bolso/:bolsoId)\n2. Definir nueva cantidad\n3. Ejecutar request"
+					},
+					"response": []
+				},
+				{
+					"name": "4. Eliminar del Inventario (NO Restaura Stock)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/bolsos_inventario/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bolsos_inventario",
+								":id"
+							]
+						},
+						"description": "ELIMINAR HERRAMIENTA DEL INVENTARIO DE BOLSO\n================================================\n⚠️ NOTA: A diferencia de camiones_inventario, aquí NO restaura stock.\n\nSe considera que la herramienta fue consumida/usada.\n\n\nPASO A PASO:\n1. Reemplazar :id con UUID del item de inventario\n2. Ejecutar request"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CHECKLIST CAMIONES",
+			"item": [
+				{
+					"name": "1. Guardar Checklist Diario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"camionId\": \"uuid-camion\",\n    \"detalles\": [\n      {\n        \"inventarioId\": \"uuid-inventario-1\",\n        \"controlado\": \"CHEQUEADO\"\n      },\n      {\n        \"inventarioId\": \"uuid-inventario-2\",\n        \"controlado\": \"FALTANTE\",\n        \"observaciones\": \"Extintor defectuoso, necesita recarga\"\n      }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/checklist/guardar",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"checklist",
+								"guardar"
+							]
+						},
+						"description": "REGISTRAR CHECKLIST DIARIO DE CAMIÓN (PASO 2)\n==================================================\nControl matutino de herramientas en un camión.\n\n⚠️ IMPORTANTE: El usuarioId se extrae automáticamente del JWT.\n\nPASO A PASO:\n1. Obtener UUID del camión\n2. Obtener inventario: GET /camiones_inventario/camion/:camionId\n3. Para cada item, definir controlado: CHEQUEADO o FALTANTE\n4. Si FALTANTE, agregar observaciones obligatorias\n5. Ejecutar request\n\nBODY:\n- camionId: UUID del camión\n- detalles: array de items\n  - inventarioId: UUID del item en camiones_inventario\n  - controlado: \"CHEQUEADO\" | \"FALTANTE\"\n  - observaciones: string (obligatorio si FALTANTE)\n\n\nVALORES:\n- CHEQUEADO: Herramienta presente y en condiciones\n- FALTANTE: Herramienta no encontrada o defectuosa"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Obtener Historial de Checklist",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/checklist/historial/:camionId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"checklist",
+								"historial",
+								":camionId"
+							]
+						},
+						"description": "OBTENER HISTORIAL DE CHECKLISTS DE UN CAMIÓN\n================================================\nLista todos los checklists de un camión, ordenados por fecha.\n\nPASO A PASO:\n1. Reemplazar :camionId con UUID del camión\n2. Ejecutar request\n3. Revisar array de checklists con sus detalles\n\nRESPUESTA:\n[\n  {\n    \"id\": \"uuid-checklist\",\n    \"fecha_control\": \"2026-04-26T08:00:00.000Z\",\n    \"camion_id\": \"uuid-camion\",\n    \"usuario_id\": \"uuid-usuario\",\n    \"detalles\": [...],\n    \"usuarioId\": { \"nombre_usuario\": \"...\", \"bombero\": {...} }\n  }\n]"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CHECKLIST BOLSOS",
+			"item": [
+				{
+					"name": "1. Guardar Checklist de Bolso",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bolsoId\": \"uuid-bolso\",\n    \"detalles\": [\n      {\n        \"inventarioId\": \"uuid-inventario-bolso-1\",\n        \"controlado\": \"CHEQUEADO\"\n      },\n      {\n        \"inventarioId\": \"uuid-inventario-bolso-2\",\n        \"controlado\": \"FALTANTE\",\n        \"observaciones\": \"Tijeras rotas\"\n      }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/checklist_bolsos/bolsos/guardar",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"checklist_bolsos",
+								"bolsos",
+								"guardar"
+							]
+						},
+						"description": "REGISTRAR CHECKLIST DE BOLSO DE EMERGENCIA (PASO 2)\n==========================================================\nControl de herramientas en bolso después de intervención.\n\n⚠️ IMPORTANTE: El usuarioId se extrae automáticamente del JWT.\n\nPASO A PASO:\n1. Obtener UUID del bolso\n2. Obtener inventario: GET /bolsos_inventario/bolso/:bolsoId\n3. Para cada item, definir controlado: CHEQUEADO o FALTANTE\n4. Si FALTANTE, agregar observaciones\n5. Ejecutar request"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Obtener Historial de Checklist de Bolso",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/checklist_bolsos/bolsos/historial/:bolsoId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"checklist_bolsos",
+								"bolsos",
+								"historial",
+								":bolsoId"
+							]
+						},
+						"description": "OBTENER HISTORIAL DE CHECKLISTS DE UN BOLSO\n===============================================\nLista el historial de checklists de un bolso. Solo muestra items FALTANTE.\n\nPASO A PASO:\n1. Reemplazar :bolsoId con UUID del bolso\n2. Ejecutar request"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ALERTAS",
+			"item": [
+				{
+					"name": "1. Crear Alerta Simple",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sub_categoria_alerta_id\": \"uuid-subcategoria\",\n    \"ubicacion\": \"Calle Falsa 123\",\n    \"observaciones\": \"Incendio de pastizales pequeños\",\n    \"fecha_hora\": \"2026-04-26T20:00:00.000Z\",\n    \"estado_alerta_id\": \"uuid-estado\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/alerta/crear",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"alerta",
+								"crear"
+							]
+						},
+						"description": "CREAR ALERTA SIN NOTIFICACIÓN\n================================\nRegistra una nueva alerta en el sistema sin disparar notificaciones.\n\nÚtil para pruebas o alertas que no requieren notificación inmediata.\n\n\n⚠️ IMPORTANTE: El usuarioId se extrae automáticamente del JWT."
+					},
+					"response": []
+				},
+				{
+					"name": "2. Crear Alerta y Notificar (FLUJO ALERTA)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sub_categoria_alerta_id\": \"uuid-subcategoria\",\n    \"ubicacion\": \"Av. Siempreviva 742\",\n    \"observaciones\": \"Fuego en estructura\",\n    \"destinatariosIds\": [\"uuid-usuario-1\", \"uuid-usuario-2\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/alerta/crear-con-notificacion",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"alerta",
+								"crear-con-notificacion"
+							]
+						},
+						"description": "CREAR ALERTA Y ENVIAR NOTIFICACIONES (PASO 2)\n==================================================\nRegistra la alerta y envía notificaciones push a los bomberos seleccionados.\n\n⚠️ IMPORTANTE: El usuarioId se extrae automáticamente del JWT.\n\nPASO A PASO:\n1. Ejecutar Login primero y guardar token\n2. Preparar datos de la alerta\n3. Definir array de destinatarios (UUIDs de usuarios)\n4. Ejecutar request\n5. Guardar 'id' de alerta para siguientes pasos\n\nBODY:\n- sub_categoria_alerta_id: UUID de subcategoría\n- ubicacion: string con dirección\n- observaciones: string con detalles\n- destinatariosIds: array de UUIDs de usuarios a notificar"
+					},
+					"response": []
+				},
+				{
+					"name": "3. Obtener Alertas por Rango de Fecha",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fecha_desde\": \"2026-04-01T00:00:00.000Z\",\n    \"fecha_hasta\": \"2026-04-30T23:59:59.000Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/alerta/rango",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"alerta",
+								"rango"
+							]
+						},
+						"description": "FILTRAR ALERTAS POR RANGO DE FECHAS\n=======================================\nObtiene alertas dentro de un período específico.\n\nPASO A PASO:\n1. Definir rango de fechas en el body\n2. Ejecutar request"
+					},
+					"response": []
+				},
+				{
+					"name": "4. Obtener Alerta por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/alerta/:id_alerta",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"alerta",
+								":id_alerta"
+							]
+						},
+						"description": "OBTENER DETALLES DE ALERTA ESPECIFICA\n=======================================\nBusca una alerta por su ID.\n\nPASO A PASO:\n1. Reemplazar :id_alerta con UUID de alerta\n2. Ejecutar request"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RESPUESTAS ALERTAS",
+			"item": [
+				{
+					"name": "1. Obtener Respuestas por Alerta",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/respuestas_alertas/:id_alerta",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"respuestas_alertas",
+								":id_alerta"
+							]
+						},
+						"description": "LISTAR RESPUESTAS DE UNA ALERTA\n==================================\nObtiene todas las respuestas (ACEPTADO/RECHAZADO) de bomberos a una alerta.\n\nPASO A PASO:\n1. Reemplazar :id_alerta con UUID de alerta\n2. Ejecutar request"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Responder a Alerta (FLUJO ALERTA)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"estado_respuesta\": \"ACEPTADO\",\n    \"fecha_hora\": \"2026-04-26T21:05:00.000Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/respuestas_alertas/responder/:alerta_id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"respuestas_alertas",
+								"responder",
+								":alerta_id"
+							]
+						},
+						"description": "RESPONDER A UNA ALERTA (PASO 3)\n==================================\nPermite al bombero aceptar o rechazar una alerta.\n\n⚠️ IMPORTANTE: El usuarioId se extrae automáticamente del JWT.\n\nPASO A PASO:\n1. Reemplazar :alerta_id con UUID de alerta\n2. Definir estado de respuesta\n3. Ejecutar request\n\nBODY:\n- estado_respuesta: \"PENDIENTE\" | \"ACEPTADO\" | \"RECHAZADO\"\n- fecha_hora: datetime de la respuesta\n\nLÓGICA:\n- Si estado = ACEPTADO y alerta está PENDIENTE → alerta pasa a EN CURSO\n- Si estado = ACEPTADO → crea registro de comunicación automático"
+					},
+					"response": []
+				},
+				{
+					"name": "3. Eliminar Respuesta",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/respuestas_alertas/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"respuestas_alertas",
+								":id"
+							]
+						},
+						"description": "ELIMINAR UNA RESPUESTA\n==========================\n⚠️ Requiere rol ADMIN (middleware verificarRolAdmin).\n\nPASO A PASO:\n1. Reemplazar :id con UUID de la respuesta\n2. Ejecutar request"
+					},
+					"response": []
+				},
+				{
+					"name": "4. Contar Asistencias",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/respuestas_alertas/:id_alerta/asistencias/count",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"respuestas_alertas",
+								":id_alerta",
+								"asistencias",
+								"count"
+							]
+						},
+						"description": "CONTAR BOMBEROS QUE CONFIRMARON ASISTENCIA\n==============================================\nRetorna la cantidad de bomberos con estado ACEPTADO.\n\n\nPASO A PASO:\n1. Reemplazar :id_alerta con UUID de alerta\n2. Ejecutar request\n\nRESPUESTA:\n{ \"cantidad\": 5 }"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "REGISTROS COMUNICACIÓN",
+			"item": [
+				{
+					"name": "1. Crear Registro (FLUJO ALERTA)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"alerta_id\": \"uuid-alerta\",\n    \"mensaje\": \"Se necesitan 3 extintores adicionales\",\n    \"tipo_comunicacion\": \"SUMINISTROS\",\n    \"fecha_hora\": \"2026-04-26T22:00:00.000Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/registros_comunicacion/crear",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"registros_comunicacion",
+								"crear"
+							]
+						},
+						"description": "CREAR REGISTRO DE COMUNICACIÓN (PASO 5)\n============================================\nRegistra un mensaje/solicitud relacionado con una alerta activa.\n\n⚠️ IMPORTANTE: El usuarioId se extrae automáticamente del JWT.\n\nPASO A PASO:\n1. Reemplazar alerta_id con UUID de alerta\n2. Definir mensaje y tipo de comunicación\n3. Ejecutar request\n\nBODY:\n- alerta_id: UUID de la alerta\n- mensaje: string con la solicitud\n- tipo_comunicacion: \"SUMINISTROS\" | \"APOYO\" | \"INFORMACION\"\n- fecha_hora: datetime del mensaje\n\nTIPOS:\n- SUMINISTROS: Solicitud de materiales\n- APOYO: Solicitud de refuerzos\n- INFORMACION: Mensaje informativo"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Obtener Registros por Alerta",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/registros_comunicacion/alerta/:id_alerta",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"registros_comunicacion",
+								"alerta",
+								":id_alerta"
+							]
+						},
+						"description": "LISTAR REGISTROS DE COMUNICACIÓN DE UNA ALERTA\n=====================================================\nObtiene todos los mensajes de una alerta, ordenados por fecha.\n\nPASO A PASO:\n1. Reemplazar :id_alerta con UUID de alerta\n2. Ejecutar request"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "NOTIFICACIONES",
+			"item": [
+				{
+					"name": "1. Registrar Token de Dispositivo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuario_id\": \"uuid-del-usuario\",\n    \"token\": \"token-firebase-del-dispositivo\",\n    \"plataforma\": \"android\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/notificaciones/registrar-token",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"notificaciones",
+								"registrar-token"
+							]
+						},
+						"description": "REGISTRAR TOKEN FCM PARA NOTIFICACIONES PUSH\n==================================================\nGuarda el token de Firebase Cloud Messaging asociado al dispositivo del usuario.\n\nDEBE llamarse cada vez que el usuario hace login en la app móvil.\n\nPASO A PASO:\n1. Obtener UUID del usuario (del login)\n2. Obtener token FCM del dispositivo (Firebase)\n3. Definir plataforma\n4. Ejecutar request\n\nBODY:\n- usuario_id: UUID del usuario (del login)\n- token: string largo de FCM\n- plataforma: \"android\" | \"ios\" | \"web\""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FLUJOS DE TRABAJO",
+			"item": [
+				{
+					"name": "WF-A: Preparar Camión para Servicio",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Helper para obtener IDs de respuesta",
+									"console.log('Workflow A: Preparar Camión para Servicio');",
+									"console.log('1. Crear herramienta(s) en stock maestro');",
+									"console.log('2. Crear camión');",
+									"console.log('3. Crear sectores');",
+									"console.log('4. Asignar herramientas a sectores');",
+									"console.log('5. Verificar inventario agrupado');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/herramientas/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"herramientas",
+								""
+							]
+						},
+						"description": "WORKFLOW A: PREPARAR CAMIÓN PARA SERVICIO\n==========================================\n\nOBJETIVO: Dejar un camión completamente equipado con herramientas.\n\nPASO A PASO:\n---------------\n\nPASO 1: Crear herramientas en stock maestro\n→ POST /herramientas/\n→ Body: { nombre_herramienta: \"Extintor 5kg\", cantidad_disponible: 20 }\n→ Repetir para cada herramienta necesaria\n→ GUARDAR: Los 'id' de cada herramienta creada\n\nPASO 2: Crear camión\n→ POST /camiones/\n→ Body: { nombre_camion: \"Unidad 1\", estado: \"ACTIVO\" }\n→ GUARDAR: 'id' del camión creado\n\nPASO 3: Crear sectores en el camión\n→ POST /sectores/\n→ Body: { camionId: \"uuid-camion\", nombre_sector: \"Compartimento Lateral 1\" }\n→ Repetir para cada compartimento\n→ GUARDAR: Los 'id' de cada sector creado\n\nPASO 4: Asignar herramientas a sectores\n→ POST /camiones_inventario/\n→ Body: { camionId, herramientaId, sectorId, cantidad }\n→ Repetir por cada asignación\n\nPASO 5: Verificar inventario\n→ GET /camiones_inventario/camion/:camionId/agrupado\n→ Revisar que todas las herramientas estén correctamente asignadas\n\nNOTA: Al asignar, decrementa automáticamente el stock maestro."
+					},
+					"response": []
+				},
+				{
+					"name": "WF-B: Checklist Diario de Camión",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/camiones_inventario/camion/{{camionId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"camiones_inventario",
+								"camion",
+								"{{camionId}}"
+							]
+						},
+						"description": "WORKFLOW B: CHECKLIST DIARIO DE CAMIÓN\n==========================================\n\nOBJETIVO: Realizar el control matutino de herramientas en un camión.\n\nPASO A PASO:\n---------------\n\nPASO 1: Obtener inventario del camión\n→ GET /camiones_inventario/camion/:camionId\n→ COPIAR: 'id' de cada item en camiones_inventario\n\nPASO 2: Registrar checklist\n→ POST /checklist/guardar\n→ Body:\n{\n  \"camionId\": \"uuid-camion\",\n  \"detalles\": [\n    { \"inventarioId\": \"uuid-1\", \"controlado\": \"CHEQUEADO\" },\n    { \"inventarioId\": \"uuid-2\", \"controlado\": \"FALTANTE\", \"observaciones\": \"...\" }\n  ]\n}\n\nPASO 3: Revisar historial si hay faltantes\n→ GET /checklist/historial/:camionId\n→ Identificar herramientas faltantes para reponer\n\nVALORES DE CONTROL:\n- CHEQUEADO: Herramienta presente y en buen estado\n- FALTANTE: No encontrada o defectuosa (requiere observaciones)\n\nNOTA: usuarioId se extrae automáticamente del JWT."
+					},
+					"response": []
+				},
+				{
+					"name": "WF-C: Gestionar Bolsa de Emergencia",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/bolsos/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bolsos",
+								""
+							]
+						},
+						"description": "WORKFLOW C: GESTIONAR BOLSA DE EMERGENCIA\n============================================\n\nOBJETIVO: Preparar un bolso de emergencia con herramientas.\n\nPASO A PASO:\n---------------\n\nPASO 1: Crear bolso\n→ POST /bolsos/\n→ Body: { nombre_bolso: \"Kit de Rescate\", estado: \"ACTIVO\" }\n→ GUARDAR: 'id' del bolso\n\nPASO 2: Agregar herramientas al bolso\n→ POST /bolsos_inventario/\n→ Body: { bolsoId, herramientaId, cantidad }\n→ Repetir por cada herramienta\n\nPASO 3: Verificar contenido\n→ GET /bolsos_inventario/bolso/:bolsoId\n→ Confirmar que todas las herramientas estén asignadas\n\nPASO 4: Después de intervención, registrar checklist\n→ POST /checklist_bolsos/bolsos/guardar\n→ Body con detalles de cada herramienta (CHEQUEADO/FALTANTE)\n\nPASO 5: Revisar historial\n→ GET /checklist_bolsos/bolsos/historial/:bolsoId\n→ Identificar items consumidos/faltantes para reponer\n\nNOTA: Al eliminar item de bolso_inventario NO restaura stock (se considera consumido)."
+					},
+					"response": []
+				},
+				{
+					"name": "WF-D: Ciclo Completo de Alerta",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre_usuario\": \"admin\",\n    \"password\": \"admin123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "WORKFLOW D: CICLO COMPLETO DE ALERTA\n======================================\n\nOBJETIVO: Crear una alerta, notificar bomberos, registrar asistencia y comunicación.\n\nPASO A PASO:\n---------------\n\nPASO 1: Login (OBTENER TOKEN)\n→ POST /auth/login\n→ Body: { nombre_usuario, password }\n→ GUARDAR: 'token' en variable {{token}}\n→ Este token se usa automáticamente en todos los requests protegidos\n\nPASO 2: Crear alerta con notificación\n→ POST /alerta/crear-con-notificacion\n→ Body con datos de la alerta y destinatarios\n→ GUARDAR: 'id' de la alerta para siguientes pasos\n\nPASO 3: Bombero responde a la alerta\n→ POST /respuestas_alertas/responder/:alerta_id\n→ Body: { estado_respuesta: \"ACEPTADO\", fecha_hora: \"...\" }\n→ Si ACEPTA y alerta está PENDIENTE → cambia a EN CURSO\n\nPASO 4: Verificar asistencia\n→ GET /respuestas_alertas/:alerta_id/asistencias/count\n→ Confirmar cantidad de bomberos confirmados\n\nPASO 5: Registrar comunicación durante la alerta\n→ POST /registros_comunicacion/crear\n→ Body: { alerta_id, mensaje, tipo_comunicacion }\n→ Repetir según necesidad (suministros, apoyo, info)\n\nPASO 6: Ver historial de comunicación\n→ GET /registros_comunicacion/alerta/:id_alerta\n→ Revisar todos los mensajes registrados\n\nNOTA: El usuarioId se extrae automáticamente del JWT en todos los endpoints."
+					},
+					"response": []
+				},
+				{
+					"name": "WF-E: Reponer Stock Después de Intervención",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/herramientas/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"herramientas",
+								""
+							]
+						},
+						"description": "WORKFLOW E: REPONER STOCK DESPUÉS DE INTERVENCIÓN\n====================================================\n\nOBJETIVO: Después de usar herramientas, reponer el stock maestro.\n\nPASO A PASO:\n---------------\n\nPASO 1: Identificar herramientas usadas\n→ Revisar checklist donde se marcaron FALTANTE\n→ GET /checklist/historial/:camionId\n→ GET /checklist_bolsos/bolsos/historial/:bolsoId\n\nPASO 2: Actualizar stock maestro\n→ PATCH /herramientas/:id\n→ Body: { cantidad_disponible: nueva_cantidad }\n→ Aumentar según herramientas repuestas\n\nPASO 3: Reasignar herramientas a camión/bolso\n→ Opción A: POST /camiones_inventario/\n→ Opción B: POST /bolsos_inventario/\n\nEJEMPLO:\n- Extintor usado: cantidad_disponible era 15, ahora 14\n- Reponer 1 extintor: PATCH /herramientas/:id con cantidad_disponible: 15\n- O si se reponen 3: cantidad_disponible: 17"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

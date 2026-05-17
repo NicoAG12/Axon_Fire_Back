@@ -27,6 +27,11 @@ export class AlertaService {
         const estadoInicial = await this.alertaRepo.buscarEstadoPorNombre('PENDIENTE');
         if (!estadoInicial) throw new Error("Estado inicial no configurado en DB");
 
+        // Fallback for missing subcategory (e.g. from PedidosSuministroScreen)
+        if (!data.sub_categoria_alerta_id) {
+            data.sub_categoria_alerta_id = '3'; // Default to OTRO TIPO
+        }
+
         const nuevaAlerta = await this.alertaRepo.crearAlertaCompletaTx(data, idsNotificar, estadoInicial.id);
 
         this.notiService.enviarPush(idsNotificar, nuevaAlerta).catch(console.error);
@@ -41,5 +46,19 @@ export class AlertaService {
     obtenerAlertaPorID = async (alerta_id: string) => {
         const alerta = await this.alertaRepo.buscarAlertaPorID(alerta_id)
         return alerta
+    }
+
+    obtenerAlertasPorUsuario = async (usuario_id: string) => {
+        return await this.alertaRepo.buscarAlertaPorUsuario(usuario_id)
+    }
+
+    finalizarAlerta = async (alertaId: string) => {
+        const estadoFinalizado = await this.alertaRepo.buscarEstadoPorNombre('FINALIZADO');
+        if (!estadoFinalizado) throw new Error("Estado FINALIZADO no configurado en DB");
+        return await this.alertaRepo.actualizarEstadoAlerta(alertaId, estadoFinalizado.id);
+    }
+
+    limpiarTodo = async () => {
+        return await this.alertaRepo.limpiarTodo();
     }
 }
