@@ -483,7 +483,120 @@ Registros del control de herramientas en bolsos de emergencia, generalmente desp
 
 ---
 
-## 🚨 11. Alertas (`/alerta`)
+## ✅ 11. Checklist de Cuartel (`/checklist_cuartel`)
+
+Registros del control semanal de herramientas del cuartel. Controla directamente las herramientas del inventario maestro.
+
+### Guardar Checklist de Cuartel
+- **Ruta:** `POST /checklist_cuartel/`
+- **Descripción:** Registra el checklist semanal de herramientas del cuartel. El `usuarioId` se pasa en el body.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Body request:**
+  ```json
+  {
+    "usuarioId": "uuid-usuario",
+    "detalles": [
+      {
+        "herramientaId": "uuid-herramienta",
+        "controlado": "CHEQUEADO"
+      },
+      {
+        "herramientaId": "uuid-herramienta-2",
+        "controlado": "FALTANTE",
+        "observaciones": "Extintor necesita recarga"
+      }
+    ]
+  }
+  ```
+- **Valores para `controlado`:** `CHEQUEADO` | `FALTANTE`
+- **Validación:** Si `controlado` es `FALTANTE`, `observaciones` es obligatorio.
+
+### Obtener Historial de Checklists
+- **Ruta:** `GET /checklist_cuartel/`
+- **Descripción:** Obtiene el historial completo de checklists del cuartel, ordenados por fecha descendente.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Respuesta (200 OK):**
+  ```json
+  [
+    {
+      "id": "uuid-checklist",
+      "fecha_control": "2026-05-17T08:00:00.000Z",
+      "usuario_id": "uuid-usuario",
+      "usuario": {
+        "id": "uuid-usuario",
+        "nombre_usuario": "juan.bombero",
+        "bombero": {
+          "nombre": "Juan",
+          "apellido": "Perez"
+        }
+      },
+      "detalles": [
+        {
+          "id": "uuid-detalle",
+          "herramienta_id": "uuid-herramienta",
+          "controlado": "CHEQUEADO",
+          "observaciones": null,
+          "herramienta": {
+            "id": "uuid-herramienta",
+            "nombre_herramienta": "Extintor 5kg",
+            "cantidad_disponible": 15
+          }
+        }
+      ]
+    }
+  ]
+  ```
+
+### Obtener Detalle de Checklist
+- **Ruta:** `GET /checklist_cuartel/:id`
+- **Descripción:** Obtiene el detalle de un checklist específico incluyendo la información completa de cada herramienta controlada.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Respuesta (200 OK):**
+  ```json
+  {
+    "id": "uuid-checklist",
+    "fecha_control": "2026-05-17T08:00:00.000Z",
+    "usuario_id": "uuid-usuario",
+    "usuario": {
+      "id": "uuid-usuario",
+      "nombre_usuario": "juan.bombero",
+      "bombero": {
+        "nombre": "Juan",
+        "apellido": "Perez"
+      }
+    },
+    "detalles": [
+      {
+        "id": "uuid-detalle",
+        "herramienta_id": "uuid-herramienta",
+        "controlado": "FALTANTE",
+        "observaciones": "Extintor necesita recarga",
+        "herramienta": {
+          "id": "uuid-herramienta",
+          "nombre_herramienta": "Extintor 5kg",
+          "cantidad_disponible": 15
+        }
+      }
+    ]
+  }
+  ```
+- **Respuesta de error (404):** `{ "error": "Checklist no encontrado" }`
+
+### Enviar Recordatorio de Checklist
+- **Ruta:** `POST /checklist_cuartel/recordatorio`
+- **Descripción:** Envía una notificación push a todos los bomberos recordando que completen el checklist semanal del cuartel. Permite enviar un recordatorio dirigido a usuarios específicos si se proveen sus IDs.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Body request (Opcional):**
+  ```json
+  {
+    "usuariosIds": ["uuid-usuario-1", "uuid-usuario-2"]
+  }
+  ```
+- **Nota:** Si el array `usuariosIds` no se envía o está vacío, el sistema notificará automáticamente a todos los bomberos.
+
+---
+
+## 🚨 12. Alertas (`/alerta`)
 
 ### Crear Alerta Simple
 - **Ruta:** `POST /alerta/crear`

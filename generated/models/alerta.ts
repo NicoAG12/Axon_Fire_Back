@@ -20,8 +20,18 @@ export type alertaModel = runtime.Types.Result.DefaultSelection<Prisma.$alertaPa
 
 export type AggregateAlerta = {
   _count: AlertaCountAggregateOutputType | null
+  _avg: AlertaAvgAggregateOutputType | null
+  _sum: AlertaSumAggregateOutputType | null
   _min: AlertaMinAggregateOutputType | null
   _max: AlertaMaxAggregateOutputType | null
+}
+
+export type AlertaAvgAggregateOutputType = {
+  duracion_total_alerta: number | null
+}
+
+export type AlertaSumAggregateOutputType = {
+  duracion_total_alerta: number | null
 }
 
 export type AlertaMinAggregateOutputType = {
@@ -32,6 +42,8 @@ export type AlertaMinAggregateOutputType = {
   estado_alerta_id: string | null
   fecha_hora: Date | null
   usuario_alta_alerta: string | null
+  fecha_hora_finalizacion: Date | null
+  duracion_total_alerta: number | null
 }
 
 export type AlertaMaxAggregateOutputType = {
@@ -42,6 +54,8 @@ export type AlertaMaxAggregateOutputType = {
   estado_alerta_id: string | null
   fecha_hora: Date | null
   usuario_alta_alerta: string | null
+  fecha_hora_finalizacion: Date | null
+  duracion_total_alerta: number | null
 }
 
 export type AlertaCountAggregateOutputType = {
@@ -52,9 +66,19 @@ export type AlertaCountAggregateOutputType = {
   estado_alerta_id: number
   fecha_hora: number
   usuario_alta_alerta: number
+  fecha_hora_finalizacion: number
+  duracion_total_alerta: number
   _all: number
 }
 
+
+export type AlertaAvgAggregateInputType = {
+  duracion_total_alerta?: true
+}
+
+export type AlertaSumAggregateInputType = {
+  duracion_total_alerta?: true
+}
 
 export type AlertaMinAggregateInputType = {
   id?: true
@@ -64,6 +88,8 @@ export type AlertaMinAggregateInputType = {
   estado_alerta_id?: true
   fecha_hora?: true
   usuario_alta_alerta?: true
+  fecha_hora_finalizacion?: true
+  duracion_total_alerta?: true
 }
 
 export type AlertaMaxAggregateInputType = {
@@ -74,6 +100,8 @@ export type AlertaMaxAggregateInputType = {
   estado_alerta_id?: true
   fecha_hora?: true
   usuario_alta_alerta?: true
+  fecha_hora_finalizacion?: true
+  duracion_total_alerta?: true
 }
 
 export type AlertaCountAggregateInputType = {
@@ -84,6 +112,8 @@ export type AlertaCountAggregateInputType = {
   estado_alerta_id?: true
   fecha_hora?: true
   usuario_alta_alerta?: true
+  fecha_hora_finalizacion?: true
+  duracion_total_alerta?: true
   _all?: true
 }
 
@@ -125,6 +155,18 @@ export type AlertaAggregateArgs<ExtArgs extends runtime.Types.Extensions.Interna
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: AlertaAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: AlertaSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: AlertaMinAggregateInputType
@@ -155,6 +197,8 @@ export type alertaGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   _count?: AlertaCountAggregateInputType | true
+  _avg?: AlertaAvgAggregateInputType
+  _sum?: AlertaSumAggregateInputType
   _min?: AlertaMinAggregateInputType
   _max?: AlertaMaxAggregateInputType
 }
@@ -167,7 +211,11 @@ export type AlertaGroupByOutputType = {
   estado_alerta_id: string
   fecha_hora: Date
   usuario_alta_alerta: string
+  fecha_hora_finalizacion: Date | null
+  duracion_total_alerta: number | null
   _count: AlertaCountAggregateOutputType | null
+  _avg: AlertaAvgAggregateOutputType | null
+  _sum: AlertaSumAggregateOutputType | null
   _min: AlertaMinAggregateOutputType | null
   _max: AlertaMaxAggregateOutputType | null
 }
@@ -198,6 +246,8 @@ export type alertaWhereInput = {
   estado_alerta_id?: Prisma.StringFilter<"alerta"> | string
   fecha_hora?: Prisma.DateTimeFilter<"alerta"> | Date | string
   usuario_alta_alerta?: Prisma.StringFilter<"alerta"> | string
+  fecha_hora_finalizacion?: Prisma.DateTimeNullableFilter<"alerta"> | Date | string | null
+  duracion_total_alerta?: Prisma.FloatNullableFilter<"alerta"> | number | null
   subCategoriaAlerta?: Prisma.XOR<Prisma.Subcategoria_alertaScalarRelationFilter, Prisma.subcategoria_alertaWhereInput>
   estadoAlerta?: Prisma.XOR<Prisma.Estados_alertaScalarRelationFilter, Prisma.estados_alertaWhereInput>
   respuestas?: Prisma.Respuestas_alertasListRelationFilter
@@ -214,6 +264,8 @@ export type alertaOrderByWithRelationInput = {
   estado_alerta_id?: Prisma.SortOrder
   fecha_hora?: Prisma.SortOrder
   usuario_alta_alerta?: Prisma.SortOrder
+  fecha_hora_finalizacion?: Prisma.SortOrderInput | Prisma.SortOrder
+  duracion_total_alerta?: Prisma.SortOrderInput | Prisma.SortOrder
   subCategoriaAlerta?: Prisma.subcategoria_alertaOrderByWithRelationInput
   estadoAlerta?: Prisma.estados_alertaOrderByWithRelationInput
   respuestas?: Prisma.respuestas_alertasOrderByRelationAggregateInput
@@ -233,6 +285,8 @@ export type alertaWhereUniqueInput = Prisma.AtLeast<{
   estado_alerta_id?: Prisma.StringFilter<"alerta"> | string
   fecha_hora?: Prisma.DateTimeFilter<"alerta"> | Date | string
   usuario_alta_alerta?: Prisma.StringFilter<"alerta"> | string
+  fecha_hora_finalizacion?: Prisma.DateTimeNullableFilter<"alerta"> | Date | string | null
+  duracion_total_alerta?: Prisma.FloatNullableFilter<"alerta"> | number | null
   subCategoriaAlerta?: Prisma.XOR<Prisma.Subcategoria_alertaScalarRelationFilter, Prisma.subcategoria_alertaWhereInput>
   estadoAlerta?: Prisma.XOR<Prisma.Estados_alertaScalarRelationFilter, Prisma.estados_alertaWhereInput>
   respuestas?: Prisma.Respuestas_alertasListRelationFilter
@@ -249,9 +303,13 @@ export type alertaOrderByWithAggregationInput = {
   estado_alerta_id?: Prisma.SortOrder
   fecha_hora?: Prisma.SortOrder
   usuario_alta_alerta?: Prisma.SortOrder
+  fecha_hora_finalizacion?: Prisma.SortOrderInput | Prisma.SortOrder
+  duracion_total_alerta?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.alertaCountOrderByAggregateInput
+  _avg?: Prisma.alertaAvgOrderByAggregateInput
   _max?: Prisma.alertaMaxOrderByAggregateInput
   _min?: Prisma.alertaMinOrderByAggregateInput
+  _sum?: Prisma.alertaSumOrderByAggregateInput
 }
 
 export type alertaScalarWhereWithAggregatesInput = {
@@ -265,6 +323,8 @@ export type alertaScalarWhereWithAggregatesInput = {
   estado_alerta_id?: Prisma.StringWithAggregatesFilter<"alerta"> | string
   fecha_hora?: Prisma.DateTimeWithAggregatesFilter<"alerta"> | Date | string
   usuario_alta_alerta?: Prisma.StringWithAggregatesFilter<"alerta"> | string
+  fecha_hora_finalizacion?: Prisma.DateTimeNullableWithAggregatesFilter<"alerta"> | Date | string | null
+  duracion_total_alerta?: Prisma.FloatNullableWithAggregatesFilter<"alerta"> | number | null
 }
 
 export type alertaCreateInput = {
@@ -272,6 +332,8 @@ export type alertaCreateInput = {
   ubicacion: string
   observaciones: string
   fecha_hora: Date | string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
   subCategoriaAlerta: Prisma.subcategoria_alertaCreateNestedOneWithoutAlertasInput
   estadoAlerta: Prisma.estados_alertaCreateNestedOneWithoutAlertasInput
   respuestas?: Prisma.respuestas_alertasCreateNestedManyWithoutAlertaIdInput
@@ -288,6 +350,8 @@ export type alertaUncheckedCreateInput = {
   estado_alerta_id: string
   fecha_hora: Date | string
   usuario_alta_alerta: string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
   respuestas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutAlertaIdInput
   checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutAlertaIdInput
@@ -298,6 +362,8 @@ export type alertaUpdateInput = {
   ubicacion?: Prisma.StringFieldUpdateOperationsInput | string
   observaciones?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   subCategoriaAlerta?: Prisma.subcategoria_alertaUpdateOneRequiredWithoutAlertasNestedInput
   estadoAlerta?: Prisma.estados_alertaUpdateOneRequiredWithoutAlertasNestedInput
   respuestas?: Prisma.respuestas_alertasUpdateManyWithoutAlertaIdNestedInput
@@ -314,6 +380,8 @@ export type alertaUncheckedUpdateInput = {
   estado_alerta_id?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   respuestas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutAlertaIdNestedInput
   checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutAlertaIdNestedInput
@@ -327,6 +395,8 @@ export type alertaCreateManyInput = {
   estado_alerta_id: string
   fecha_hora: Date | string
   usuario_alta_alerta: string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
 }
 
 export type alertaUpdateManyMutationInput = {
@@ -334,6 +404,8 @@ export type alertaUpdateManyMutationInput = {
   ubicacion?: Prisma.StringFieldUpdateOperationsInput | string
   observaciones?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type alertaUncheckedUpdateManyInput = {
@@ -344,6 +416,8 @@ export type alertaUncheckedUpdateManyInput = {
   estado_alerta_id?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type AlertaListRelationFilter = {
@@ -364,6 +438,12 @@ export type alertaCountOrderByAggregateInput = {
   estado_alerta_id?: Prisma.SortOrder
   fecha_hora?: Prisma.SortOrder
   usuario_alta_alerta?: Prisma.SortOrder
+  fecha_hora_finalizacion?: Prisma.SortOrder
+  duracion_total_alerta?: Prisma.SortOrder
+}
+
+export type alertaAvgOrderByAggregateInput = {
+  duracion_total_alerta?: Prisma.SortOrder
 }
 
 export type alertaMaxOrderByAggregateInput = {
@@ -374,6 +454,8 @@ export type alertaMaxOrderByAggregateInput = {
   estado_alerta_id?: Prisma.SortOrder
   fecha_hora?: Prisma.SortOrder
   usuario_alta_alerta?: Prisma.SortOrder
+  fecha_hora_finalizacion?: Prisma.SortOrder
+  duracion_total_alerta?: Prisma.SortOrder
 }
 
 export type alertaMinOrderByAggregateInput = {
@@ -384,6 +466,12 @@ export type alertaMinOrderByAggregateInput = {
   estado_alerta_id?: Prisma.SortOrder
   fecha_hora?: Prisma.SortOrder
   usuario_alta_alerta?: Prisma.SortOrder
+  fecha_hora_finalizacion?: Prisma.SortOrder
+  duracion_total_alerta?: Prisma.SortOrder
+}
+
+export type alertaSumOrderByAggregateInput = {
+  duracion_total_alerta?: Prisma.SortOrder
 }
 
 export type AlertaScalarRelationFilter = {
@@ -517,6 +605,18 @@ export type alertaUncheckedUpdateManyWithoutEstadoAlertaNestedInput = {
   deleteMany?: Prisma.alertaScalarWhereInput | Prisma.alertaScalarWhereInput[]
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type alertaCreateNestedOneWithoutRespuestasInput = {
   create?: Prisma.XOR<Prisma.alertaCreateWithoutRespuestasInput, Prisma.alertaUncheckedCreateWithoutRespuestasInput>
   connectOrCreate?: Prisma.alertaCreateOrConnectWithoutRespuestasInput
@@ -564,6 +664,8 @@ export type alertaCreateWithoutUsuarioIDInput = {
   ubicacion: string
   observaciones: string
   fecha_hora: Date | string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
   subCategoriaAlerta: Prisma.subcategoria_alertaCreateNestedOneWithoutAlertasInput
   estadoAlerta: Prisma.estados_alertaCreateNestedOneWithoutAlertasInput
   respuestas?: Prisma.respuestas_alertasCreateNestedManyWithoutAlertaIdInput
@@ -578,6 +680,8 @@ export type alertaUncheckedCreateWithoutUsuarioIDInput = {
   observaciones: string
   estado_alerta_id: string
   fecha_hora: Date | string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
   respuestas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutAlertaIdInput
   checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutAlertaIdInput
@@ -620,6 +724,8 @@ export type alertaScalarWhereInput = {
   estado_alerta_id?: Prisma.StringFilter<"alerta"> | string
   fecha_hora?: Prisma.DateTimeFilter<"alerta"> | Date | string
   usuario_alta_alerta?: Prisma.StringFilter<"alerta"> | string
+  fecha_hora_finalizacion?: Prisma.DateTimeNullableFilter<"alerta"> | Date | string | null
+  duracion_total_alerta?: Prisma.FloatNullableFilter<"alerta"> | number | null
 }
 
 export type alertaCreateWithoutSubCategoriaAlertaInput = {
@@ -627,6 +733,8 @@ export type alertaCreateWithoutSubCategoriaAlertaInput = {
   ubicacion: string
   observaciones: string
   fecha_hora: Date | string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
   estadoAlerta: Prisma.estados_alertaCreateNestedOneWithoutAlertasInput
   respuestas?: Prisma.respuestas_alertasCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutAlertaIdInput
@@ -641,6 +749,8 @@ export type alertaUncheckedCreateWithoutSubCategoriaAlertaInput = {
   estado_alerta_id: string
   fecha_hora: Date | string
   usuario_alta_alerta: string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
   respuestas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutAlertaIdInput
   checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutAlertaIdInput
@@ -677,6 +787,8 @@ export type alertaCreateWithoutEstadoAlertaInput = {
   ubicacion: string
   observaciones: string
   fecha_hora: Date | string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
   subCategoriaAlerta: Prisma.subcategoria_alertaCreateNestedOneWithoutAlertasInput
   respuestas?: Prisma.respuestas_alertasCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutAlertaIdInput
@@ -691,6 +803,8 @@ export type alertaUncheckedCreateWithoutEstadoAlertaInput = {
   observaciones: string
   fecha_hora: Date | string
   usuario_alta_alerta: string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
   respuestas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutAlertaIdInput
   checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutAlertaIdInput
@@ -727,6 +841,8 @@ export type alertaCreateWithoutRespuestasInput = {
   ubicacion: string
   observaciones: string
   fecha_hora: Date | string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
   subCategoriaAlerta: Prisma.subcategoria_alertaCreateNestedOneWithoutAlertasInput
   estadoAlerta: Prisma.estados_alertaCreateNestedOneWithoutAlertasInput
   registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutAlertaIdInput
@@ -742,6 +858,8 @@ export type alertaUncheckedCreateWithoutRespuestasInput = {
   estado_alerta_id: string
   fecha_hora: Date | string
   usuario_alta_alerta: string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutAlertaIdInput
   checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutAlertaIdInput
 }
@@ -767,6 +885,8 @@ export type alertaUpdateWithoutRespuestasInput = {
   ubicacion?: Prisma.StringFieldUpdateOperationsInput | string
   observaciones?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   subCategoriaAlerta?: Prisma.subcategoria_alertaUpdateOneRequiredWithoutAlertasNestedInput
   estadoAlerta?: Prisma.estados_alertaUpdateOneRequiredWithoutAlertasNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutAlertaIdNestedInput
@@ -782,6 +902,8 @@ export type alertaUncheckedUpdateWithoutRespuestasInput = {
   estado_alerta_id?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutAlertaIdNestedInput
   checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutAlertaIdNestedInput
 }
@@ -791,6 +913,8 @@ export type alertaCreateWithoutRegistros_comunicacionInput = {
   ubicacion: string
   observaciones: string
   fecha_hora: Date | string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
   subCategoriaAlerta: Prisma.subcategoria_alertaCreateNestedOneWithoutAlertasInput
   estadoAlerta: Prisma.estados_alertaCreateNestedOneWithoutAlertasInput
   respuestas?: Prisma.respuestas_alertasCreateNestedManyWithoutAlertaIdInput
@@ -806,6 +930,8 @@ export type alertaUncheckedCreateWithoutRegistros_comunicacionInput = {
   estado_alerta_id: string
   fecha_hora: Date | string
   usuario_alta_alerta: string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
   respuestas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutAlertaIdInput
   checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutAlertaIdInput
 }
@@ -831,6 +957,8 @@ export type alertaUpdateWithoutRegistros_comunicacionInput = {
   ubicacion?: Prisma.StringFieldUpdateOperationsInput | string
   observaciones?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   subCategoriaAlerta?: Prisma.subcategoria_alertaUpdateOneRequiredWithoutAlertasNestedInput
   estadoAlerta?: Prisma.estados_alertaUpdateOneRequiredWithoutAlertasNestedInput
   respuestas?: Prisma.respuestas_alertasUpdateManyWithoutAlertaIdNestedInput
@@ -846,6 +974,8 @@ export type alertaUncheckedUpdateWithoutRegistros_comunicacionInput = {
   estado_alerta_id?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   respuestas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutAlertaIdNestedInput
   checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutAlertaIdNestedInput
 }
@@ -855,6 +985,8 @@ export type alertaCreateWithoutChecklistBolsosEmergenciasInput = {
   ubicacion: string
   observaciones: string
   fecha_hora: Date | string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
   subCategoriaAlerta: Prisma.subcategoria_alertaCreateNestedOneWithoutAlertasInput
   estadoAlerta: Prisma.estados_alertaCreateNestedOneWithoutAlertasInput
   respuestas?: Prisma.respuestas_alertasCreateNestedManyWithoutAlertaIdInput
@@ -870,6 +1002,8 @@ export type alertaUncheckedCreateWithoutChecklistBolsosEmergenciasInput = {
   estado_alerta_id: string
   fecha_hora: Date | string
   usuario_alta_alerta: string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
   respuestas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutAlertaIdInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutAlertaIdInput
 }
@@ -895,6 +1029,8 @@ export type alertaUpdateWithoutChecklistBolsosEmergenciasInput = {
   ubicacion?: Prisma.StringFieldUpdateOperationsInput | string
   observaciones?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   subCategoriaAlerta?: Prisma.subcategoria_alertaUpdateOneRequiredWithoutAlertasNestedInput
   estadoAlerta?: Prisma.estados_alertaUpdateOneRequiredWithoutAlertasNestedInput
   respuestas?: Prisma.respuestas_alertasUpdateManyWithoutAlertaIdNestedInput
@@ -910,6 +1046,8 @@ export type alertaUncheckedUpdateWithoutChecklistBolsosEmergenciasInput = {
   estado_alerta_id?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   respuestas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutAlertaIdNestedInput
 }
@@ -921,6 +1059,8 @@ export type alertaCreateManyUsuarioIDInput = {
   observaciones: string
   estado_alerta_id: string
   fecha_hora: Date | string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
 }
 
 export type alertaUpdateWithoutUsuarioIDInput = {
@@ -928,6 +1068,8 @@ export type alertaUpdateWithoutUsuarioIDInput = {
   ubicacion?: Prisma.StringFieldUpdateOperationsInput | string
   observaciones?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   subCategoriaAlerta?: Prisma.subcategoria_alertaUpdateOneRequiredWithoutAlertasNestedInput
   estadoAlerta?: Prisma.estados_alertaUpdateOneRequiredWithoutAlertasNestedInput
   respuestas?: Prisma.respuestas_alertasUpdateManyWithoutAlertaIdNestedInput
@@ -942,6 +1084,8 @@ export type alertaUncheckedUpdateWithoutUsuarioIDInput = {
   observaciones?: Prisma.StringFieldUpdateOperationsInput | string
   estado_alerta_id?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   respuestas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutAlertaIdNestedInput
   checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutAlertaIdNestedInput
@@ -954,6 +1098,8 @@ export type alertaUncheckedUpdateManyWithoutUsuarioIDInput = {
   observaciones?: Prisma.StringFieldUpdateOperationsInput | string
   estado_alerta_id?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type alertaCreateManySubCategoriaAlertaInput = {
@@ -963,6 +1109,8 @@ export type alertaCreateManySubCategoriaAlertaInput = {
   estado_alerta_id: string
   fecha_hora: Date | string
   usuario_alta_alerta: string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
 }
 
 export type alertaUpdateWithoutSubCategoriaAlertaInput = {
@@ -970,6 +1118,8 @@ export type alertaUpdateWithoutSubCategoriaAlertaInput = {
   ubicacion?: Prisma.StringFieldUpdateOperationsInput | string
   observaciones?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   estadoAlerta?: Prisma.estados_alertaUpdateOneRequiredWithoutAlertasNestedInput
   respuestas?: Prisma.respuestas_alertasUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutAlertaIdNestedInput
@@ -984,6 +1134,8 @@ export type alertaUncheckedUpdateWithoutSubCategoriaAlertaInput = {
   estado_alerta_id?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   respuestas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutAlertaIdNestedInput
   checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutAlertaIdNestedInput
@@ -996,6 +1148,8 @@ export type alertaUncheckedUpdateManyWithoutSubCategoriaAlertaInput = {
   estado_alerta_id?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type alertaCreateManyEstadoAlertaInput = {
@@ -1005,6 +1159,8 @@ export type alertaCreateManyEstadoAlertaInput = {
   observaciones: string
   fecha_hora: Date | string
   usuario_alta_alerta: string
+  fecha_hora_finalizacion?: Date | string | null
+  duracion_total_alerta?: number | null
 }
 
 export type alertaUpdateWithoutEstadoAlertaInput = {
@@ -1012,6 +1168,8 @@ export type alertaUpdateWithoutEstadoAlertaInput = {
   ubicacion?: Prisma.StringFieldUpdateOperationsInput | string
   observaciones?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   subCategoriaAlerta?: Prisma.subcategoria_alertaUpdateOneRequiredWithoutAlertasNestedInput
   respuestas?: Prisma.respuestas_alertasUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutAlertaIdNestedInput
@@ -1026,6 +1184,8 @@ export type alertaUncheckedUpdateWithoutEstadoAlertaInput = {
   observaciones?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   respuestas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutAlertaIdNestedInput
   registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutAlertaIdNestedInput
   checklistBolsosEmergencias?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutAlertaIdNestedInput
@@ -1038,6 +1198,8 @@ export type alertaUncheckedUpdateManyWithoutEstadoAlertaInput = {
   observaciones?: Prisma.StringFieldUpdateOperationsInput | string
   fecha_hora?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuario_alta_alerta?: Prisma.StringFieldUpdateOperationsInput | string
+  fecha_hora_finalizacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duracion_total_alerta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 
@@ -1097,6 +1259,8 @@ export type alertaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   estado_alerta_id?: boolean
   fecha_hora?: boolean
   usuario_alta_alerta?: boolean
+  fecha_hora_finalizacion?: boolean
+  duracion_total_alerta?: boolean
   subCategoriaAlerta?: boolean | Prisma.subcategoria_alertaDefaultArgs<ExtArgs>
   estadoAlerta?: boolean | Prisma.estados_alertaDefaultArgs<ExtArgs>
   respuestas?: boolean | Prisma.alerta$respuestasArgs<ExtArgs>
@@ -1114,6 +1278,8 @@ export type alertaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   estado_alerta_id?: boolean
   fecha_hora?: boolean
   usuario_alta_alerta?: boolean
+  fecha_hora_finalizacion?: boolean
+  duracion_total_alerta?: boolean
   subCategoriaAlerta?: boolean | Prisma.subcategoria_alertaDefaultArgs<ExtArgs>
   estadoAlerta?: boolean | Prisma.estados_alertaDefaultArgs<ExtArgs>
   usuarioID?: boolean | Prisma.usuariosDefaultArgs<ExtArgs>
@@ -1127,6 +1293,8 @@ export type alertaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   estado_alerta_id?: boolean
   fecha_hora?: boolean
   usuario_alta_alerta?: boolean
+  fecha_hora_finalizacion?: boolean
+  duracion_total_alerta?: boolean
   subCategoriaAlerta?: boolean | Prisma.subcategoria_alertaDefaultArgs<ExtArgs>
   estadoAlerta?: boolean | Prisma.estados_alertaDefaultArgs<ExtArgs>
   usuarioID?: boolean | Prisma.usuariosDefaultArgs<ExtArgs>
@@ -1140,9 +1308,11 @@ export type alertaSelectScalar = {
   estado_alerta_id?: boolean
   fecha_hora?: boolean
   usuario_alta_alerta?: boolean
+  fecha_hora_finalizacion?: boolean
+  duracion_total_alerta?: boolean
 }
 
-export type alertaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sub_categoria_alerta_id" | "ubicacion" | "observaciones" | "estado_alerta_id" | "fecha_hora" | "usuario_alta_alerta", ExtArgs["result"]["alerta"]>
+export type alertaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sub_categoria_alerta_id" | "ubicacion" | "observaciones" | "estado_alerta_id" | "fecha_hora" | "usuario_alta_alerta" | "fecha_hora_finalizacion" | "duracion_total_alerta", ExtArgs["result"]["alerta"]>
 export type alertaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subCategoriaAlerta?: boolean | Prisma.subcategoria_alertaDefaultArgs<ExtArgs>
   estadoAlerta?: boolean | Prisma.estados_alertaDefaultArgs<ExtArgs>
@@ -1181,6 +1351,8 @@ export type $alertaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     estado_alerta_id: string
     fecha_hora: Date
     usuario_alta_alerta: string
+    fecha_hora_finalizacion: Date | null
+    duracion_total_alerta: number | null
   }, ExtArgs["result"]["alerta"]>
   composites: {}
 }
@@ -1617,6 +1789,8 @@ export interface alertaFieldRefs {
   readonly estado_alerta_id: Prisma.FieldRef<"alerta", 'String'>
   readonly fecha_hora: Prisma.FieldRef<"alerta", 'DateTime'>
   readonly usuario_alta_alerta: Prisma.FieldRef<"alerta", 'String'>
+  readonly fecha_hora_finalizacion: Prisma.FieldRef<"alerta", 'DateTime'>
+  readonly duracion_total_alerta: Prisma.FieldRef<"alerta", 'Float'>
 }
     
 

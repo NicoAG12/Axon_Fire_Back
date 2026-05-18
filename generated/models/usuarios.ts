@@ -181,6 +181,7 @@ export type usuariosWhereInput = {
   tokens_dispositivos?: Prisma.Tokens_dispositivosListRelationFilter
   checklistCamionesDiarios?: Prisma.Checklist_camiones_diarioListRelationFilter
   checklistBolsosEmergencia?: Prisma.Checklist_bolsos_emergenciaListRelationFilter
+  checklistsCuartel?: Prisma.Checklist_cuartelListRelationFilter
 }
 
 export type usuariosOrderByWithRelationInput = {
@@ -195,6 +196,7 @@ export type usuariosOrderByWithRelationInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosOrderByRelationAggregateInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioOrderByRelationAggregateInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaOrderByRelationAggregateInput
+  checklistsCuartel?: Prisma.checklist_cuartelOrderByRelationAggregateInput
 }
 
 export type usuariosWhereUniqueInput = Prisma.AtLeast<{
@@ -212,6 +214,7 @@ export type usuariosWhereUniqueInput = Prisma.AtLeast<{
   tokens_dispositivos?: Prisma.Tokens_dispositivosListRelationFilter
   checklistCamionesDiarios?: Prisma.Checklist_camiones_diarioListRelationFilter
   checklistBolsosEmergencia?: Prisma.Checklist_bolsos_emergenciaListRelationFilter
+  checklistsCuartel?: Prisma.Checklist_cuartelListRelationFilter
 }, "id" | "nombre_usuario">
 
 export type usuariosOrderByWithAggregationInput = {
@@ -246,6 +249,7 @@ export type usuariosCreateInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosCreateNestedManyWithoutUsuarioIdInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioCreateNestedManyWithoutUsuarioIdInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosUncheckedCreateInput = {
@@ -260,6 +264,7 @@ export type usuariosUncheckedCreateInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedCreateNestedManyWithoutUsuarioIdInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedCreateNestedManyWithoutUsuarioIdInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosUpdateInput = {
@@ -274,6 +279,7 @@ export type usuariosUpdateInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUpdateManyWithoutUsuarioIdNestedInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUpdateManyWithoutUsuarioIdNestedInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosUncheckedUpdateInput = {
@@ -288,6 +294,7 @@ export type usuariosUncheckedUpdateInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedUpdateManyWithoutUsuarioIdNestedInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedUpdateManyWithoutUsuarioIdNestedInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosCreateManyInput = {
@@ -439,6 +446,20 @@ export type usuariosUpdateOneRequiredWithoutChecklistBolsosEmergenciaNestedInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.usuariosUpdateToOneWithWhereWithoutChecklistBolsosEmergenciaInput, Prisma.usuariosUpdateWithoutChecklistBolsosEmergenciaInput>, Prisma.usuariosUncheckedUpdateWithoutChecklistBolsosEmergenciaInput>
 }
 
+export type usuariosCreateNestedOneWithoutChecklistsCuartelInput = {
+  create?: Prisma.XOR<Prisma.usuariosCreateWithoutChecklistsCuartelInput, Prisma.usuariosUncheckedCreateWithoutChecklistsCuartelInput>
+  connectOrCreate?: Prisma.usuariosCreateOrConnectWithoutChecklistsCuartelInput
+  connect?: Prisma.usuariosWhereUniqueInput
+}
+
+export type usuariosUpdateOneRequiredWithoutChecklistsCuartelNestedInput = {
+  create?: Prisma.XOR<Prisma.usuariosCreateWithoutChecklistsCuartelInput, Prisma.usuariosUncheckedCreateWithoutChecklistsCuartelInput>
+  connectOrCreate?: Prisma.usuariosCreateOrConnectWithoutChecklistsCuartelInput
+  upsert?: Prisma.usuariosUpsertWithoutChecklistsCuartelInput
+  connect?: Prisma.usuariosWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.usuariosUpdateToOneWithWhereWithoutChecklistsCuartelInput, Prisma.usuariosUpdateWithoutChecklistsCuartelInput>, Prisma.usuariosUncheckedUpdateWithoutChecklistsCuartelInput>
+}
+
 export type usuariosCreateWithoutTokens_dispositivosInput = {
   id?: string
   nombre_usuario: string
@@ -450,6 +471,7 @@ export type usuariosCreateWithoutTokens_dispositivosInput = {
   alertas?: Prisma.alertaCreateNestedManyWithoutUsuarioIDInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioCreateNestedManyWithoutUsuarioIdInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosUncheckedCreateWithoutTokens_dispositivosInput = {
@@ -463,6 +485,7 @@ export type usuariosUncheckedCreateWithoutTokens_dispositivosInput = {
   alertas?: Prisma.alertaUncheckedCreateNestedManyWithoutUsuarioIDInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedCreateNestedManyWithoutUsuarioIdInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosCreateOrConnectWithoutTokens_dispositivosInput = {
@@ -492,6 +515,7 @@ export type usuariosUpdateWithoutTokens_dispositivosInput = {
   alertas?: Prisma.alertaUpdateManyWithoutUsuarioIDNestedInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUpdateManyWithoutUsuarioIdNestedInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosUncheckedUpdateWithoutTokens_dispositivosInput = {
@@ -505,6 +529,7 @@ export type usuariosUncheckedUpdateWithoutTokens_dispositivosInput = {
   alertas?: Prisma.alertaUncheckedUpdateManyWithoutUsuarioIDNestedInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedUpdateManyWithoutUsuarioIdNestedInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosCreateWithoutBomberoInput = {
@@ -518,6 +543,7 @@ export type usuariosCreateWithoutBomberoInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosCreateNestedManyWithoutUsuarioIdInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioCreateNestedManyWithoutUsuarioIdInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosUncheckedCreateWithoutBomberoInput = {
@@ -531,6 +557,7 @@ export type usuariosUncheckedCreateWithoutBomberoInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedCreateNestedManyWithoutUsuarioIdInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedCreateNestedManyWithoutUsuarioIdInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosCreateOrConnectWithoutBomberoInput = {
@@ -560,6 +587,7 @@ export type usuariosUpdateWithoutBomberoInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUpdateManyWithoutUsuarioIdNestedInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUpdateManyWithoutUsuarioIdNestedInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosUncheckedUpdateWithoutBomberoInput = {
@@ -573,6 +601,7 @@ export type usuariosUncheckedUpdateWithoutBomberoInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedUpdateManyWithoutUsuarioIdNestedInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedUpdateManyWithoutUsuarioIdNestedInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosCreateWithoutAlertasInput = {
@@ -586,6 +615,7 @@ export type usuariosCreateWithoutAlertasInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosCreateNestedManyWithoutUsuarioIdInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioCreateNestedManyWithoutUsuarioIdInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosUncheckedCreateWithoutAlertasInput = {
@@ -599,6 +629,7 @@ export type usuariosUncheckedCreateWithoutAlertasInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedCreateNestedManyWithoutUsuarioIdInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedCreateNestedManyWithoutUsuarioIdInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosCreateOrConnectWithoutAlertasInput = {
@@ -628,6 +659,7 @@ export type usuariosUpdateWithoutAlertasInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUpdateManyWithoutUsuarioIdNestedInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUpdateManyWithoutUsuarioIdNestedInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosUncheckedUpdateWithoutAlertasInput = {
@@ -641,6 +673,7 @@ export type usuariosUncheckedUpdateWithoutAlertasInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedUpdateManyWithoutUsuarioIdNestedInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedUpdateManyWithoutUsuarioIdNestedInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosCreateWithoutRespuestas_alertasInput = {
@@ -654,6 +687,7 @@ export type usuariosCreateWithoutRespuestas_alertasInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosCreateNestedManyWithoutUsuarioIdInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioCreateNestedManyWithoutUsuarioIdInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosUncheckedCreateWithoutRespuestas_alertasInput = {
@@ -667,6 +701,7 @@ export type usuariosUncheckedCreateWithoutRespuestas_alertasInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedCreateNestedManyWithoutUsuarioIdInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedCreateNestedManyWithoutUsuarioIdInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosCreateOrConnectWithoutRespuestas_alertasInput = {
@@ -696,6 +731,7 @@ export type usuariosUpdateWithoutRespuestas_alertasInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUpdateManyWithoutUsuarioIdNestedInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUpdateManyWithoutUsuarioIdNestedInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosUncheckedUpdateWithoutRespuestas_alertasInput = {
@@ -709,6 +745,7 @@ export type usuariosUncheckedUpdateWithoutRespuestas_alertasInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedUpdateManyWithoutUsuarioIdNestedInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedUpdateManyWithoutUsuarioIdNestedInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosCreateWithoutRegistros_comunicacionInput = {
@@ -722,6 +759,7 @@ export type usuariosCreateWithoutRegistros_comunicacionInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosCreateNestedManyWithoutUsuarioIdInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioCreateNestedManyWithoutUsuarioIdInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosUncheckedCreateWithoutRegistros_comunicacionInput = {
@@ -735,6 +773,7 @@ export type usuariosUncheckedCreateWithoutRegistros_comunicacionInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedCreateNestedManyWithoutUsuarioIdInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedCreateNestedManyWithoutUsuarioIdInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosCreateOrConnectWithoutRegistros_comunicacionInput = {
@@ -764,6 +803,7 @@ export type usuariosUpdateWithoutRegistros_comunicacionInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUpdateManyWithoutUsuarioIdNestedInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUpdateManyWithoutUsuarioIdNestedInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosUncheckedUpdateWithoutRegistros_comunicacionInput = {
@@ -777,6 +817,7 @@ export type usuariosUncheckedUpdateWithoutRegistros_comunicacionInput = {
   tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedUpdateManyWithoutUsuarioIdNestedInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedUpdateManyWithoutUsuarioIdNestedInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosCreateWithoutChecklistCamionesDiariosInput = {
@@ -790,6 +831,7 @@ export type usuariosCreateWithoutChecklistCamionesDiariosInput = {
   alertas?: Prisma.alertaCreateNestedManyWithoutUsuarioIDInput
   tokens_dispositivos?: Prisma.tokens_dispositivosCreateNestedManyWithoutUsuarioIdInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosUncheckedCreateWithoutChecklistCamionesDiariosInput = {
@@ -803,6 +845,7 @@ export type usuariosUncheckedCreateWithoutChecklistCamionesDiariosInput = {
   alertas?: Prisma.alertaUncheckedCreateNestedManyWithoutUsuarioIDInput
   tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedCreateNestedManyWithoutUsuarioIdInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosCreateOrConnectWithoutChecklistCamionesDiariosInput = {
@@ -832,6 +875,7 @@ export type usuariosUpdateWithoutChecklistCamionesDiariosInput = {
   alertas?: Prisma.alertaUpdateManyWithoutUsuarioIDNestedInput
   tokens_dispositivos?: Prisma.tokens_dispositivosUpdateManyWithoutUsuarioIdNestedInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosUncheckedUpdateWithoutChecklistCamionesDiariosInput = {
@@ -845,6 +889,7 @@ export type usuariosUncheckedUpdateWithoutChecklistCamionesDiariosInput = {
   alertas?: Prisma.alertaUncheckedUpdateManyWithoutUsuarioIDNestedInput
   tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedUpdateManyWithoutUsuarioIdNestedInput
   checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosCreateWithoutChecklistBolsosEmergenciaInput = {
@@ -858,6 +903,7 @@ export type usuariosCreateWithoutChecklistBolsosEmergenciaInput = {
   alertas?: Prisma.alertaCreateNestedManyWithoutUsuarioIDInput
   tokens_dispositivos?: Prisma.tokens_dispositivosCreateNestedManyWithoutUsuarioIdInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosUncheckedCreateWithoutChecklistBolsosEmergenciaInput = {
@@ -871,6 +917,7 @@ export type usuariosUncheckedCreateWithoutChecklistBolsosEmergenciaInput = {
   alertas?: Prisma.alertaUncheckedCreateNestedManyWithoutUsuarioIDInput
   tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedCreateNestedManyWithoutUsuarioIdInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedCreateNestedManyWithoutUsuarioIdInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuariosCreateOrConnectWithoutChecklistBolsosEmergenciaInput = {
@@ -900,6 +947,7 @@ export type usuariosUpdateWithoutChecklistBolsosEmergenciaInput = {
   alertas?: Prisma.alertaUpdateManyWithoutUsuarioIDNestedInput
   tokens_dispositivos?: Prisma.tokens_dispositivosUpdateManyWithoutUsuarioIdNestedInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuariosUncheckedUpdateWithoutChecklistBolsosEmergenciaInput = {
@@ -913,6 +961,79 @@ export type usuariosUncheckedUpdateWithoutChecklistBolsosEmergenciaInput = {
   alertas?: Prisma.alertaUncheckedUpdateManyWithoutUsuarioIDNestedInput
   tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedUpdateManyWithoutUsuarioIdNestedInput
   checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  checklistsCuartel?: Prisma.checklist_cuartelUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuariosCreateWithoutChecklistsCuartelInput = {
+  id?: string
+  nombre_usuario: string
+  password: string
+  rol: $Enums.user_roles
+  bombero?: Prisma.bomberosCreateNestedOneWithoutUsuarioIdInput
+  respuestas_alertas?: Prisma.respuestas_alertasCreateNestedManyWithoutUsuarioIdInput
+  registros_comunicacion?: Prisma.registros_comunicacionCreateNestedManyWithoutUsuarioIdInput
+  alertas?: Prisma.alertaCreateNestedManyWithoutUsuarioIDInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosCreateNestedManyWithoutUsuarioIdInput
+  checklistCamionesDiarios?: Prisma.checklist_camiones_diarioCreateNestedManyWithoutUsuarioIdInput
+  checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaCreateNestedManyWithoutUsuarioIdInput
+}
+
+export type usuariosUncheckedCreateWithoutChecklistsCuartelInput = {
+  id?: string
+  nombre_usuario: string
+  password: string
+  rol: $Enums.user_roles
+  bombero?: Prisma.bomberosUncheckedCreateNestedOneWithoutUsuarioIdInput
+  respuestas_alertas?: Prisma.respuestas_alertasUncheckedCreateNestedManyWithoutUsuarioIdInput
+  registros_comunicacion?: Prisma.registros_comunicacionUncheckedCreateNestedManyWithoutUsuarioIdInput
+  alertas?: Prisma.alertaUncheckedCreateNestedManyWithoutUsuarioIDInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedCreateNestedManyWithoutUsuarioIdInput
+  checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedCreateNestedManyWithoutUsuarioIdInput
+  checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedCreateNestedManyWithoutUsuarioIdInput
+}
+
+export type usuariosCreateOrConnectWithoutChecklistsCuartelInput = {
+  where: Prisma.usuariosWhereUniqueInput
+  create: Prisma.XOR<Prisma.usuariosCreateWithoutChecklistsCuartelInput, Prisma.usuariosUncheckedCreateWithoutChecklistsCuartelInput>
+}
+
+export type usuariosUpsertWithoutChecklistsCuartelInput = {
+  update: Prisma.XOR<Prisma.usuariosUpdateWithoutChecklistsCuartelInput, Prisma.usuariosUncheckedUpdateWithoutChecklistsCuartelInput>
+  create: Prisma.XOR<Prisma.usuariosCreateWithoutChecklistsCuartelInput, Prisma.usuariosUncheckedCreateWithoutChecklistsCuartelInput>
+  where?: Prisma.usuariosWhereInput
+}
+
+export type usuariosUpdateToOneWithWhereWithoutChecklistsCuartelInput = {
+  where?: Prisma.usuariosWhereInput
+  data: Prisma.XOR<Prisma.usuariosUpdateWithoutChecklistsCuartelInput, Prisma.usuariosUncheckedUpdateWithoutChecklistsCuartelInput>
+}
+
+export type usuariosUpdateWithoutChecklistsCuartelInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre_usuario?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  rol?: Prisma.Enumuser_rolesFieldUpdateOperationsInput | $Enums.user_roles
+  bombero?: Prisma.bomberosUpdateOneWithoutUsuarioIdNestedInput
+  respuestas_alertas?: Prisma.respuestas_alertasUpdateManyWithoutUsuarioIdNestedInput
+  registros_comunicacion?: Prisma.registros_comunicacionUpdateManyWithoutUsuarioIdNestedInput
+  alertas?: Prisma.alertaUpdateManyWithoutUsuarioIDNestedInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUpdateManyWithoutUsuarioIdNestedInput
+  checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUpdateManyWithoutUsuarioIdNestedInput
+  checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUpdateManyWithoutUsuarioIdNestedInput
+}
+
+export type usuariosUncheckedUpdateWithoutChecklistsCuartelInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre_usuario?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  rol?: Prisma.Enumuser_rolesFieldUpdateOperationsInput | $Enums.user_roles
+  bombero?: Prisma.bomberosUncheckedUpdateOneWithoutUsuarioIdNestedInput
+  respuestas_alertas?: Prisma.respuestas_alertasUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  registros_comunicacion?: Prisma.registros_comunicacionUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  alertas?: Prisma.alertaUncheckedUpdateManyWithoutUsuarioIDNestedInput
+  tokens_dispositivos?: Prisma.tokens_dispositivosUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  checklistCamionesDiarios?: Prisma.checklist_camiones_diarioUncheckedUpdateManyWithoutUsuarioIdNestedInput
+  checklistBolsosEmergencia?: Prisma.checklist_bolsos_emergenciaUncheckedUpdateManyWithoutUsuarioIdNestedInput
 }
 
 
@@ -927,6 +1048,7 @@ export type UsuariosCountOutputType = {
   tokens_dispositivos: number
   checklistCamionesDiarios: number
   checklistBolsosEmergencia: number
+  checklistsCuartel: number
 }
 
 export type UsuariosCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -936,6 +1058,7 @@ export type UsuariosCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensio
   tokens_dispositivos?: boolean | UsuariosCountOutputTypeCountTokens_dispositivosArgs
   checklistCamionesDiarios?: boolean | UsuariosCountOutputTypeCountChecklistCamionesDiariosArgs
   checklistBolsosEmergencia?: boolean | UsuariosCountOutputTypeCountChecklistBolsosEmergenciaArgs
+  checklistsCuartel?: boolean | UsuariosCountOutputTypeCountChecklistsCuartelArgs
 }
 
 /**
@@ -990,6 +1113,13 @@ export type UsuariosCountOutputTypeCountChecklistBolsosEmergenciaArgs<ExtArgs ex
   where?: Prisma.checklist_bolsos_emergenciaWhereInput
 }
 
+/**
+ * UsuariosCountOutputType without action
+ */
+export type UsuariosCountOutputTypeCountChecklistsCuartelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.checklist_cuartelWhereInput
+}
+
 
 export type usuariosSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1003,6 +1133,7 @@ export type usuariosSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   tokens_dispositivos?: boolean | Prisma.usuarios$tokens_dispositivosArgs<ExtArgs>
   checklistCamionesDiarios?: boolean | Prisma.usuarios$checklistCamionesDiariosArgs<ExtArgs>
   checklistBolsosEmergencia?: boolean | Prisma.usuarios$checklistBolsosEmergenciaArgs<ExtArgs>
+  checklistsCuartel?: boolean | Prisma.usuarios$checklistsCuartelArgs<ExtArgs>
   _count?: boolean | Prisma.UsuariosCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["usuarios"]>
 
@@ -1036,6 +1167,7 @@ export type usuariosInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   tokens_dispositivos?: boolean | Prisma.usuarios$tokens_dispositivosArgs<ExtArgs>
   checklistCamionesDiarios?: boolean | Prisma.usuarios$checklistCamionesDiariosArgs<ExtArgs>
   checklistBolsosEmergencia?: boolean | Prisma.usuarios$checklistBolsosEmergenciaArgs<ExtArgs>
+  checklistsCuartel?: boolean | Prisma.usuarios$checklistsCuartelArgs<ExtArgs>
   _count?: boolean | Prisma.UsuariosCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type usuariosIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1051,6 +1183,7 @@ export type $usuariosPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     tokens_dispositivos: Prisma.$tokens_dispositivosPayload<ExtArgs>[]
     checklistCamionesDiarios: Prisma.$checklist_camiones_diarioPayload<ExtArgs>[]
     checklistBolsosEmergencia: Prisma.$checklist_bolsos_emergenciaPayload<ExtArgs>[]
+    checklistsCuartel: Prisma.$checklist_cuartelPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1458,6 +1591,7 @@ export interface Prisma__usuariosClient<T, Null = never, ExtArgs extends runtime
   tokens_dispositivos<T extends Prisma.usuarios$tokens_dispositivosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usuarios$tokens_dispositivosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$tokens_dispositivosPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   checklistCamionesDiarios<T extends Prisma.usuarios$checklistCamionesDiariosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usuarios$checklistCamionesDiariosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$checklist_camiones_diarioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   checklistBolsosEmergencia<T extends Prisma.usuarios$checklistBolsosEmergenciaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usuarios$checklistBolsosEmergenciaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$checklist_bolsos_emergenciaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  checklistsCuartel<T extends Prisma.usuarios$checklistsCuartelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usuarios$checklistsCuartelArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$checklist_cuartelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2044,6 +2178,30 @@ export type usuarios$checklistBolsosEmergenciaArgs<ExtArgs extends runtime.Types
   take?: number
   skip?: number
   distinct?: Prisma.Checklist_bolsos_emergenciaScalarFieldEnum | Prisma.Checklist_bolsos_emergenciaScalarFieldEnum[]
+}
+
+/**
+ * usuarios.checklistsCuartel
+ */
+export type usuarios$checklistsCuartelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the checklist_cuartel
+   */
+  select?: Prisma.checklist_cuartelSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the checklist_cuartel
+   */
+  omit?: Prisma.checklist_cuartelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.checklist_cuartelInclude<ExtArgs> | null
+  where?: Prisma.checklist_cuartelWhereInput
+  orderBy?: Prisma.checklist_cuartelOrderByWithRelationInput | Prisma.checklist_cuartelOrderByWithRelationInput[]
+  cursor?: Prisma.checklist_cuartelWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Checklist_cuartelScalarFieldEnum | Prisma.Checklist_cuartelScalarFieldEnum[]
 }
 
 /**

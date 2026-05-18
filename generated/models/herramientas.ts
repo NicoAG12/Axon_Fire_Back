@@ -202,6 +202,7 @@ export type herramientasWhereInput = {
   cantidad_disponible?: Prisma.IntFilter<"herramientas"> | number
   inventarios?: Prisma.Camiones_inventarioListRelationFilter
   bolsos_inventarios?: Prisma.Bolsos_inventarioListRelationFilter
+  detalles_checklist?: Prisma.Checklist_detalle_cuartelListRelationFilter
 }
 
 export type herramientasOrderByWithRelationInput = {
@@ -210,6 +211,7 @@ export type herramientasOrderByWithRelationInput = {
   cantidad_disponible?: Prisma.SortOrder
   inventarios?: Prisma.camiones_inventarioOrderByRelationAggregateInput
   bolsos_inventarios?: Prisma.bolsos_inventarioOrderByRelationAggregateInput
+  detalles_checklist?: Prisma.checklist_detalle_cuartelOrderByRelationAggregateInput
 }
 
 export type herramientasWhereUniqueInput = Prisma.AtLeast<{
@@ -221,6 +223,7 @@ export type herramientasWhereUniqueInput = Prisma.AtLeast<{
   cantidad_disponible?: Prisma.IntFilter<"herramientas"> | number
   inventarios?: Prisma.Camiones_inventarioListRelationFilter
   bolsos_inventarios?: Prisma.Bolsos_inventarioListRelationFilter
+  detalles_checklist?: Prisma.Checklist_detalle_cuartelListRelationFilter
 }, "id">
 
 export type herramientasOrderByWithAggregationInput = {
@@ -249,6 +252,7 @@ export type herramientasCreateInput = {
   cantidad_disponible: number
   inventarios?: Prisma.camiones_inventarioCreateNestedManyWithoutHerramientaIdInput
   bolsos_inventarios?: Prisma.bolsos_inventarioCreateNestedManyWithoutHerramientaIdInput
+  detalles_checklist?: Prisma.checklist_detalle_cuartelCreateNestedManyWithoutHerramientaInput
 }
 
 export type herramientasUncheckedCreateInput = {
@@ -257,6 +261,7 @@ export type herramientasUncheckedCreateInput = {
   cantidad_disponible: number
   inventarios?: Prisma.camiones_inventarioUncheckedCreateNestedManyWithoutHerramientaIdInput
   bolsos_inventarios?: Prisma.bolsos_inventarioUncheckedCreateNestedManyWithoutHerramientaIdInput
+  detalles_checklist?: Prisma.checklist_detalle_cuartelUncheckedCreateNestedManyWithoutHerramientaInput
 }
 
 export type herramientasUpdateInput = {
@@ -265,6 +270,7 @@ export type herramientasUpdateInput = {
   cantidad_disponible?: Prisma.IntFieldUpdateOperationsInput | number
   inventarios?: Prisma.camiones_inventarioUpdateManyWithoutHerramientaIdNestedInput
   bolsos_inventarios?: Prisma.bolsos_inventarioUpdateManyWithoutHerramientaIdNestedInput
+  detalles_checklist?: Prisma.checklist_detalle_cuartelUpdateManyWithoutHerramientaNestedInput
 }
 
 export type herramientasUncheckedUpdateInput = {
@@ -273,6 +279,7 @@ export type herramientasUncheckedUpdateInput = {
   cantidad_disponible?: Prisma.IntFieldUpdateOperationsInput | number
   inventarios?: Prisma.camiones_inventarioUncheckedUpdateManyWithoutHerramientaIdNestedInput
   bolsos_inventarios?: Prisma.bolsos_inventarioUncheckedUpdateManyWithoutHerramientaIdNestedInput
+  detalles_checklist?: Prisma.checklist_detalle_cuartelUncheckedUpdateManyWithoutHerramientaNestedInput
 }
 
 export type herramientasCreateManyInput = {
@@ -360,11 +367,26 @@ export type herramientasUpdateOneRequiredWithoutBolsos_inventariosNestedInput = 
   update?: Prisma.XOR<Prisma.XOR<Prisma.herramientasUpdateToOneWithWhereWithoutBolsos_inventariosInput, Prisma.herramientasUpdateWithoutBolsos_inventariosInput>, Prisma.herramientasUncheckedUpdateWithoutBolsos_inventariosInput>
 }
 
+export type herramientasCreateNestedOneWithoutDetalles_checklistInput = {
+  create?: Prisma.XOR<Prisma.herramientasCreateWithoutDetalles_checklistInput, Prisma.herramientasUncheckedCreateWithoutDetalles_checklistInput>
+  connectOrCreate?: Prisma.herramientasCreateOrConnectWithoutDetalles_checklistInput
+  connect?: Prisma.herramientasWhereUniqueInput
+}
+
+export type herramientasUpdateOneRequiredWithoutDetalles_checklistNestedInput = {
+  create?: Prisma.XOR<Prisma.herramientasCreateWithoutDetalles_checklistInput, Prisma.herramientasUncheckedCreateWithoutDetalles_checklistInput>
+  connectOrCreate?: Prisma.herramientasCreateOrConnectWithoutDetalles_checklistInput
+  upsert?: Prisma.herramientasUpsertWithoutDetalles_checklistInput
+  connect?: Prisma.herramientasWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.herramientasUpdateToOneWithWhereWithoutDetalles_checklistInput, Prisma.herramientasUpdateWithoutDetalles_checklistInput>, Prisma.herramientasUncheckedUpdateWithoutDetalles_checklistInput>
+}
+
 export type herramientasCreateWithoutInventariosInput = {
   id?: string
   nombre_herramienta: string
   cantidad_disponible: number
   bolsos_inventarios?: Prisma.bolsos_inventarioCreateNestedManyWithoutHerramientaIdInput
+  detalles_checklist?: Prisma.checklist_detalle_cuartelCreateNestedManyWithoutHerramientaInput
 }
 
 export type herramientasUncheckedCreateWithoutInventariosInput = {
@@ -372,6 +394,7 @@ export type herramientasUncheckedCreateWithoutInventariosInput = {
   nombre_herramienta: string
   cantidad_disponible: number
   bolsos_inventarios?: Prisma.bolsos_inventarioUncheckedCreateNestedManyWithoutHerramientaIdInput
+  detalles_checklist?: Prisma.checklist_detalle_cuartelUncheckedCreateNestedManyWithoutHerramientaInput
 }
 
 export type herramientasCreateOrConnectWithoutInventariosInput = {
@@ -395,6 +418,7 @@ export type herramientasUpdateWithoutInventariosInput = {
   nombre_herramienta?: Prisma.StringFieldUpdateOperationsInput | string
   cantidad_disponible?: Prisma.IntFieldUpdateOperationsInput | number
   bolsos_inventarios?: Prisma.bolsos_inventarioUpdateManyWithoutHerramientaIdNestedInput
+  detalles_checklist?: Prisma.checklist_detalle_cuartelUpdateManyWithoutHerramientaNestedInput
 }
 
 export type herramientasUncheckedUpdateWithoutInventariosInput = {
@@ -402,6 +426,7 @@ export type herramientasUncheckedUpdateWithoutInventariosInput = {
   nombre_herramienta?: Prisma.StringFieldUpdateOperationsInput | string
   cantidad_disponible?: Prisma.IntFieldUpdateOperationsInput | number
   bolsos_inventarios?: Prisma.bolsos_inventarioUncheckedUpdateManyWithoutHerramientaIdNestedInput
+  detalles_checklist?: Prisma.checklist_detalle_cuartelUncheckedUpdateManyWithoutHerramientaNestedInput
 }
 
 export type herramientasCreateWithoutBolsos_inventariosInput = {
@@ -409,6 +434,7 @@ export type herramientasCreateWithoutBolsos_inventariosInput = {
   nombre_herramienta: string
   cantidad_disponible: number
   inventarios?: Prisma.camiones_inventarioCreateNestedManyWithoutHerramientaIdInput
+  detalles_checklist?: Prisma.checklist_detalle_cuartelCreateNestedManyWithoutHerramientaInput
 }
 
 export type herramientasUncheckedCreateWithoutBolsos_inventariosInput = {
@@ -416,6 +442,7 @@ export type herramientasUncheckedCreateWithoutBolsos_inventariosInput = {
   nombre_herramienta: string
   cantidad_disponible: number
   inventarios?: Prisma.camiones_inventarioUncheckedCreateNestedManyWithoutHerramientaIdInput
+  detalles_checklist?: Prisma.checklist_detalle_cuartelUncheckedCreateNestedManyWithoutHerramientaInput
 }
 
 export type herramientasCreateOrConnectWithoutBolsos_inventariosInput = {
@@ -439,6 +466,7 @@ export type herramientasUpdateWithoutBolsos_inventariosInput = {
   nombre_herramienta?: Prisma.StringFieldUpdateOperationsInput | string
   cantidad_disponible?: Prisma.IntFieldUpdateOperationsInput | number
   inventarios?: Prisma.camiones_inventarioUpdateManyWithoutHerramientaIdNestedInput
+  detalles_checklist?: Prisma.checklist_detalle_cuartelUpdateManyWithoutHerramientaNestedInput
 }
 
 export type herramientasUncheckedUpdateWithoutBolsos_inventariosInput = {
@@ -446,6 +474,55 @@ export type herramientasUncheckedUpdateWithoutBolsos_inventariosInput = {
   nombre_herramienta?: Prisma.StringFieldUpdateOperationsInput | string
   cantidad_disponible?: Prisma.IntFieldUpdateOperationsInput | number
   inventarios?: Prisma.camiones_inventarioUncheckedUpdateManyWithoutHerramientaIdNestedInput
+  detalles_checklist?: Prisma.checklist_detalle_cuartelUncheckedUpdateManyWithoutHerramientaNestedInput
+}
+
+export type herramientasCreateWithoutDetalles_checklistInput = {
+  id?: string
+  nombre_herramienta: string
+  cantidad_disponible: number
+  inventarios?: Prisma.camiones_inventarioCreateNestedManyWithoutHerramientaIdInput
+  bolsos_inventarios?: Prisma.bolsos_inventarioCreateNestedManyWithoutHerramientaIdInput
+}
+
+export type herramientasUncheckedCreateWithoutDetalles_checklistInput = {
+  id?: string
+  nombre_herramienta: string
+  cantidad_disponible: number
+  inventarios?: Prisma.camiones_inventarioUncheckedCreateNestedManyWithoutHerramientaIdInput
+  bolsos_inventarios?: Prisma.bolsos_inventarioUncheckedCreateNestedManyWithoutHerramientaIdInput
+}
+
+export type herramientasCreateOrConnectWithoutDetalles_checklistInput = {
+  where: Prisma.herramientasWhereUniqueInput
+  create: Prisma.XOR<Prisma.herramientasCreateWithoutDetalles_checklistInput, Prisma.herramientasUncheckedCreateWithoutDetalles_checklistInput>
+}
+
+export type herramientasUpsertWithoutDetalles_checklistInput = {
+  update: Prisma.XOR<Prisma.herramientasUpdateWithoutDetalles_checklistInput, Prisma.herramientasUncheckedUpdateWithoutDetalles_checklistInput>
+  create: Prisma.XOR<Prisma.herramientasCreateWithoutDetalles_checklistInput, Prisma.herramientasUncheckedCreateWithoutDetalles_checklistInput>
+  where?: Prisma.herramientasWhereInput
+}
+
+export type herramientasUpdateToOneWithWhereWithoutDetalles_checklistInput = {
+  where?: Prisma.herramientasWhereInput
+  data: Prisma.XOR<Prisma.herramientasUpdateWithoutDetalles_checklistInput, Prisma.herramientasUncheckedUpdateWithoutDetalles_checklistInput>
+}
+
+export type herramientasUpdateWithoutDetalles_checklistInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre_herramienta?: Prisma.StringFieldUpdateOperationsInput | string
+  cantidad_disponible?: Prisma.IntFieldUpdateOperationsInput | number
+  inventarios?: Prisma.camiones_inventarioUpdateManyWithoutHerramientaIdNestedInput
+  bolsos_inventarios?: Prisma.bolsos_inventarioUpdateManyWithoutHerramientaIdNestedInput
+}
+
+export type herramientasUncheckedUpdateWithoutDetalles_checklistInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre_herramienta?: Prisma.StringFieldUpdateOperationsInput | string
+  cantidad_disponible?: Prisma.IntFieldUpdateOperationsInput | number
+  inventarios?: Prisma.camiones_inventarioUncheckedUpdateManyWithoutHerramientaIdNestedInput
+  bolsos_inventarios?: Prisma.bolsos_inventarioUncheckedUpdateManyWithoutHerramientaIdNestedInput
 }
 
 
@@ -456,11 +533,13 @@ export type herramientasUncheckedUpdateWithoutBolsos_inventariosInput = {
 export type HerramientasCountOutputType = {
   inventarios: number
   bolsos_inventarios: number
+  detalles_checklist: number
 }
 
 export type HerramientasCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inventarios?: boolean | HerramientasCountOutputTypeCountInventariosArgs
   bolsos_inventarios?: boolean | HerramientasCountOutputTypeCountBolsos_inventariosArgs
+  detalles_checklist?: boolean | HerramientasCountOutputTypeCountDetalles_checklistArgs
 }
 
 /**
@@ -487,6 +566,13 @@ export type HerramientasCountOutputTypeCountBolsos_inventariosArgs<ExtArgs exten
   where?: Prisma.bolsos_inventarioWhereInput
 }
 
+/**
+ * HerramientasCountOutputType without action
+ */
+export type HerramientasCountOutputTypeCountDetalles_checklistArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.checklist_detalle_cuartelWhereInput
+}
+
 
 export type herramientasSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -494,6 +580,7 @@ export type herramientasSelect<ExtArgs extends runtime.Types.Extensions.Internal
   cantidad_disponible?: boolean
   inventarios?: boolean | Prisma.herramientas$inventariosArgs<ExtArgs>
   bolsos_inventarios?: boolean | Prisma.herramientas$bolsos_inventariosArgs<ExtArgs>
+  detalles_checklist?: boolean | Prisma.herramientas$detalles_checklistArgs<ExtArgs>
   _count?: boolean | Prisma.HerramientasCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["herramientas"]>
 
@@ -519,6 +606,7 @@ export type herramientasOmit<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type herramientasInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inventarios?: boolean | Prisma.herramientas$inventariosArgs<ExtArgs>
   bolsos_inventarios?: boolean | Prisma.herramientas$bolsos_inventariosArgs<ExtArgs>
+  detalles_checklist?: boolean | Prisma.herramientas$detalles_checklistArgs<ExtArgs>
   _count?: boolean | Prisma.HerramientasCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type herramientasIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -529,6 +617,7 @@ export type $herramientasPayload<ExtArgs extends runtime.Types.Extensions.Intern
   objects: {
     inventarios: Prisma.$camiones_inventarioPayload<ExtArgs>[]
     bolsos_inventarios: Prisma.$bolsos_inventarioPayload<ExtArgs>[]
+    detalles_checklist: Prisma.$checklist_detalle_cuartelPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -930,6 +1019,7 @@ export interface Prisma__herramientasClient<T, Null = never, ExtArgs extends run
   readonly [Symbol.toStringTag]: "PrismaPromise"
   inventarios<T extends Prisma.herramientas$inventariosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.herramientas$inventariosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$camiones_inventarioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bolsos_inventarios<T extends Prisma.herramientas$bolsos_inventariosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.herramientas$bolsos_inventariosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$bolsos_inventarioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  detalles_checklist<T extends Prisma.herramientas$detalles_checklistArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.herramientas$detalles_checklistArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$checklist_detalle_cuartelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1400,6 +1490,30 @@ export type herramientas$bolsos_inventariosArgs<ExtArgs extends runtime.Types.Ex
   take?: number
   skip?: number
   distinct?: Prisma.Bolsos_inventarioScalarFieldEnum | Prisma.Bolsos_inventarioScalarFieldEnum[]
+}
+
+/**
+ * herramientas.detalles_checklist
+ */
+export type herramientas$detalles_checklistArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the checklist_detalle_cuartel
+   */
+  select?: Prisma.checklist_detalle_cuartelSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the checklist_detalle_cuartel
+   */
+  omit?: Prisma.checklist_detalle_cuartelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.checklist_detalle_cuartelInclude<ExtArgs> | null
+  where?: Prisma.checklist_detalle_cuartelWhereInput
+  orderBy?: Prisma.checklist_detalle_cuartelOrderByWithRelationInput | Prisma.checklist_detalle_cuartelOrderByWithRelationInput[]
+  cursor?: Prisma.checklist_detalle_cuartelWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Checklist_detalle_cuartelScalarFieldEnum | Prisma.Checklist_detalle_cuartelScalarFieldEnum[]
 }
 
 /**

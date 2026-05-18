@@ -176,6 +176,23 @@ async function seed() {
       { id: 'bolso_inv_7', bolso_id: 'bolso_3', herramienta_id: 'herr_10', cantidad_herramienta: 2 },
     ],
   });
+  // ── Checklist de Cuartel ──────────────────────────────────────────────
+  const checklistId = 'checklist_cuartel_1';
+  await prisma.checklist_cuartel.create({
+    data: {
+      id: checklistId,
+      usuario_id: 'abc1',
+      fecha_control: new Date(),
+    },
+  });
+
+  await prisma.checklist_detalle_cuartel.createMany({
+    data: [
+      { id: 'check_detalle_1', checklist_id: checklistId, herramienta_id: 'herr_1', controlado: 'CHEQUEADO' },
+      { id: 'check_detalle_2', checklist_id: checklistId, herramienta_id: 'herr_2', controlado: 'CHEQUEADO' },
+      { id: 'check_detalle_3', checklist_id: checklistId, herramienta_id: 'herr_3', controlado: 'FALTANTE', observaciones: 'Falta una manguera en el deposito principal' },
+    ],
+  });
 
   console.log('✅ Seed completado');
 }

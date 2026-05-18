@@ -8,6 +8,34 @@ export class NotificacionesService {
         return await this.repositorio.guardarToken(data);
     }
 
+    async enviarPushCheckListSemanal(usuariosIds: string[], payload: any) {
+        const tokens = await this.repositorio.obtenerTokensPorUsuarios(usuariosIds);
+        const messages = tokens.map(token => ({
+            to: token,
+            title: payload.title || 'CONTROL SEMANAL',
+            body: payload.body || 'COMPLETE EL CONTROL SEMANAL DEL CUARTEL',
+            data: { id: payload.id }
+        }))
+
+        try {
+            const response = await fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Accept-Encoding': 'gzip, deflate',
+                },
+                body: JSON.stringify(messages)
+            });
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error enviando push notification:', error);
+            return null;
+        }
+    }
+
     async enviarPush(usuariosIds: string[], payload: any) {
         const tokens = await this.repositorio.obtenerTokensPorUsuarios(usuariosIds);
         if (payload.sub_categoria_alerta_id == '1') {

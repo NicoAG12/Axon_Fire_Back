@@ -57,10 +57,10 @@ export class AlertaRepositorio {
         return bomberos.map(b => b.usuario_id);
     }
 
-    async actualizarEstadoAlerta(alertaId: string, idEstadoNuevo: string) {
+    async actualizarEstadoAlerta(alertaId: string, idEstadoNuevo: string, fecha_hora_finalizacion: string, duracion: number) {
         return await prisma.alerta.update({
             where: { id: alertaId },
-            data: { estado_alerta_id: idEstadoNuevo }
+            data: { estado_alerta_id: idEstadoNuevo, fecha_hora_finalizacion: fecha_hora_finalizacion, duracion: duracion }
         });
     }
 
