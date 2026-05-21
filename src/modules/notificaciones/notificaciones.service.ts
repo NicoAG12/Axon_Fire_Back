@@ -24,6 +24,7 @@ export class NotificacionesService {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                     'Accept-Encoding': 'gzip, deflate',
+                    'Authorization': `Bearer ${process.env.EXPO_ACCESS_TOKEN}`,
                 },
                 body: JSON.stringify(messages)
             });
@@ -65,6 +66,7 @@ export class NotificacionesService {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                     'Accept-Encoding': 'gzip, deflate',
+                    'Authorization': `Bearer ${process.env.EXPO_ACCESS_TOKEN}`,
                 },
                 body: JSON.stringify(messages)
             });
