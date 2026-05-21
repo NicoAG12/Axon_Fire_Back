@@ -12,8 +12,10 @@ async function seed() {
   await prisma.tokens_dispositivos.deleteMany();
   await prisma.checklist_detalle.deleteMany();
   await prisma.checklist_detalle_bolso.deleteMany();
+  await prisma.checklist_detalle_cuartel.deleteMany();
   await prisma.checklist_camiones_diario.deleteMany();
   await prisma.checklist_bolsos_emergencia.deleteMany();
+  await prisma.checklist_cuartel.deleteMany();
   await prisma.camiones_inventario.deleteMany();
   await prisma.bolsos_inventario.deleteMany();
   await prisma.sectores_camion.deleteMany();
