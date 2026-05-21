@@ -1,6 +1,6 @@
 import { prisma } from "../../lib/prisma";
 import { crearRespuestaAlertaDTO, modificarRespuestaAlertaDTO } from "./DTO/respuestas_alertas_DTO";
-import { tipos_comunicacion, tipos_respuesta } from "../../../generated/client";
+import { tipos_comunicacion, tipos_respuesta } from "@prisma/client";
 
 export class RespuestasAlertasRepositorio {
 

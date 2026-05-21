@@ -1,7 +1,7 @@
 import { prisma } from "../../lib/prisma"
 import { crearAlertaDTO, crearAlertaConNotificacionDTO } from "./DTO/crear_alerta_dto"
 import { randomUUID } from "crypto"
-import { tipos_respuesta } from "../../../generated/client"
+import { tipos_respuesta } from "@prisma/client"
 export class AlertaRepositorio {
 
     async crearAlerta(data: crearAlertaDTO) {
