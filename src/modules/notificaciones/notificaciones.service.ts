@@ -8,6 +8,10 @@ export class NotificacionesService {
         return await this.repositorio.guardarToken(data);
     }
 
+    async obtenerTokensPorUsuarioId(usuarioId: string) {
+        return await this.repositorio.obtenerTokensPorUsuarioId(usuarioId);
+    }
+
     async enviarPushCheckListSemanal(usuariosIds: string[], payload: any) {
         const tokens = await this.repositorio.obtenerTokensPorUsuarios(usuariosIds);
 
