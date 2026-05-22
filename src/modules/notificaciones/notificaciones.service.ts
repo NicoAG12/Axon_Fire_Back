@@ -34,18 +34,37 @@ export class NotificacionesService {
         }))
 
         try {
-            const response = await fetch('https://exp.host/--/api/v2/push/send', {
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Accept-Encoding': 'gzip, deflate',
+            };
+
+            const expoAccessToken = process.env.EXPO_ACCESS_TOKEN?.trim();
+            if (expoAccessToken) {
+                headers['Authorization'] = `Bearer ${expoAccessToken}`;
+            }
+
+            let response = await fetch('https://exp.host/--/api/v2/push/send', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Accept-Encoding': 'gzip, deflate',
-                    'Authorization': `Bearer ${process.env.EXPO_ACCESS_TOKEN?.trim()}`,
-                },
+                headers,
                 body: JSON.stringify(messages)
             });
 
-            const data = await response.json();
+            let data = await response.json();
+
+            // Si falla por autenticación, reintentar SIN el header Authorization
+            if (data.errors?.some((e: any) => e.code === 'AUTHENTICATION_ERROR')) {
+                console.warn('⚠️ [ChecklistSemanal] Token inválido, reintentando sin Authorization...');
+                delete headers['Authorization'];
+                response = await fetch('https://exp.host/--/api/v2/push/send', {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(messages)
+                });
+                data = await response.json();
+            }
+
             console.log('📲 [ChecklistSemanal] Respuesta Expo Push:', JSON.stringify(data));
             return data;
         } catch (error) {
@@ -88,18 +107,37 @@ export class NotificacionesService {
         }));
 
         try {
-            const response = await fetch('https://exp.host/--/api/v2/push/send', {
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Accept-Encoding': 'gzip, deflate',
+            };
+
+            const expoAccessToken = process.env.EXPO_ACCESS_TOKEN?.trim();
+            if (expoAccessToken) {
+                headers['Authorization'] = `Bearer ${expoAccessToken}`;
+            }
+
+            let response = await fetch('https://exp.host/--/api/v2/push/send', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Accept-Encoding': 'gzip, deflate',
-                    'Authorization': `Bearer ${process.env.EXPO_ACCESS_TOKEN?.trim()}`,
-                },
+                headers,
                 body: JSON.stringify(messages)
             });
 
-            const data = await response.json();
+            let data = await response.json();
+
+            // Si falla por autenticación, reintentar SIN el header Authorization
+            if (data.errors?.some((e: any) => e.code === 'AUTHENTICATION_ERROR')) {
+                console.warn('⚠️ [Alerta] Token inválido, reintentando sin Authorization...');
+                delete headers['Authorization'];
+                response = await fetch('https://exp.host/--/api/v2/push/send', {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(messages)
+                });
+                data = await response.json();
+            }
+
             console.log('📲 [Alerta] Respuesta Expo Push:', JSON.stringify(data));
             return data;
         } catch (error) {
