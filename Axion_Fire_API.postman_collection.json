@@ -1274,6 +1274,88 @@
             "description": "OBTENER DETALLES DE ALERTA ESPECIFICA\n=======================================\nBusca una alerta por su ID.\n\nPASO A PASO:\n1. Reemplazar :id_alerta con UUID de alerta\n2. Ejecutar request"
           },
           "response": []
+        },
+        {
+          "name": "5. Obtener Alertas por Usuario",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/alerta/usuario/:id_usuario",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alerta",
+                "usuario",
+                ":id_usuario"
+              ]
+            },
+            "description": "OBTENER ALERTAS POR USUARIO\n=======================================\nRetorna todas las alertas creadas por un usuario específico, ordenadas por fecha descendente.\n\nPASO A PASO:\n1. Reemplazar :id_usuario con UUID del usuario\n2. Ejecutar request"
+          },
+          "response": []
+        },
+        {
+          "name": "6. Finalizar Alerta (FLUJO ALERTA)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/alerta/:id_alerta/finalizar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alerta",
+                ":id_alerta",
+                "finalizar"
+              ]
+            },
+            "description": "FINALIZAR ALERTA\n=======================================\nCambia el estado de la alerta a FINALIZADO.\nCalcula automáticamente la duración total de la emergencia.\nRegistra fecha y hora de finalización.\n\nREQUISITOS:\n- Requiere rol ADMIN\n- La alerta debe existir\n- El estado FINALIZADO debe estar configurado en la DB\n\nPASO A PASO:\n1. Reemplazar :id_alerta con UUID de la alerta activa\n2. Ejecutar request\n\nRESPUESTA:\n- Retorna el objeto alerta actualizado con:\n  - estado_alerta_id: ID del estado FINALIZADO\n  - fecha_hora_finalizacion: fecha/hora de cierre\n  - duracion_total_alerta: duración en milisegundos"
+          },
+          "response": []
+        },
+        {
+          "name": "7. Limpiar Todo (Testing)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/alerta/limpiar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alerta",
+                "limpiar"
+              ]
+            },
+            "description": "LIMPIAR TODO (TESTING)\n=======================================\nElimina todas las alertas, respuestas y registros de comunicación.\nSolo para testing/desarrollo.\n\nREQUISITOS:\n- Requiere rol ADMIN\n\n⚠️ CUIDADO: Esta acción es irreversible."
+          },
+          "response": []
         }
       ]
     },

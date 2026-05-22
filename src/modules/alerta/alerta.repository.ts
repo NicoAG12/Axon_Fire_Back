@@ -60,7 +60,7 @@ export class AlertaRepositorio {
     async actualizarEstadoAlerta(alertaId: string, idEstadoNuevo: string, fecha_hora_finalizacion: string, duracion: number) {
         return await prisma.alerta.update({
             where: { id: alertaId },
-            data: { estado_alerta_id: idEstadoNuevo, fecha_hora_finalizacion: fecha_hora_finalizacion, duracion: duracion }
+            data: { estado_alerta_id: idEstadoNuevo, fecha_hora_finalizacion: new Date(fecha_hora_finalizacion), duracion_total_alerta: duracion }
         });
     }
 
