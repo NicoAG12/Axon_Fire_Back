@@ -108,7 +108,7 @@ model alerta {
   registros_comunicacion     registros_comunicacion[]
   usuarioID                  usuarios                      @relation(fields: [usuario_alta_alerta], references: [id])
   usuario_alta_alerta        String
-  fecha_hora_finalizacion    DateTime?                     @updatedAt
+   fecha_hora_finalizacion    DateTime?
   duracion_total_alerta      Float?                          @default(0)
   checklistBolsosEmergencias checklist_bolsos_emergencia[]
 }

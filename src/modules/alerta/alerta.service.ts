@@ -1,7 +1,7 @@
 import { AlertaRepositorio } from "./alerta.repository";
 import { crearAlertaDTO, crearAlertaConNotificacionDTO } from "./DTO/crear_alerta_dto";
 import { NotificacionesService } from "../notificaciones/notificaciones.service";
-import { getLocalDate } from "../../lib/utils";
+import { getLocalDate, formatToARTString } from "../../lib/utils";
 
 export class AlertaService {
     private alertaRepo: AlertaRepositorio;
@@ -60,7 +60,13 @@ export class AlertaService {
         if (!alertaActual) throw new Error("No se encuentra la alerta")
         const fecha_hora_finalizacion = getLocalDate()
         const duracion = fecha_hora_finalizacion.getTime() - alertaActual.fecha_hora.getTime()
-        return await this.alertaRepo.actualizarEstadoAlerta(alertaId, estadoFinalizado.id, fecha_hora_finalizacion.toISOString(), duracion);
+        const alertaActualizada = await this.alertaRepo.actualizarEstadoAlerta(alertaId, estadoFinalizado.id, fecha_hora_finalizacion, duracion);
+
+        return {
+            ...alertaActualizada,
+            fecha_hora: formatToARTString(alertaActualizada.fecha_hora),
+            fecha_hora_finalizacion: formatToARTString(alertaActualizada.fecha_hora_finalizacion),
+        };
     }
 
     limpiarTodo = async () => {
