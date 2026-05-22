@@ -10,6 +10,14 @@ export class NotificacionesService {
 
     async enviarPushCheckListSemanal(usuariosIds: string[], payload: any) {
         const tokens = await this.repositorio.obtenerTokensPorUsuarios(usuariosIds);
+
+        if (!tokens || tokens.length === 0) {
+            console.warn('⚠️ [ChecklistSemanal] No se encontraron tokens para los usuarios:', usuariosIds);
+            return null;
+        }
+
+        console.log(`📲 [ChecklistSemanal] Enviando push a ${tokens.length} dispositivo(s)`);
+
         const messages = tokens.map(token => ({
             to: token,
             title: payload.title || 'CONTROL SEMANAL',
@@ -30,9 +38,10 @@ export class NotificacionesService {
             });
 
             const data = await response.json();
+            console.log('📲 [ChecklistSemanal] Respuesta Expo Push:', JSON.stringify(data));
             return data;
         } catch (error) {
-            console.error('Error enviando push notification:', error);
+            console.error('❌ [ChecklistSemanal] Error enviando push notification:', error);
             return null;
         }
     }
@@ -46,8 +55,11 @@ export class NotificacionesService {
         }
 
         if (!tokens || tokens.length === 0) {
+            console.warn('⚠️ [Alerta] No se encontraron tokens para los usuarios:', usuariosIds);
             return null;
         }
+
+        console.log(`📲 [Alerta] Enviando push a ${tokens.length} dispositivo(s)`);
 
         const messages = tokens.map(token => ({
             to: token,
@@ -72,9 +84,10 @@ export class NotificacionesService {
             });
 
             const data = await response.json();
+            console.log('📲 [Alerta] Respuesta Expo Push:', JSON.stringify(data));
             return data;
         } catch (error) {
-            console.error('Error enviando push notification:', error);
+            console.error('❌ [Alerta] Error enviando push notification:', error);
             return null;
         }
     }

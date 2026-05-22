@@ -9,7 +9,7 @@ async function seed() {
   console.log('🌱 Iniciando seed...');
 
   // ── Limpiar en orden correcto (hijos antes que padres) ───────────────────
-  await prisma.tokens_dispositivos.deleteMany();
+
   await prisma.checklist_detalle.deleteMany();
   await prisma.checklist_detalle_bolso.deleteMany();
   await prisma.checklist_detalle_cuartel.deleteMany();
@@ -80,14 +80,7 @@ async function seed() {
     ],
   });
 
-  // ── Tokens de dispositivos (después de usuarios) ────────────────────────
-  await prisma.tokens_dispositivos.createMany({
-    data: [
-      { id: 'token_1', usuario_id: 'abc1', token: 'fcm_token_admin_android', plataforma: 'android' },
-      { id: 'token_2', usuario_id: 'abc2', token: 'fcm_token_user1_ios', plataforma: 'ios' },
-      { id: 'token_3', usuario_id: 'abc3', token: 'fcm_token_user2_web', plataforma: 'web' },
-    ],
-  });
+
 
   // ── Alertas (después de usuarios, subcategorías y estados) ───────────────
   await prisma.alerta.createMany({

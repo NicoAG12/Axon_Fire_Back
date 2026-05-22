@@ -17,7 +17,7 @@ export class SeedController {
             console.log('🌱 Ejecutando seed desde endpoint...');
 
             // ── Limpiar en orden correcto (hijos antes que padres) ───────────
-            await prisma.tokens_dispositivos.deleteMany();
+
             await prisma.checklist_detalle.deleteMany();
             await prisma.checklist_detalle_bolso.deleteMany();
             await prisma.checklist_detalle_cuartel.deleteMany();
@@ -84,15 +84,6 @@ export class SeedController {
                     { id: 'abc1', nombre_usuario: 'TEST_1_ADMIN', password: passwordHash, rol: 'ADMIN' },
                     { id: 'abc2', nombre_usuario: 'TEST_2_USER', password: passwordHash, rol: 'USER' },
                     { id: 'abc3', nombre_usuario: 'TEST_3_USER', password: passwordHash, rol: 'USER' },
-                ],
-            });
-
-            // ── Tokens de dispositivos ──────────────────────────────────────
-            await prisma.tokens_dispositivos.createMany({
-                data: [
-                    { id: 'token_1', usuario_id: 'abc1', token: 'fcm_token_admin_android', plataforma: 'android' },
-                    { id: 'token_2', usuario_id: 'abc2', token: 'fcm_token_user1_ios', plataforma: 'ios' },
-                    { id: 'token_3', usuario_id: 'abc3', token: 'fcm_token_user2_web', plataforma: 'web' },
                 ],
             });
 
