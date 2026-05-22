@@ -18,6 +18,14 @@ export class NotificacionesService {
 
         console.log(`📲 [ChecklistSemanal] Enviando push a ${tokens.length} dispositivo(s)`);
 
+        // === DEBUG: Verificar EXPO_ACCESS_TOKEN ===
+        const expoToken = process.env.EXPO_ACCESS_TOKEN;
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN definido:', !!expoToken);
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN length:', expoToken?.length);
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN primeros 20 chars:', expoToken?.substring(0, 20));
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN tiene espacios al inicio/fin:', expoToken !== expoToken?.trim());
+        // === FIN DEBUG ===
+
         const messages = tokens.map(token => ({
             to: token,
             title: payload.title || 'CONTROL SEMANAL',
@@ -32,7 +40,7 @@ export class NotificacionesService {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                     'Accept-Encoding': 'gzip, deflate',
-                    'Authorization': `Bearer ${process.env.EXPO_ACCESS_TOKEN}`,
+                    'Authorization': `Bearer ${process.env.EXPO_ACCESS_TOKEN?.trim()}`,
                 },
                 body: JSON.stringify(messages)
             });
@@ -61,6 +69,14 @@ export class NotificacionesService {
 
         console.log(`📲 [Alerta] Enviando push a ${tokens.length} dispositivo(s)`);
 
+        // === DEBUG: Verificar EXPO_ACCESS_TOKEN ===
+        const expoToken = process.env.EXPO_ACCESS_TOKEN;
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN definido:', !!expoToken);
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN length:', expoToken?.length);
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN primeros 20 chars:', expoToken?.substring(0, 20));
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN tiene espacios al inicio/fin:', expoToken !== expoToken?.trim());
+        // === FIN DEBUG ===
+
         const messages = tokens.map(token => ({
             to: token,
             title: payload.title || payload.sub_categoria_alerta_id,
@@ -78,7 +94,7 @@ export class NotificacionesService {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                     'Accept-Encoding': 'gzip, deflate',
-                    'Authorization': `Bearer ${process.env.EXPO_ACCESS_TOKEN}`,
+                    'Authorization': `Bearer ${process.env.EXPO_ACCESS_TOKEN?.trim()}`,
                 },
                 body: JSON.stringify(messages)
             });
