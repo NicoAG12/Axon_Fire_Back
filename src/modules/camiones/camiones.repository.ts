@@ -1,7 +1,7 @@
 import { prisma } from "../../lib/prisma";
 import { CrearCamionDTO, ActualizarCamionDTO } from "./DTO/camiones_DTO";
 import { randomUUID } from "crypto";
-import { estado_camion } from "../../../generated/client";
+import { estado_camion } from "@prisma/client";
 
 export class CamionesRepositorio {
     async obtenerTodos() {

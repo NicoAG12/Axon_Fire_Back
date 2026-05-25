@@ -644,7 +644,35 @@ Registros del control semanal de herramientas del cuartel. Controla directamente
 - **Descripción:** Detalles de una alerta específica.
 - **Headers Requeridos:** `Authorization: Bearer <token>`
 
----
+### Obtener Alertas por Usuario
+- **Ruta:** `GET /alerta/usuario/:id_usuario`
+- **Descripción:** Retorna todas las alertas creadas por un usuario específico, ordenadas por fecha descendente.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+
+### Finalizar Alerta
+- **Ruta:** `PATCH /alerta/:id_alerta/finalizar`
+- **Descripción:** Cambia el estado de la alerta a `FINALIZADO`, calcula la duración total y registra la fecha/hora de finalización.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Permisos Requeridos:** `ADMIN` (requiere middleware `verificarRolAdmin`)
+- **Body request:** No requiere body (enviar `{}`)
+- **Respuesta (200 OK):**
+  ```json
+  {
+    "id": "uuid-alerta",
+    "sub_categoria_alerta_id": "uuid-subcategoria",
+    "ubicacion": "Av. Siempreviva 742",
+    "observaciones": "Fuego en estructura",
+    "estado_alerta_id": "uuid-estado-finalizado",
+    "fecha_hora": "2026-04-26T20:00:00.000Z",
+    "fecha_hora_finalizacion": "2026-04-26T22:30:00.000Z",
+    "duracion_total_alerta": 9000000,
+    "usuario_alta_alerta": "uuid-usuario"
+  }
+  ```
+- **Posibles errores (500):**
+  - `"Estado FINALIZADO no configurado en DB"` — No existe el registro `FINALIZADO` en la tabla `estados_alerta`.
+  - `"No se encuentra la alerta"` — El `id_alerta` no corresponde a ninguna alerta existente.
+
 
 ## 🧑‍🚒 12. Respuestas a Alertas (`/respuestas_alertas`)
 
@@ -816,6 +844,11 @@ Registros del control semanal de herramientas del cuartel. Controla directamente
 
 6. **Ver historial de comunicación**
    - `GET /registros_comunicacion/alerta/:id_alerta`
+
+7. **Finalizar la alerta** (solo ADMIN)
+   - `PATCH /alerta/:id_alerta/finalizar`
+   - Sin body (enviar `{}`)
+   - Calcula automáticamente la duración total de la emergencia
 
 ---
 

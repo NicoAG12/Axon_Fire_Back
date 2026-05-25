@@ -1,4 +1,4 @@
-import { PrismaClient } from "../../generated/client";
+import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from '@prisma/adapter-pg'
 // Singleton para reutilizar la conexión en toda la app
 const globalForPrisma = global as unknown as { prisma: PrismaClient };

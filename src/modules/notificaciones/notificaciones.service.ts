@@ -8,8 +8,28 @@ export class NotificacionesService {
         return await this.repositorio.guardarToken(data);
     }
 
+    async obtenerTokensPorUsuarioId(usuarioId: string) {
+        return await this.repositorio.obtenerTokensPorUsuarioId(usuarioId);
+    }
+
     async enviarPushCheckListSemanal(usuariosIds: string[], payload: any) {
         const tokens = await this.repositorio.obtenerTokensPorUsuarios(usuariosIds);
+
+        if (!tokens || tokens.length === 0) {
+            console.warn('⚠️ [ChecklistSemanal] No se encontraron tokens para los usuarios:', usuariosIds);
+            return null;
+        }
+
+        console.log(`📲 [ChecklistSemanal] Enviando push a ${tokens.length} dispositivo(s)`);
+
+        // === DEBUG: Verificar EXPO_ACCESS_TOKEN ===
+        const expoToken = process.env.EXPO_ACCESS_TOKEN;
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN definido:', !!expoToken);
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN length:', expoToken?.length);
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN primeros 20 chars:', expoToken?.substring(0, 20));
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN tiene espacios al inicio/fin:', expoToken !== expoToken?.trim());
+        // === FIN DEBUG ===
+
         const messages = tokens.map(token => ({
             to: token,
             title: payload.title || 'CONTROL SEMANAL',
@@ -18,20 +38,41 @@ export class NotificacionesService {
         }))
 
         try {
-            const response = await fetch('https://exp.host/--/api/v2/push/send', {
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Accept-Encoding': 'gzip, deflate',
+            };
+
+            const expoAccessToken = process.env.EXPO_ACCESS_TOKEN?.trim();
+            if (expoAccessToken) {
+                headers['Authorization'] = `Bearer ${expoAccessToken}`;
+            }
+
+            let response = await fetch('https://exp.host/--/api/v2/push/send', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Accept-Encoding': 'gzip, deflate',
-                },
+                headers,
                 body: JSON.stringify(messages)
             });
 
-            const data = await response.json();
+            let data = await response.json();
+
+            // Si falla por autenticación, reintentar SIN el header Authorization
+            if (data.errors?.some((e: any) => e.code === 'AUTHENTICATION_ERROR')) {
+                console.warn('⚠️ [ChecklistSemanal] Token inválido, reintentando sin Authorization...');
+                delete headers['Authorization'];
+                response = await fetch('https://exp.host/--/api/v2/push/send', {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(messages)
+                });
+                data = await response.json();
+            }
+
+            console.log('📲 [ChecklistSemanal] Respuesta Expo Push:', JSON.stringify(data));
             return data;
         } catch (error) {
-            console.error('Error enviando push notification:', error);
+            console.error('❌ [ChecklistSemanal] Error enviando push notification:', error);
             return null;
         }
     }
@@ -45,8 +86,19 @@ export class NotificacionesService {
         }
 
         if (!tokens || tokens.length === 0) {
+            console.warn('⚠️ [Alerta] No se encontraron tokens para los usuarios:', usuariosIds);
             return null;
         }
+
+        console.log(`📲 [Alerta] Enviando push a ${tokens.length} dispositivo(s)`);
+
+        // === DEBUG: Verificar EXPO_ACCESS_TOKEN ===
+        const expoToken = process.env.EXPO_ACCESS_TOKEN;
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN definido:', !!expoToken);
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN length:', expoToken?.length);
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN primeros 20 chars:', expoToken?.substring(0, 20));
+        console.log('🔑 [DEBUG] EXPO_ACCESS_TOKEN tiene espacios al inicio/fin:', expoToken !== expoToken?.trim());
+        // === FIN DEBUG ===
 
         const messages = tokens.map(token => ({
             to: token,
@@ -59,20 +111,41 @@ export class NotificacionesService {
         }));
 
         try {
-            const response = await fetch('https://exp.host/--/api/v2/push/send', {
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Accept-Encoding': 'gzip, deflate',
+            };
+
+            const expoAccessToken = process.env.EXPO_ACCESS_TOKEN?.trim();
+            if (expoAccessToken) {
+                headers['Authorization'] = `Bearer ${expoAccessToken}`;
+            }
+
+            let response = await fetch('https://exp.host/--/api/v2/push/send', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Accept-Encoding': 'gzip, deflate',
-                },
+                headers,
                 body: JSON.stringify(messages)
             });
 
-            const data = await response.json();
+            let data = await response.json();
+
+            // Si falla por autenticación, reintentar SIN el header Authorization
+            if (data.errors?.some((e: any) => e.code === 'AUTHENTICATION_ERROR')) {
+                console.warn('⚠️ [Alerta] Token inválido, reintentando sin Authorization...');
+                delete headers['Authorization'];
+                response = await fetch('https://exp.host/--/api/v2/push/send', {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(messages)
+                });
+                data = await response.json();
+            }
+
+            console.log('📲 [Alerta] Respuesta Expo Push:', JSON.stringify(data));
             return data;
         } catch (error) {
-            console.error('Error enviando push notification:', error);
+            console.error('❌ [Alerta] Error enviando push notification:', error);
             return null;
         }
     }

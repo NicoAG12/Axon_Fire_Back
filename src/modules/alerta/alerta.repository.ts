@@ -1,7 +1,8 @@
 import { prisma } from "../../lib/prisma"
 import { crearAlertaDTO, crearAlertaConNotificacionDTO } from "./DTO/crear_alerta_dto"
 import { randomUUID } from "crypto"
-import { tipos_respuesta } from "../../../generated/client"
+import { tipos_respuesta } from "@prisma/client"
+import { getLocalDate, parseARTDate } from "../../lib/utils"
 export class AlertaRepositorio {
 
     async crearAlerta(data: crearAlertaDTO) {
@@ -12,7 +13,7 @@ export class AlertaRepositorio {
                 sub_categoria_alerta_id: data.sub_categoria_alerta_id,
                 ubicacion: data.ubicacion,
                 observaciones: data.observaciones,
-                fecha_hora: new Date(data.fecha_hora),
+                fecha_hora: parseARTDate(data.fecha_hora),
                 estado_alerta_id: data.estado_alerta_id,
                 usuario_alta_alerta: data.usuario_alta_alerta,
             }
@@ -27,7 +28,7 @@ export class AlertaRepositorio {
                     sub_categoria_alerta_id: dataAlerta.sub_categoria_alerta_id,
                     ubicacion: dataAlerta.ubicacion,
                     observaciones: dataAlerta.observaciones,
-                    fecha_hora: new Date(),
+                    fecha_hora: getLocalDate(),
                     estado_alerta_id: idEstadoInicial,
                     usuario_alta_alerta: dataAlerta.usuario_alta_alerta,
                 }
@@ -57,10 +58,10 @@ export class AlertaRepositorio {
         return bomberos.map(b => b.usuario_id);
     }
 
-    async actualizarEstadoAlerta(alertaId: string, idEstadoNuevo: string, fecha_hora_finalizacion: string, duracion: number) {
+    async actualizarEstadoAlerta(alertaId: string, idEstadoNuevo: string, fecha_hora_finalizacion: Date, duracion: number) {
         return await prisma.alerta.update({
             where: { id: alertaId },
-            data: { estado_alerta_id: idEstadoNuevo, fecha_hora_finalizacion: fecha_hora_finalizacion, duracion: duracion }
+            data: { estado_alerta_id: idEstadoNuevo, fecha_hora_finalizacion: fecha_hora_finalizacion, duracion_total_alerta: duracion }
         });
     }
 

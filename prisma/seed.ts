@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { PrismaClient } from '../generated/client';
+import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import bcrypt from "bcrypt"
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
@@ -9,10 +9,13 @@ async function seed() {
   console.log('🌱 Iniciando seed...');
 
   // ── Limpiar en orden correcto (hijos antes que padres) ───────────────────
+
   await prisma.checklist_detalle.deleteMany();
   await prisma.checklist_detalle_bolso.deleteMany();
+  await prisma.checklist_detalle_cuartel.deleteMany();
   await prisma.checklist_camiones_diario.deleteMany();
   await prisma.checklist_bolsos_emergencia.deleteMany();
+  await prisma.checklist_cuartel.deleteMany();
   await prisma.camiones_inventario.deleteMany();
   await prisma.bolsos_inventario.deleteMany();
   await prisma.sectores_camion.deleteMany();
@@ -77,12 +80,34 @@ async function seed() {
     ],
   });
 
+
+
   // ── Alertas (después de usuarios, subcategorías y estados) ───────────────
   await prisma.alerta.createMany({
     data: [
       { id: '1', sub_categoria_alerta_id: '1', ubicacion: 'TEST_1', observaciones: 'TEST_1', fecha_hora: new Date(), estado_alerta_id: '1', usuario_alta_alerta: 'abc1' },
       { id: '2', sub_categoria_alerta_id: '2', ubicacion: 'TEST_2', observaciones: 'TEST_2', fecha_hora: new Date(), estado_alerta_id: '2', usuario_alta_alerta: 'abc2' },
       { id: '3', sub_categoria_alerta_id: '3', ubicacion: 'TEST_3', observaciones: 'TEST_3', fecha_hora: new Date(), estado_alerta_id: '1', usuario_alta_alerta: 'abc3' },
+    ],
+  });
+
+  // ── Respuestas a alertas (después de alertas y bomberos) ───────────────
+  await prisma.respuestas_alertas.createMany({
+    data: [
+      { id: 'resp_1', alerta_id: '1', usuario_id: 'abc1', estado_respuesta: 'PENDIENTE', fecha_hora: new Date() },
+      { id: 'resp_2', alerta_id: '1', usuario_id: 'abc2', estado_respuesta: 'ACEPTADO', fecha_hora: new Date() },
+      { id: 'resp_3', alerta_id: '2', usuario_id: 'abc2', estado_respuesta: 'PENDIENTE', fecha_hora: new Date() },
+      { id: 'resp_4', alerta_id: '2', usuario_id: 'abc3', estado_respuesta: 'RECHAZADO', fecha_hora: new Date() },
+      { id: 'resp_5', alerta_id: '3', usuario_id: 'abc1', estado_respuesta: 'PENDIENTE', fecha_hora: new Date() },
+    ],
+  });
+
+  // ── Registros de comunicación (después de alertas) ─────────────────────
+  await prisma.registros_comunicacion.createMany({
+    data: [
+      { id: 'reg_1', alerta_id: '1', usuario_id: 'abc1', mensaje: 'Solicito extintores de apoyo', tipo_comunicacion: 'SUMINISTROS', fecha_hora: new Date() },
+      { id: 'reg_2', alerta_id: '1', usuario_id: 'abc2', mensaje: 'En camino al lugar', tipo_comunicacion: 'APOYO', fecha_hora: new Date() },
+      { id: 'reg_3', alerta_id: '2', usuario_id: 'abc3', mensaje: 'Rescate en curso, se necesitara grua', tipo_comunicacion: 'INFORMACION', fecha_hora: new Date() },
     ],
   });
 
@@ -191,6 +216,45 @@ async function seed() {
       { id: 'check_detalle_1', checklist_id: checklistId, herramienta_id: 'herr_1', controlado: 'CHEQUEADO' },
       { id: 'check_detalle_2', checklist_id: checklistId, herramienta_id: 'herr_2', controlado: 'CHEQUEADO' },
       { id: 'check_detalle_3', checklist_id: checklistId, herramienta_id: 'herr_3', controlado: 'FALTANTE', observaciones: 'Falta una manguera en el deposito principal' },
+    ],
+  });
+
+  // ── Checklist de Camiones Diarios ───────────────────────────────────
+  const checklistCamion1Id = 'checklist_camion_1';
+  await prisma.checklist_camiones_diario.create({
+    data: {
+      id: checklistCamion1Id,
+      camion_id: 'camion_1',
+      usuario_id: 'abc1',
+      fecha_control: new Date(),
+    },
+  });
+
+  await prisma.checklist_detalle.createMany({
+    data: [
+      { id: 'cam_det_1', checklist_id: checklistCamion1Id, inventario_id: 'inv_1', controlado: 'CHEQUEADO' },
+      { id: 'cam_det_2', checklist_id: checklistCamion1Id, inventario_id: 'inv_2', controlado: 'CHEQUEADO' },
+      { id: 'cam_det_3', checklist_id: checklistCamion1Id, inventario_id: 'inv_3', controlado: 'FALTANTE', observaciones: 'Manguera dañada en compartimento lateral' },
+    ],
+  });
+
+  // ── Checklist de Bolsos de Emergencia ──────────────────────────────────
+  const checklistBolso1Id = 'checklist_bolso_1';
+  await prisma.checklist_bolsos_emergencia.create({
+    data: {
+      id: checklistBolso1Id,
+      bolso_id: 'bolso_1',
+      usuario_id: 'abc2',
+      alerta_id: '1',
+      fecha_control: new Date(),
+    },
+  });
+
+  await prisma.checklist_detalle_bolso.createMany({
+    data: [
+      { id: 'bol_det_1', checklist_id: checklistBolso1Id, inventario_id: 'bolso_inv_1', controlado: 'CHEQUEADO' },
+      { id: 'bol_det_2', checklist_id: checklistBolso1Id, inventario_id: 'bolso_inv_2', controlado: 'CHEQUEADO' },
+      { id: 'bol_det_3', checklist_id: checklistBolso1Id, inventario_id: 'bolso_inv_3', controlado: 'FALTANTE', observaciones: 'Pinza cortacables necesita reemplazo' },
     ],
   });
 

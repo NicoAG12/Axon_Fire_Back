@@ -1,4 +1,4 @@
-import { tipos_comunicacion } from "../../../generated/client";
+import { tipos_comunicacion } from "@prisma/client";
 
 export interface crearRegistroComunicacionDTO {
     alerta_id: string;
