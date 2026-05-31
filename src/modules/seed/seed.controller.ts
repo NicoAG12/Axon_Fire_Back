@@ -39,6 +39,7 @@ export class SeedController {
             await prisma.estados_alerta.deleteMany();
             await prisma.bomberos.deleteMany();
             await prisma.bomberos_rangos.deleteMany();
+            await prisma.tokens_dispositivos.deleteMany();
             await prisma.usuarios.deleteMany();
 
             // ── Rangos ──────────────────────────────────────────────────────
