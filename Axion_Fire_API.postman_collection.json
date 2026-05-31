@@ -1832,6 +1832,161 @@
           }
         }
       ]
+    },
+    {
+      "name": "MÉTRICAS MENSUALES",
+      "item": [
+        {
+          "name": "1. Obtener Métricas Mensuales",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/metricas/mensuales?mes=5&anio=2026",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "metricas",
+                "mensuales"
+              ],
+              "query": [
+                {
+                  "key": "mes",
+                  "value": "5",
+                  "description": "Mes a consultar (1-12)"
+                },
+                {
+                  "key": "anio",
+                  "value": "2026",
+                  "description": "Año a consultar"
+                }
+              ]
+            },
+            "description": "OBTENER MÉTRICAS MENSUALES\n===========================\nRetorna emergencias agrupadas por tipo y horas/asistencias por bombero para un mes dado.\n\nÚtil para el Registro Único de Bomberos.\n\nPASO A PASO:\n1. Modificar query params 'mes' y 'anio'\n2. Ejecutar request con token de ADMIN\n3. Revisar emergencias_por_tipo y bomberos\n\nRESPUESTA:\n{\n  \"mes\": 5,\n  \"anio\": 2026,\n  \"total_emergencias\": 17,\n  \"emergencias_por_tipo\": [\n    { \"subcategoria\": \"INCENDIO ESTRUCTURAL\", \"cantidad\": 12 }\n  ],\n  \"bomberos\": [\n    { \"nombre\": \"Juan\", \"total_asistencias\": 8, \"total_horas\": 24.5 }\n  ]\n}\n\nNOTA: Requiere token de ADMIN."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "INFORMES PDF",
+      "item": [
+        {
+          "name": "1. Generar PDF de Emergencia",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/informes/4/pdf",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "informes",
+                "4",
+                "pdf"
+              ]
+            },
+            "description": "GENERAR PDF DE INFORME DE EMERGENCIA\n=====================================\nGenera y descarga un documento PDF pre-formateado con los datos de la emergencia.\n\nPRECONDICIONES:\n- La emergencia debe estar en estado FINALIZADO\n- Reemplazar '4' con el ID de la alerta finalizada\n\nPASO A PASO:\n1. Asegurar que la alerta esté FINALIZADA (usar PATCH /alerta/:id/finalizar)\n2. (Opcional) Editar el borrador con observaciones del admin\n3. Ejecutar este request\n4. En Postman, ir a la pestaña de respuesta para ver/descargar el PDF\n\nRESPUESTA: Archivo PDF (Content-Type: application/pdf)\n\nTIP: En Postman, click en 'Save Response > Save to a file' para descargar el PDF."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Obtener Datos del Informe (JSON)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/informes/4/datos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "informes",
+                "4",
+                "datos"
+              ]
+            },
+            "description": "PREVISUALIZAR DATOS DEL INFORME\n================================\nObtiene los datos completos de la alerta en formato JSON.\nÚtil para previsualización en el frontend antes de generar el PDF.\n\nPASO A PASO:\n1. Reemplazar '4' con el ID de la alerta\n2. Ejecutar request\n3. Revisar datos que se incluirán en el PDF"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Obtener/Crear Borrador de Informe",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/informes/4/borrador",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "informes",
+                "4",
+                "borrador"
+              ]
+            },
+            "description": "OBTENER O CREAR BORRADOR DE INFORME\n======================================\nSi el borrador ya existe, lo retorna. Si no existe, lo crea automáticamente.\n\nPRECONDICIONES:\n- La alerta debe estar FINALIZADA\n- Requiere token de ADMIN\n\nPASO A PASO:\n1. Reemplazar '4' con el ID de la alerta\n2. Ejecutar request\n3. Copiar el 'id' del borrador si necesita actualizarlo\n\nRESPUESTA:\n{\n  \"id\": \"uuid-informe\",\n  \"alerta_id\": \"4\",\n  \"observaciones_admin\": null,\n  \"detalles_propiedad\": null,\n  \"estado_informe\": \"BORRADOR\"\n}"
+          },
+          "response": []
+        },
+        {
+          "name": "4. Actualizar Borrador de Informe",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"observaciones_admin\": \"Vivienda tipo PH, daño estructural parcial en planta baja. El fuego se originó en la cocina.\",\n    \"detalles_propiedad\": \"Propiedad horizontal, 2 plantas, techo de losa. Superficie estimada: 80m². Propietario: Juan Pérez, DNI 12.345.678.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/informes/4/borrador",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "informes",
+                "4",
+                "borrador"
+              ]
+            },
+            "description": "ACTUALIZAR BORRADOR CON OBSERVACIONES DEL ADMIN\n=================================================\nPermite al administrador agregar observaciones cualitativas y detalles de la propiedad afectada.\n\nPRECONDICIONES:\n- Debe existir un borrador (crear primero con GET /informes/:alertaId/borrador)\n- Requiere token de ADMIN\n\nPASO A PASO:\n1. Primero obtener/crear el borrador con GET\n2. Completar observaciones_admin y/o detalles_propiedad\n3. Ejecutar request\n4. Generar el PDF (GET /informes/:alertaId/pdf) para ver las observaciones incluidas\n\nBODY:\n- observaciones_admin: string (observaciones cualitativas)\n- detalles_propiedad: string (detalles de vivienda/local afectado)\n\nAmbos campos son opcionales."
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }

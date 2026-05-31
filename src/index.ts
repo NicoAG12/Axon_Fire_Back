@@ -20,6 +20,8 @@ import rutaChecklist from './routes/checklist.route'
 import rutaChecklistBolsos from './routes/checklist_bolsos.route'
 import rutaChecklistCuartel from './routes/checklist_cuartel.route'
 import rutaSeed from './routes/seed.route'
+import rutaMetricas from './routes/metricas.route'
+import rutaInformes from './routes/informes.route'
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '3000', 10);
@@ -50,6 +52,8 @@ async function main() {
     app.use('/checklist_bolsos', verificarHeaders, rutaChecklistBolsos);
     app.use('/checklist_cuartel', verificarHeaders, rutaChecklistCuartel);
     app.use('/seed', rutaSeed);
+    app.use('/metricas', rutaMetricas);
+    app.use('/informes', rutaInformes);
 
     // 3. Poner el servidor a escuchar peticiones
     app.listen(PORT, '0.0.0.0', () => {
