@@ -33,6 +33,11 @@ enum estado_control_herramienta {
   FALTANTE
 }
 
+enum estado_informe {
+  BORRADOR
+  FINALIZADO
+}
+
 model tokens_dispositivos {
   id         String   @id @default(uuid())
   usuarioId  usuarios @relation(fields: [usuario_id], references: [id])
@@ -111,6 +116,7 @@ model alerta {
    fecha_hora_finalizacion    DateTime?
   duracion_total_alerta      Float?                          @default(0)
   checklistBolsosEmergencias checklist_bolsos_emergencia[]
+  informe                    informes_emergencia?
 }
 
 model respuestas_alertas {
@@ -249,4 +255,16 @@ model checklist_detalle_cuartel {
 
   checklist    checklist_cuartel      @relation(fields: [checklist_id], references: [id], onDelete: Cascade)
   herramienta  herramientas           @relation(fields: [herramienta_id], references: [id])
+}
+
+model informes_emergencia {
+  id                  String         @id @default(uuid())
+  alertaId            alerta         @relation(fields: [alerta_id], references: [id])
+  alerta_id           String         @unique
+  observaciones_admin String?
+  detalles_propiedad  String?
+  estado_informe      estado_informe @default(BORRADOR)
+  creado_por          String
+  fecha_creacion      DateTime       @default(now())
+  fecha_actualizacion DateTime       @updatedAt
 }

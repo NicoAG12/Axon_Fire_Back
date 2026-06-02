@@ -868,6 +868,128 @@ Registros del control semanal de herramientas del cuartel. Controla directamente
 
 ---
 
+### Workflow F: Generar Informe PDF de Emergencia
+
+**Objetivo:** Generar el informe PDF de una emergencia finalizada, opcionalmente con observaciones del administrador.
+
+1. **Finalizar la alerta** (si no está finalizada)
+   - `PATCH /alerta/:id_alerta/finalizar`
+
+2. **(Opcional) Admin edita el borrador del informe**
+   - `GET /informes/:alertaId/borrador` → Crea u obtiene el borrador
+   - `PATCH /informes/:alertaId/borrador` → Agrega observaciones y detalles de propiedad
+
+3. **Generar y descargar el PDF**
+   - `GET /informes/:alertaId/pdf`
+   - El PDF incluye automáticamente las observaciones del borrador si existen
+
+---
+
+## 📊 15. Métricas Mensuales (`/metricas`)
+
+### Obtener Métricas Mensuales
+- **Ruta:** `GET /metricas/mensuales?mes=5&anio=2026`
+- **Descripción:** Retorna métricas mensuales: cantidad de emergencias agrupadas por tipo (subcategoría), y la cantidad de asistencias y horas acumuladas por cada bombero. Útil para el Registro Único de Bomberos.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Permisos Requeridos:** `ADMIN` (requiere middleware `verificarRolAdmin`)
+- **Query Params:**
+  - `mes` (number, 1-12): Mes a consultar
+  - `anio` (number): Año a consultar
+- **Respuesta (200 OK):**
+  ```json
+  {
+    "mes": 5,
+    "anio": 2026,
+    "total_emergencias": 17,
+    "emergencias_por_tipo": [
+      {
+        "sub_categoria_alerta_id": "1",
+        "subcategoria": "INCENDIO ESTRUCTURAL",
+        "categoria": "INCENDIO",
+        "cantidad": 12
+      },
+      {
+        "sub_categoria_alerta_id": "2",
+        "subcategoria": "RESCATE AUTOMOVIL",
+        "categoria": "RESCATE",
+        "cantidad": 5
+      }
+    ],
+    "bomberos": [
+      {
+        "usuario_id": "uuid-usuario",
+        "nombre": "Juan",
+        "apellido": "Perez",
+        "total_asistencias": 8,
+        "total_horas": 24.5
+      }
+    ]
+  }
+  ```
+- **Posibles errores (400):**
+  - `"Los parámetros "mes" y "anio" son obligatorios y deben ser números"`
+- **Posibles errores (500):**
+  - `"El mes debe estar entre 1 y 12"`
+  - `"Año inválido"`
+
+---
+
+## 📄 16. Informes PDF (`/informes`)
+
+### Generar PDF de Informe de Emergencia
+- **Ruta:** `GET /informes/:alertaId/pdf`
+- **Descripción:** Genera y descarga un documento PDF pre-formateado con los datos de la emergencia. El PDF incluye: tipo de siniestro, ubicación, horarios, personal asistente, observaciones y (si existen) las notas del administrador.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Precondiciones:** La emergencia debe figurar en estado `FINALIZADO`.
+- **Respuesta:** El endpoint responde directamente con el archivo PDF (Content-Type: `application/pdf`). El navegador/app lo descarga como archivo.
+- **Posibles errores (500):**
+  - `"Alerta no encontrada"`
+  - `"Solo se pueden generar informes de emergencias finalizadas"`
+
+### Obtener Datos del Informe (JSON)
+- **Ruta:** `GET /informes/:alertaId/datos`
+- **Descripción:** Obtiene los datos completos de la alerta en formato JSON para previsualización en el frontend.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Respuesta (200 OK):** Objeto completo de la alerta con subcategoría, estado, respuestas aceptadas (con datos de bombero) e informe/borrador si existe.
+
+### Obtener o Crear Borrador de Informe
+- **Ruta:** `GET /informes/:alertaId/borrador`
+- **Descripción:** Obtiene el borrador del informe para una alerta. Si no existe, lo crea automáticamente.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Permisos Requeridos:** `ADMIN` (requiere middleware `verificarRolAdmin`)
+- **Precondiciones:** La emergencia debe figurar en estado `FINALIZADO`.
+- **Respuesta (200 OK):**
+  ```json
+  {
+    "id": "uuid-informe",
+    "alerta_id": "uuid-alerta",
+    "observaciones_admin": null,
+    "detalles_propiedad": null,
+    "estado_informe": "BORRADOR",
+    "creado_por": "uuid-usuario",
+    "fecha_creacion": "2026-05-31T12:00:00.000Z",
+    "fecha_actualizacion": "2026-05-31T12:00:00.000Z"
+  }
+  ```
+
+### Actualizar Borrador de Informe
+- **Ruta:** `PATCH /informes/:alertaId/borrador`
+- **Descripción:** Actualiza las observaciones cualitativas y los detalles de la propiedad afectada en el borrador del informe.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Permisos Requeridos:** `ADMIN` (requiere middleware `verificarRolAdmin`)
+- **Body request:**
+  ```json
+  {
+    "observaciones_admin": "Vivienda tipo PH, daño estructural parcial en planta baja. El fuego se originó en la cocina.",
+    "detalles_propiedad": "Propiedad horizontal, 2 plantas, techo de losa. Superficie estimada: 80m². Propietario: Juan Pérez, DNI 12.345.678."
+  }
+  ```
+- **Respuesta (200 OK):** Objeto del informe actualizado.
+- **Posibles errores (500):**
+  - `"No existe un borrador para esta alerta. Primero obtenga el borrador con GET."`
+
+---
+
 ## 📊 Estados y Enums Comunes
 
 ### Estado de Camión
@@ -887,6 +1009,10 @@ Registros del control semanal de herramientas del cuartel. Controla directamente
 - `PENDIENTE` - Aún no respondió
 - `ACEPTADO` - Confirmó asistencia
 - `RECHAZADO` - No puede asistir
+
+### Estado de Informe
+- `BORRADOR` - Informe en edición por el administrador
+- `FINALIZADO` - Informe listo para impresión
 
 ---
 
@@ -913,4 +1039,9 @@ BOLSO
     ├──-> BOLSOS_INVENTARIO (herramientas)
     ├──-> CHECKLIST_BOLSOS_EMERGENCIA (control post-intervención)
     └──-> CHECKLIST_DETALLE_BOLSOS (items controlados)
+
+ALERTA
+    ├──-> RESPUESTAS_ALERTAS (asistencia de bomberos)
+    ├──-> REGISTROS_COMUNICACION (mensajes durante emergencia)
+    └──-> INFORMES_EMERGENCIA (borrador + PDF, 1:1)
 ```

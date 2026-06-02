@@ -30,6 +30,7 @@ export class SeedController {
             await prisma.herramientas.deleteMany();
             await prisma.camiones.deleteMany();
             await prisma.bolsos.deleteMany();
+            await prisma.informes_emergencia.deleteMany();
             await prisma.registros_comunicacion.deleteMany();
             await prisma.respuestas_alertas.deleteMany();
             await prisma.alerta.deleteMany();
@@ -38,6 +39,7 @@ export class SeedController {
             await prisma.estados_alerta.deleteMany();
             await prisma.bomberos.deleteMany();
             await prisma.bomberos_rangos.deleteMany();
+            await prisma.tokens_dispositivos.deleteMany();
             await prisma.usuarios.deleteMany();
 
             // ── Rangos ──────────────────────────────────────────────────────
@@ -88,11 +90,28 @@ export class SeedController {
             });
 
             // ── Alertas ─────────────────────────────────────────────────────
+            // Fecha de inicio para la alerta finalizada (3 horas antes de ahora)
+            const fechaInicioFinalizada = new Date(Date.now() - 3 * 3_600_000);
+            const fechaFinFinalizada = new Date();
+            const duracionMs = fechaFinFinalizada.getTime() - fechaInicioFinalizada.getTime();
+
             await prisma.alerta.createMany({
                 data: [
                     { id: '1', sub_categoria_alerta_id: '1', ubicacion: 'TEST_1', observaciones: 'TEST_1', fecha_hora: new Date(), estado_alerta_id: '1', usuario_alta_alerta: 'abc1' },
                     { id: '2', sub_categoria_alerta_id: '2', ubicacion: 'TEST_2', observaciones: 'TEST_2', fecha_hora: new Date(), estado_alerta_id: '2', usuario_alta_alerta: 'abc2' },
                     { id: '3', sub_categoria_alerta_id: '3', ubicacion: 'TEST_3', observaciones: 'TEST_3', fecha_hora: new Date(), estado_alerta_id: '1', usuario_alta_alerta: 'abc3' },
+                    // Alerta FINALIZADA para probar métricas e informes PDF
+                    {
+                        id: '4',
+                        sub_categoria_alerta_id: '1',
+                        ubicacion: 'Av. San Martín 1250, Godoy Cruz',
+                        observaciones: 'Incendio en vivienda de 2 plantas. Se controló el fuego en planta baja. Daños parciales en estructura.',
+                        fecha_hora: fechaInicioFinalizada,
+                        fecha_hora_finalizacion: fechaFinFinalizada,
+                        duracion_total_alerta: duracionMs,
+                        estado_alerta_id: '3', // FINALIZADO
+                        usuario_alta_alerta: 'abc1'
+                    },
                 ],
             });
 
@@ -104,6 +123,10 @@ export class SeedController {
                     { id: 'resp_3', alerta_id: '2', usuario_id: 'abc2', estado_respuesta: 'PENDIENTE', fecha_hora: new Date() },
                     { id: 'resp_4', alerta_id: '2', usuario_id: 'abc3', estado_respuesta: 'RECHAZADO', fecha_hora: new Date() },
                     { id: 'resp_5', alerta_id: '3', usuario_id: 'abc1', estado_respuesta: 'PENDIENTE', fecha_hora: new Date() },
+                    // Respuestas ACEPTADO para la alerta finalizada (para métricas + PDF)
+                    { id: 'resp_6', alerta_id: '4', usuario_id: 'abc1', estado_respuesta: 'ACEPTADO', fecha_hora: fechaInicioFinalizada },
+                    { id: 'resp_7', alerta_id: '4', usuario_id: 'abc2', estado_respuesta: 'ACEPTADO', fecha_hora: fechaInicioFinalizada },
+                    { id: 'resp_8', alerta_id: '4', usuario_id: 'abc3', estado_respuesta: 'ACEPTADO', fecha_hora: fechaInicioFinalizada },
                 ],
             });
 
@@ -123,6 +146,18 @@ export class SeedController {
                     { id: 'bombero_test_2', usuario_id: 'abc2', rango: 'CAD', nombre: 'CADETE_TEST', apellido: 'TEST' },
                     { id: 'bombero_test_3', usuario_id: 'abc3', rango: 'OFI', nombre: 'OFICIAL_TEST', apellido: 'TEST' },
                 ],
+            });
+
+            // ── Informe borrador para alerta finalizada ─────────────────────
+            await prisma.informes_emergencia.create({
+                data: {
+                    id: 'informe_1',
+                    alerta_id: '4',
+                    observaciones_admin: 'Vivienda tipo PH de 2 ambientes. Se constató daño estructural parcial en la planta baja. El fuego se originó en la cocina.',
+                    detalles_propiedad: 'Propiedad horizontal, 2 plantas, techo de losa. Superficie estimada: 80m². Propietario: Juan Pérez, DNI 12.345.678.',
+                    estado_informe: 'BORRADOR',
+                    creado_por: 'abc1',
+                },
             });
 
             // ── Camiones ────────────────────────────────────────────────────
@@ -278,3 +313,4 @@ export class SeedController {
         }
     }
 }
+
