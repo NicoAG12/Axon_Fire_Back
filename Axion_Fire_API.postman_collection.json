@@ -905,7 +905,7 @@
                 ":id"
               ]
             },
-            "description": "ACTUALIZAR CANTIDAD DE HERRAMIENTA EN BOLSO\n=============================================\nModifica la cantidad de una herramienta específica.\n\nPASO A PASO:\n1. Obtener ID del inventario (de GET /bolsos_inventario/bolso/:bolsoId)\n2. Definir nueva cantidad\n3. Ejecutar request"
+            "description": "ACTUALIZAR INVENTARIO DE BOLSO\n=============================================\nModifica la cantidad y/u opcionalmente la herramienta específica.\n\n⚠️ IMPORTANTE: Al actualizar, recalcula y ajusta automáticamente el stock (cantidad_disponible) en el inventario maestro de herramientas.\n\nPASO A PASO:\n1. Obtener ID del inventario (de GET /bolsos_inventario/bolso/:bolsoId)\n2. Definir nueva cantidad (y herramientaId opcional)\n3. Ejecutar request"
           },
           "response": []
         },

@@ -373,10 +373,17 @@ Gestión del inventario de herramientas asignadas a cada bolso de emergencia. Si
 - **Descripción:** Lista todas las herramientas asignadas a un bolso.
 - **Headers Requeridos:** `Authorization: Bearer <token>`
 
-### Actualizar Cantidad de Inventario de Bolso
+### Actualizar Inventario de Bolso
 - **Ruta:** `PATCH /bolsos_inventario/:id`
-- **Descripción:** Actualiza la cantidad de una herramienta en el inventario del bolso.
+- **Descripción:** Actualiza la cantidad de una herramienta en el inventario del bolso. Opcionalmente, puede cambiar la herramienta si se envía `herramientaId`. Al actualizar, recalcula y actualiza automáticamente el stock (`cantidad_disponible`) en el inventario maestro de la(s) herramienta(s) afectada(s).
 - **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Body request:**
+  ```json
+  {
+    "cantidad": 3,
+    "herramientaId": "uuid-herramienta-opcional"
+  }
+  ```
 
 ### Eliminar del Inventario de Bolso
 - **Ruta:** `DELETE /bolsos_inventario/:id`
