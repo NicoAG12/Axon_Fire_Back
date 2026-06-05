@@ -18,6 +18,13 @@ describe('AX-17: Exactitud Conteo RUBA - Verificación Matemática de Horas', ()
     expect(loginRes.status).toBe(200);
     adminToken = loginRes.body.token;
 
+    // Limpiar datos residuales de ejecuciones anteriores (forceExit puede cortar afterAll)
+    const residuales = await prisma.alerta.findMany({ where: { ubicacion: { startsWith: 'Test RUBA horas' } }, select: { id: true } });
+    for (const r of residuales) {
+      await prisma.respuestas_alertas.deleteMany({ where: { alerta_id: r.id } });
+      await prisma.alerta.delete({ where: { id: r.id } });
+    }
+
     // Obtener mes/año actual para crear alertas en el mismo período
     const ahora = new Date();
     const anio = ahora.getFullYear();
@@ -66,9 +73,15 @@ describe('AX-17: Exactitud Conteo RUBA - Verificación Matemática de Horas', ()
   });
 
   afterAll(async () => {
+    // Doble limpieza: por lista + por patrón (cubre datos residuales si forceExit cortó la limpieza anterior)
     for (const id of createdAlertas) {
       await prisma.respuestas_alertas.deleteMany({ where: { alerta_id: id } });
       await prisma.alerta.deleteMany({ where: { id } });
+    }
+    const residuales = await prisma.alerta.findMany({ where: { ubicacion: { startsWith: 'Test RUBA horas' } }, select: { id: true } });
+    for (const r of residuales) {
+      await prisma.respuestas_alertas.deleteMany({ where: { alerta_id: r.id } });
+      await prisma.alerta.delete({ where: { id: r.id } });
     }
     await prisma.$disconnect();
   });
