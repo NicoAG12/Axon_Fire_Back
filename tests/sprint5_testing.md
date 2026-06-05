@@ -211,6 +211,8 @@ Prueba de integración sobre los endpoints CRUD de la entidad `bolsos_inventario
      }
 ```
 
+> **Nota post-implementación:** El DTO `ActualizarInventarioBolsoDTO` define `cantidad` como `cantidad?: number` (opcional). Con `strict: true` en tsconfig, `data.cantidad` es `number | undefined`, por lo que la línea `const diferencia = data.cantidad - item.cantidad_herramienta` no compila. El fix requiere agregar un guard al inicio: `if (data.cantidad === undefined) throw new Error('cantidad es requerida');`.
+
 ---
 
 ## 7. AX-15 — Test de Generación de PDF
