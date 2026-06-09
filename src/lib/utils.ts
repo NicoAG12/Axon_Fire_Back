@@ -42,12 +42,12 @@ export function parseARTDate(input: Date | string): Date {
 
 /**
  * Formatea un Date guardado como "reloj UTC = reloj ART" para devolverlo
- * al frontend sin la Z de UTC, manteniendo la hora literal.
- * Ej: Date "2026-05-22T18:53:00.000Z" -> "2026-05-22T18:53:00"
+ * al frontend sin la Z de UTC ni los milisegundos, manteniendo la hora literal.
+ * Ej: Date "2026-05-22T18:53:00.123Z" -> "2026-05-22 18:53:00"
  */
 export function formatToARTString(date: Date | null): string | null {
     if (!date) return null;
-    const iso = date.toISOString(); // ej: 2026-05-22T18:53:00.000Z
-    // Quitamos la Z y los milisegundos
-    return iso.replace('.000Z', '');
+    const iso = date.toISOString(); 
+    // Separamos por el punto de los milisegundos y reemplazamos la T por un espacio
+    return iso.split('.')[0].replace('T', ' ');
 }
