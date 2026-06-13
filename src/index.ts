@@ -22,6 +22,7 @@ import rutaChecklistCuartel from './routes/checklist_cuartel.route'
 import rutaSeed from './routes/seed.route'
 import rutaMetricas from './routes/metricas.route'
 import rutaInformes from './routes/informes.route'
+import rutaPois from './routes/pois.routes'
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '3000', 10);
@@ -54,6 +55,7 @@ async function main() {
     app.use('/seed', rutaSeed);
     app.use('/metricas', rutaMetricas);
     app.use('/informes', rutaInformes);
+    app.use('/api/maps/pois', rutaPois);
 
     // 3. Poner el servidor a escuchar peticiones
     app.listen(PORT, '0.0.0.0', () => {

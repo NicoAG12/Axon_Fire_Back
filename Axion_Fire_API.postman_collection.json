@@ -1987,6 +1987,151 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "POIS",
+      "item": [
+        {
+          "name": "1. Obtener POIs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/maps/pois",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "maps",
+                "pois"
+              ]
+            },
+            "description": "LISTAR TODOS LOS PUNTOS DE INTERÉS (POIs)\n============================================\nObtiene todos los POIs activos registrados en el sistema.\n\nPASO A PASO:\n1. Ejecutar request con token de ADMIN\n2. Revisar array de POIs\n\nRESPUESTA:\n[\n  {\n    \"id\": \"uuid-poi\",\n    \"categoria\": \"HIDRANTE | SALUD | MATERIAL_PELIGROSO | CUARTEL_APOYO\",\n    \"nombre\": \"Hidrante Av. Corrientes\",\n    \"descripcion\": \"...\",\n    \"latitud\": -34.6040,\n    \"longitud\": -58.3820,\n    \"activo\": true,\n    \"creado_por\": \"uuid-admin\"\n  }\n]\n\nNOTA: Requiere token de ADMIN (middleware verificarRolAdmin)."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Crear POI",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Hidrante Av. Corrientes\",\n    \"categoria\": \"HIDRANTE\",\n    \"descripcion\": \"Hidrante de color rojo, entre Talcahuano y Uruguay\",\n    \"latitud\": -34.6040,\n    \"longitud\": -58.3820\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/maps/pois",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "maps",
+                "pois"
+              ]
+            },
+            "description": "CREAR NUEVO PUNTO DE INTERÉS (POI)\n====================================\nRegistra un nuevo POI estratégico en el sistema.\n\nPASO A PASO:\n1. Definir nombre, categoria, latitud y longitud\n2. (Opcional) Agregar descripción\n3. Ejecutar request con token de ADMIN\n4. Guardar 'id' retornado para actualizaciones o eliminación\n\nBODY:\n- nombre: string (requerido)\n- categoria: \"HIDRANTE\" | \"SALUD\" | \"MATERIAL_PELIGROSO\" | \"CUARTEL_APOYO\" (requerido)\n- descripcion: string (opcional)\n- latitud: number (requerido)\n- longitud: number (requerido)\n\nNOTA: Requiere token de ADMIN (middleware verificarRolAdmin).\nEl creado_por se extrae automáticamente del JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "3. Actualizar POI",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Hidrante renovado Av. Corrientes\",\n    \"descripcion\": \"Hidrante reemplazado en enero 2026\",\n    \"latitud\": -34.6045,\n    \"longitud\": -58.3815\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/maps/pois/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "maps",
+                "pois",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-del-poi"
+                }
+              ]
+            },
+            "description": "MODIFICAR DATOS DE UN POI\n==========================\nActualiza los campos de un POI existente.\n\nPASO A PASO:\n1. Reemplazar :id con UUID del POI\n2. Enviar solo los campos a actualizar (todos opcionales)\n3. Ejecutar request con token de ADMIN\n\nBODY (todos opcionales):\n- nombre: string\n- categoria: \"HIDRANTE\" | \"SALUD\" | \"MATERIAL_PELIGROSO\" | \"CUARTEL_APOYO\"\n- descripcion: string\n- latitud: number\n- longitud: number\n\nNOTA: Requiere token de ADMIN (middleware verificarRolAdmin).\nERROR 404: { \"error\": \"POI no encontrado\" }"
+          },
+          "response": []
+        },
+        {
+          "name": "4. Eliminar POI",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/maps/pois/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "maps",
+                "pois",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-del-poi"
+                }
+              ]
+            },
+            "description": "ELIMINAR POI (BORRADO LÓGICO)\n================================\nMarca un POI como inactivo (activo = false). No se elimina físicamente.\n\nPASO A PASO:\n1. Reemplazar :id con UUID del POI\n2. Ejecutar request con token de ADMIN\n\nRESPUESTA:\n{ \"message\": \"POI eliminado correctamente\" }\n\nNOTA: Requiere token de ADMIN (middleware verificarRolAdmin).\nERROR 404: { \"error\": \"POI no encontrado\" }"
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }

@@ -38,6 +38,13 @@ enum estado_informe {
   FINALIZADO
 }
 
+enum categoria_poi {
+  HIDRANTE
+  SALUD
+  MATERIAL_PELIGROSO
+  CUARTEL_APOYO
+}
+
 model tokens_dispositivos {
   id         String   @id @default(uuid())
   usuarioId  usuarios @relation(fields: [usuario_id], references: [id])
@@ -60,6 +67,7 @@ model usuarios {
   checklistCamionesDiarios  checklist_camiones_diario[]
   checklistBolsosEmergencia checklist_bolsos_emergencia[]
   checklistsCuartel         checklist_cuartel[]
+  pois_creados              puntos_interes[]
 
   @@map("users")
 }
@@ -267,4 +275,16 @@ model informes_emergencia {
   creado_por          String
   fecha_creacion      DateTime       @default(now())
   fecha_actualizacion DateTime       @updatedAt
+}
+
+model puntos_interes {
+  id          String        @id @default(uuid())
+  categoria   categoria_poi
+  nombre      String
+  descripcion String?
+  latitud     Float
+  longitud    Float
+  activo      Boolean       @default(true)
+  creado_por  String
+  usuario     usuarios      @relation(fields: [creado_por], references: [id])
 }

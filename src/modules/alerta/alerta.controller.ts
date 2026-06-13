@@ -47,7 +47,7 @@ export class AlertaController {
 
     obtenerAlertasPorFecha = async (req: AuthRequest, res: Response) => {
         try {
-            const { fecha_desde, fecha_hasta } = req.body;
+            const { fecha_desde, fecha_hasta } = req.query as { fecha_desde: string, fecha_hasta: string };
             const alertas = await this.alertaService.obtenerAlertasPorFechas(fecha_desde, fecha_hasta)
             return res.json({
                 alertas
