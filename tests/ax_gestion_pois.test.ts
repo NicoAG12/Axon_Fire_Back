@@ -110,7 +110,7 @@ describe('AX-GESTION POIs — RBAC, CRUD y Validaciones Geográficas', () => {
   describe('AX-GESTION-B2 — CRUD de POIs (ciclo de vida completo)', () => {
     const poiPayload = {
       nombre: 'Hidrante QA Test',
-      categoria: 'HIDRANTE',
+      categoria: 'HIDRANTE' as const,
       descripcion: 'Hidrante creado durante test de QA',
       latitud: -34.6037,
       longitud: -58.3816
@@ -149,6 +149,18 @@ describe('AX-GESTION POIs — RBAC, CRUD y Validaciones Geográficas', () => {
       expect(found.nombre).toBe(poiPayload.nombre);
     });
 
+    it('GET /api/maps/pois?type=HIDRANTE → filtra por categoría', async () => {
+      const res = await request(baseUrl)
+        .get('/api/maps/pois?type=HIDRANTE')
+        .set('Authorization', `Bearer ${adminToken}`);
+
+      expect(res.status).toBe(200);
+      expect(Array.isArray(res.body)).toBe(true);
+      res.body.forEach((p: any) => {
+        expect(p.categoria).toBe('HIDRANTE');
+      });
+    });
+
     it('PATCH /api/maps/pois/:id → 200 + datos actualizados', async () => {
       expect(createdPoiId).toBeTruthy();
 
@@ -184,14 +196,14 @@ describe('AX-GESTION POIs — RBAC, CRUD y Validaciones Geográficas', () => {
       expect(res.body).toHaveProperty('error', 'POI no encontrado');
     });
 
-    it('DELETE /api/maps/pois/:id → soft-delete (activo=false) + 200 (BUG: debería ser 204)', async () => {
+    it('DELETE /api/maps/pois/:id → soft-delete (activo=false) + 200', async () => {
       expect(createdPoiId).toBeTruthy();
 
       const res = await request(baseUrl)
         .delete(`/api/maps/pois/${createdPoiId}`)
         .set('Authorization', `Bearer ${adminToken}`);
 
-      // BUG documentado: la spec pide 204, el controller devuelve 200
+      // API contract define 200 para DELETE (borrado lógico)
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty('message', 'POI eliminado correctamente');
     });
@@ -228,55 +240,85 @@ describe('AX-GESTION POIs — RBAC, CRUD y Validaciones Geográficas', () => {
   });
 
   // ─────────────────────────────────────────────────────────────────────────
-  // AX-GESTION-B3: Validaciones geográficas
+  // AX-GESTION-B3: Validaciones geográficas (ahora con Zod middleware)
   // ─────────────────────────────────────────────────────────────────────────
   describe('AX-GESTION-B3 — Validaciones geográficas', () => {
     const basePoi = {
       nombre: 'POI validación geográfica',
-      categoria: 'HIDRANTE'
+      categoria: 'HIDRANTE' as const
     };
 
-    describe('Campos vacíos / faltantes — deberían retornar 400', () => {
-      it('POST sin latitud → 400 (BUG: actualmente retorna 500)', async () => {
+    describe('Campos requeridos faltantes — 400 Bad Request', () => {
+      it('POST sin latitud retorna 400 con errors detallado', async () => {
         const res = await request(baseUrl)
           .post('/api/maps/pois')
           .set('Authorization', `Bearer ${adminToken}`)
           .send({ ...basePoi, longitud: -58.38 });
 
-        // BUG: el backend retorna 500 porque service lanza error sin manejo 400
         expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('errors');
+        expect(Array.isArray(res.body.errors)).toBe(true);
+        expect(res.body.errors[0]).toHaveProperty('path');
+        expect(res.body.errors[0]).toHaveProperty('message');
       });
 
-      it('POST sin longitud → 400 (BUG: actualmente retorna 500)', async () => {
+      it('POST sin longitud retorna 400 con errors detallado', async () => {
         const res = await request(baseUrl)
           .post('/api/maps/pois')
           .set('Authorization', `Bearer ${adminToken}`)
           .send({ ...basePoi, latitud: -34.6 });
 
         expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('errors');
+        expect(res.body.errors.length).toBeGreaterThanOrEqual(1);
       });
 
-      it('POST sin latitud ni longitud → 400 (BUG: actualmente retorna 500)', async () => {
+      it('POST sin latitud ni longitud retorna 400 con ambos errores', async () => {
         const res = await request(baseUrl)
           .post('/api/maps/pois')
           .set('Authorization', `Bearer ${adminToken}`)
           .send(basePoi);
 
         expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('errors');
+        expect(res.body.errors.length).toBeGreaterThanOrEqual(2);
+      });
+
+      it('POST sin nombre retorna 400 con error de nombre', async () => {
+        const res = await request(baseUrl)
+          .post('/api/maps/pois')
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({ categoria: 'HIDRANTE', latitud: -34.6, longitud: -58.38 });
+
+        expect(res.status).toBe(400);
+        const errorPaths = res.body.errors.map((e: any) => e.path);
+        expect(errorPaths).toContain('nombre');
+      });
+
+      it('POST con nombre vacío retorna 400', async () => {
+        const res = await request(baseUrl)
+          .post('/api/maps/pois')
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({ ...basePoi, nombre: '', latitud: -34.6, longitud: -58.38 });
+
+        expect(res.status).toBe(400);
       });
     });
 
-    describe('Latitud fuera de rango [-90, 90] — debería retornar 400', () => {
-      it('latitud > 90 → 400 (BUG: actualmente retorna 500)', async () => {
+    describe('Latitud fuera de rango [-90, 90] — 400 Bad Request', () => {
+      it('latitud > 90 rechazada', async () => {
         const res = await request(baseUrl)
           .post('/api/maps/pois')
           .set('Authorization', `Bearer ${adminToken}`)
           .send({ ...basePoi, latitud: 91, longitud: 0 });
 
         expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('errors');
+        const latErrors = res.body.errors.filter((e: any) => e.path === 'latitud');
+        expect(latErrors.length).toBeGreaterThanOrEqual(1);
       });
 
-      it('latitud < -90 → 400 (BUG: actualmente retorna 500)', async () => {
+      it('latitud < -90 rechazada', async () => {
         const res = await request(baseUrl)
           .post('/api/maps/pois')
           .set('Authorization', `Bearer ${adminToken}`)
@@ -286,17 +328,19 @@ describe('AX-GESTION POIs — RBAC, CRUD y Validaciones Geográficas', () => {
       });
     });
 
-    describe('Longitud fuera de rango [-180, 180] — debería retornar 400', () => {
-      it('longitud > 180 → 400 (BUG: actualmente retorna 500)', async () => {
+    describe('Longitud fuera de rango [-180, 180] — 400 Bad Request', () => {
+      it('longitud > 180 rechazada', async () => {
         const res = await request(baseUrl)
           .post('/api/maps/pois')
           .set('Authorization', `Bearer ${adminToken}`)
           .send({ ...basePoi, latitud: 0, longitud: 181 });
 
         expect(res.status).toBe(400);
+        const lngErrors = res.body.errors.filter((e: any) => e.path === 'longitud');
+        expect(lngErrors.length).toBeGreaterThanOrEqual(1);
       });
 
-      it('longitud < -180 → 400 (BUG: actualmente retorna 500)', async () => {
+      it('longitud < -180 rechazada', async () => {
         const res = await request(baseUrl)
           .post('/api/maps/pois')
           .set('Authorization', `Bearer ${adminToken}`)
@@ -306,7 +350,7 @@ describe('AX-GESTION POIs — RBAC, CRUD y Validaciones Geográficas', () => {
       });
     });
 
-    describe('PATCH también debería validar coordenadas', () => {
+    describe('PATCH también valida coordenadas (Zod partial schema)', () => {
       let tempPoiId: string;
 
       beforeAll(async () => {
@@ -323,7 +367,7 @@ describe('AX-GESTION POIs — RBAC, CRUD y Validaciones Geográficas', () => {
         }
       });
 
-      it('PATCH con latitud inválida → 400 (BUG: service no valida en actualizar)', async () => {
+      it('PATCH con latitud inválida → 400', async () => {
         if (!tempPoiId) return;
 
         const res = await request(baseUrl)
@@ -331,8 +375,52 @@ describe('AX-GESTION POIs — RBAC, CRUD y Validaciones Geográficas', () => {
           .set('Authorization', `Bearer ${adminToken}`)
           .send({ latitud: 200 });
 
-        // BUG: actualizarPoi en service NO valida rangos de coordenadas
-        // El valor 200 se guarda en la DB sin error
+        expect(res.status).toBe(400);
+        const latErrors = res.body.errors.filter((e: any) => e.path === 'latitud');
+        expect(latErrors.length).toBeGreaterThanOrEqual(1);
+      });
+
+      it('PATCH con longitud inválida → 400', async () => {
+        if (!tempPoiId) return;
+
+        const res = await request(baseUrl)
+          .patch(`/api/maps/pois/${tempPoiId}`)
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({ longitud: 500 });
+
+        expect(res.status).toBe(400);
+      });
+
+      it('PATCH con categoria inválida → 400', async () => {
+        if (!tempPoiId) return;
+
+        const res = await request(baseUrl)
+          .patch(`/api/maps/pois/${tempPoiId}`)
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({ categoria: 'NO_EXISTE' });
+
+        expect(res.status).toBe(400);
+      });
+    });
+
+    describe('Categoría inválida — 400 Bad Request', () => {
+      it('POST con categoria inválida rechazada', async () => {
+        const res = await request(baseUrl)
+          .post('/api/maps/pois')
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({ ...basePoi, categoria: 'INVENTADA', latitud: -34.6, longitud: -58.38 });
+
+        expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('errors');
+      });
+    });
+
+    describe('GET con type inválido — 400 Bad Request', () => {
+      it('GET /api/maps/pois?type=INVALIDO retorna 400', async () => {
+        const res = await request(baseUrl)
+          .get('/api/maps/pois?type=INVALIDO')
+          .set('Authorization', `Bearer ${adminToken}`);
+
         expect(res.status).toBe(400);
       });
     });
