@@ -11,7 +11,7 @@ export class PoisService {
         const longitudValida = data.longitud >= -180 && data.longitud <= 180
 
         if (!latitudValida || !longitudValida) {
-            throw new Error("Latitud o longitud invalida");
+            throw new Error("Latitud debe estar entre -90 y 90, y longitud entre -180 y 180");
         }
 
         return await this.repositorio.crearPoi(data, adminId);

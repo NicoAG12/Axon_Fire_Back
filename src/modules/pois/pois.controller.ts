@@ -3,19 +3,12 @@ import { AuthRequest } from '../../middlewares/auth.middleware';
 import { PoisService } from './pois.service';
 import { CrearPoiDTO, ActualizarPoiDTO } from './DTO/pois_dto';
 
-import { categoria_poi } from '@prisma/client';
-
 export class PoisController {
     private service = new PoisService();
 
     crearPOI = async (req: AuthRequest, res: Response) => {
         try {
             const data: CrearPoiDTO = req.body;
-            
-            // Validacion en runtime
-            if (!Object.values(categoria_poi).includes(data.categoria)) {
-                return res.status(400).json({ error: `Categoria invalida. Debe ser una de: ${Object.values(categoria_poi).join(', ')}` });
-            }
 
             const adminId = (req.user as any).id_usuario;
             const resultado = await this.service.crearPoi(data, adminId);
@@ -40,11 +33,6 @@ export class PoisController {
         try {
             const { id } = req.params as { id: string };
             const data: ActualizarPoiDTO = req.body;
-
-            // Validacion en runtime
-            if (data.categoria && !Object.values(categoria_poi).includes(data.categoria as any)) {
-                return res.status(400).json({ error: `Categoria invalida. Debe ser una de: ${Object.values(categoria_poi).join(', ')}` });
-            }
 
             const resultado = await this.service.actualizarPoi(id, data);
             return res.status(200).json(resultado);

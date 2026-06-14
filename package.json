@@ -26,7 +26,8 @@
     "jsonwebtoken": "^9.0.3",
     "luxon": "^3.7.2",
     "pdfkit": "^0.18.0",
-    "prisma": "^7.7.0"
+    "prisma": "^7.7.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@prisma/adapter-pg": "^7.7.0",
