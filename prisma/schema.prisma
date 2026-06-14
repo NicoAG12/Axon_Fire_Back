@@ -45,6 +45,12 @@ enum categoria_poi {
   CUARTEL_APOYO
 }
 
+enum nivel_prioridad {
+  ALTA
+  MEDIA
+  BAJA
+}
+
 model tokens_dispositivos {
   id         String   @id @default(uuid())
   usuarioId  usuarios @relation(fields: [usuario_id], references: [id])
@@ -113,6 +119,9 @@ model alerta {
   subCategoriaAlerta         subcategoria_alerta           @relation(fields: [sub_categoria_alerta_id], references: [id])
   sub_categoria_alerta_id    String
   ubicacion                  String
+  latitud                    Float?
+  longitud                   Float?
+  prioridad                  nivel_prioridad               @default(MEDIA)
   observaciones              String
   estadoAlerta               estados_alerta                @relation(fields: [estado_alerta_id], references: [id])
   estado_alerta_id           String

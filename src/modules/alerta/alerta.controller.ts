@@ -22,9 +22,12 @@ export class AlertaController {
                 id: nuevaAlerta.id, fecha_hora:
                     nuevaAlerta.fecha_hora,
                 ubicacion: nuevaAlerta.ubicacion,
+                latitud: nuevaAlerta.latitud,
+                longitud: nuevaAlerta.longitud,
                 observaciones: nuevaAlerta.observaciones,
                 sub_categoria_alerta_id: nuevaAlerta.sub_categoria_alerta_id,
-                estado_alerta_id: nuevaAlerta.estado_alerta_id
+                estado_alerta_id: nuevaAlerta.estado_alerta_id,
+                prioridad: nuevaAlerta.prioridad
             });
         } catch (error: any) {
             return res.status(500).json({ error: error.message });

@@ -1,5 +1,6 @@
 import { prisma } from "../../lib/prisma";
 import { CrearPoiDTO, ActualizarPoiDTO } from "./DTO/pois_dto";
+import { categoria_poi } from "@prisma/client";
 
 const poiSelect = {
     id: true,
@@ -26,9 +27,12 @@ export class PoisRepository {
         });
     }
 
-    async obtenerPois() {
+    async obtenerPois(categoria?: categoria_poi) {
         return await prisma.puntos_interes.findMany({
-            where: { activo: true },
+            where: {
+                activo: true,
+                ...(categoria && { categoria })
+            },
             select: poiSelect
         });
     }

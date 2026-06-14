@@ -1,5 +1,6 @@
 import { PoisRepository } from "./pois.repository";
 import { CrearPoiDTO, ActualizarPoiDTO } from "./DTO/pois_dto";
+import { categoria_poi } from "@prisma/client";
 
 
 export class PoisService {
@@ -11,14 +12,14 @@ export class PoisService {
         const longitudValida = data.longitud >= -180 && data.longitud <= 180
 
         if (!latitudValida || !longitudValida) {
-            throw new Error("Latitud o longitud invalida");
+            throw new Error("Latitud debe estar entre -90 y 90, y longitud entre -180 y 180");
         }
 
         return await this.repositorio.crearPoi(data, adminId);
     }
 
-    async obtenerPois() {
-        return await this.repositorio.obtenerPois();
+    async obtenerPois(categoria?: categoria_poi) {
+        return await this.repositorio.obtenerPois(categoria);
     }
 
     async actualizarPoi(id: string, data: ActualizarPoiDTO) {
