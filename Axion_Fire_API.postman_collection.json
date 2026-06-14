@@ -13,6 +13,10 @@
     {
       "key": "token",
       "value": ""
+    },
+    {
+      "key": "alertaId",
+      "value": ""
     }
   ],
   "item": [
@@ -1164,7 +1168,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"sub_categoria_alerta_id\": \"uuid-subcategoria\",\n    \"ubicacion\": \"Calle Falsa 123\",\n    \"observaciones\": \"Incendio de pastizales pequeños\",\n    \"fecha_hora\": \"2026-04-26T20:00:00.000Z\",\n    \"estado_alerta_id\": \"uuid-estado\"\n}",
+              "raw": "{\n    \"sub_categoria_alerta_id\": \"uuid-subcategoria\",\n    \"ubicacion\": \"Calle Falsa 123\",\n    \"latitud\": -26.8072,\n    \"longitud\": -65.2927,\n    \"observaciones\": \"Incendio de pastizales pequeños\",\n    \"fecha_hora\": \"2026-04-26T20:00:00.000Z\",\n    \"estado_alerta_id\": \"uuid-estado\",\n    \"prioridad\": \"MEDIA\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1181,7 +1185,7 @@
                 "crear"
               ]
             },
-            "description": "CREAR ALERTA SIN NOTIFICACIÓN\n================================\nRegistra una nueva alerta en el sistema sin disparar notificaciones.\n\nÚtil para pruebas o alertas que no requieren notificación inmediata.\n\n\n⚠️ IMPORTANTE: El usuarioId se extrae automáticamente del JWT."
+            "description": "CREAR ALERTA SIN NOTIFICACIÓN\n================================\nRegistra una nueva alerta en el sistema sin disparar notificaciones.\n\nÚtil para pruebas o alertas que no requieren notificación inmediata.\n\n⚠️ IMPORTANTE: El usuarioId se extrae automáticamente del JWT.\n\nBODY:\n- sub_categoria_alerta_id: UUID\n- ubicacion: string (dirección textual)\n- latitud: number (requerido)\n- longitud: number (requerido)\n- observaciones: string\n- fecha_hora: ISO datetime\n- estado_alerta_id: UUID\n- prioridad: \"ALTA\" | \"MEDIA\" | \"BAJA\" (opcional, default MEDIA)\n\nRESPUESTA incluye: id, latitud, longitud, prioridad, etc."
           },
           "response": []
         },
@@ -1197,7 +1201,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"sub_categoria_alerta_id\": \"uuid-subcategoria\",\n    \"ubicacion\": \"Av. Siempreviva 742\",\n    \"observaciones\": \"Fuego en estructura\",\n    \"destinatariosIds\": [\"uuid-usuario-1\", \"uuid-usuario-2\"]\n}",
+              "raw": "{\n    \"sub_categoria_alerta_id\": \"uuid-subcategoria\",\n    \"ubicacion\": \"Av. Siempreviva 742\",\n    \"latitud\": -26.8072,\n    \"longitud\": -65.2927,\n    \"observaciones\": \"Fuego en estructura\",\n    \"prioridad\": \"ALTA\",\n    \"destinatariosIds\": [\"uuid-usuario-1\", \"uuid-usuario-2\"]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1214,7 +1218,7 @@
                 "crear-con-notificacion"
               ]
             },
-            "description": "CREAR ALERTA Y ENVIAR NOTIFICACIONES (PASO 2)\n==================================================\nRegistra la alerta y envía notificaciones push a los bomberos seleccionados.\n\n⚠️ IMPORTANTE: El usuarioId se extrae automáticamente del JWT.\n\nPASO A PASO:\n1. Ejecutar Login primero y guardar token\n2. Preparar datos de la alerta\n3. Definir array de destinatarios (UUIDs de usuarios)\n4. Ejecutar request\n5. Guardar 'id' de alerta para siguientes pasos\n\nBODY:\n- sub_categoria_alerta_id: UUID de subcategoría\n- ubicacion: string con dirección\n- observaciones: string con detalles\n- destinatariosIds: array de UUIDs de usuarios a notificar"
+            "description": "CREAR ALERTA Y ENVIAR NOTIFICACIONES (PASO 2)\n==================================================\nRegistra la alerta y envía notificaciones push a los bomberos seleccionados.\n\n⚠️ IMPORTANTE: El usuarioId se extrae automáticamente del JWT.\n\nPASO A PASO:\n1. Ejecutar Login primero y guardar token\n2. Preparar datos de la alerta (incluir coordenadas y prioridad)\n3. Definir array de destinatarios (UUIDs de usuarios)\n4. Ejecutar request\n5. Guardar 'id' de alerta para siguientes pasos\n\nBODY:\n- sub_categoria_alerta_id: UUID de subcategoría\n- ubicacion: string con dirección\n- latitud: number (requerido)\n- longitud: number (requerido)\n- observaciones: string con detalles\n- prioridad: \"ALTA\" | \"MEDIA\" | \"BAJA\" (opcional, default MEDIA)\n- destinatariosIds: array de UUIDs de usuarios a notificar"
           },
           "response": []
         },
@@ -1690,7 +1694,7 @@
                 "login"
               ]
             },
-            "description": "WORKFLOW D: CICLO COMPLETO DE ALERTA\n======================================\n\nOBJETIVO: Crear una alerta, notificar bomberos, registrar asistencia y comunicación.\n\nPASO A PASO:\n---------------\n\nPASO 1: Login (OBTENER TOKEN)\n→ POST /auth/login\n→ Body: { nombre_usuario, password }\n→ GUARDAR: 'token' en variable {{token}}\n→ Este token se usa automáticamente en todos los requests protegidos\n\nPASO 2: Crear alerta con notificación\n→ POST /alerta/crear-con-notificacion\n→ Body con datos de la alerta y destinatarios\n→ GUARDAR: 'id' de la alerta para siguientes pasos\n\nPASO 3: Bombero responde a la alerta\n→ POST /respuestas_alertas/responder/:alerta_id\n→ Body: { estado_respuesta: \"ACEPTADO\", fecha_hora: \"...\" }\n→ Si ACEPTA y alerta está PENDIENTE → cambia a EN CURSO\n\nPASO 4: Verificar asistencia\n→ GET /respuestas_alertas/:alerta_id/asistencias/count\n→ Confirmar cantidad de bomberos confirmados\n\nPASO 5: Registrar comunicación durante la alerta\n→ POST /registros_comunicacion/crear\n→ Body: { alerta_id, mensaje, tipo_comunicacion }\n→ Repetir según necesidad (suministros, apoyo, info)\n\nPASO 6: Ver historial de comunicación\n→ GET /registros_comunicacion/alerta/:id_alerta\n→ Revisar todos los mensajes registrados\n\nNOTA: El usuarioId se extrae automáticamente del JWT en todos los endpoints."
+            "description": "WORKFLOW D: CICLO COMPLETO DE ALERTA\n======================================\n\nOBJETIVO: Crear una alerta, notificar bomberos, registrar asistencia y comunicación.\n\nPASO A PASO:\n---------------\n\nPASO 1: Login (OBTENER TOKEN)\n→ POST /auth/login\n→ Body: { nombre_usuario, password }\n→ GUARDAR: 'token' en variable {{token}}\n→ Este token se usa automáticamente en todos los requests protegidos\n\nPASO 2: Crear alerta con notificación\n→ POST /alerta/crear-con-notificacion\n→ Body con datos de la alerta, coordenadas (latitud/longitud), prioridad y destinatarios\n→ GUARDAR: 'id' de la alerta para siguientes pasos\n\nPASO 3: Bombero responde a la alerta\n→ POST /respuestas_alertas/responder/:alerta_id\n→ Body: { estado_respuesta: \"ACEPTADO\", fecha_hora: \"...\" }\n→ Si ACEPTA y alerta está PENDIENTE → cambia a EN CURSO\n\nPASO 4: Verificar asistencia\n→ GET /respuestas_alertas/:alerta_id/asistencias/count\n→ Confirmar cantidad de bomberos confirmados\n\nPASO 5: Registrar comunicación durante la alerta\n→ POST /registros_comunicacion/crear\n→ Body: { alerta_id, mensaje, tipo_comunicacion }\n→ Repetir según necesidad (suministros, apoyo, info)\n\nPASO 6: Ver historial de comunicación\n→ GET /registros_comunicacion/alerta/:id_alerta\n→ Revisar todos los mensajes registrados\n\nNOTA: El usuarioId se extrae automáticamente del JWT en todos los endpoints."
           },
           "response": []
         },
@@ -1989,6 +1993,62 @@
       ]
     },
     {
+      "name": "MAPA OPERATIVO",
+      "item": [
+        {
+          "name": "1. Obtener Config del Cuartel",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/maps/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "maps",
+                "config"
+              ]
+            },
+            "description": "OBTENER CONFIGURACIÓN DEL MAPA\n================================\nRetorna las coordenadas del cuartel (latitud/longitud) configuradas en variables de entorno.\n\nPASO A PASO:\n1. Ejecutar request con token válido\n2. Revisar latitud y longitud en la respuesta\n3. Usar estos valores para centrar el mapa en el frontend\n\nRESPUESTA:\n{\n  \"latitud\": -26.80727053351925,\n  \"longitud\": -65.29278506048794\n}\n\nERROR 500: Si no están configuradas las variables de entorno CUARTEL_LAT / CUARTEL_LNG."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Obtener Incidente por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/maps/incidents/{{alertaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "maps",
+                "incidents",
+                "{{alertaId}}"
+              ]
+            },
+            "description": "OBTENER DATOS DE UN INCIDENTE PARA EL MAPA\n=============================================\nRetorna la ubicación formateada de una alerta para mostrar en el mapa operativo.\n\nREQUISITOS:\n- La alerta debe existir\n- La alerta debe tener latitud y longitud (no nulos)\n\nPASO A PASO:\n1. Reemplazar {{alertaId}} con el UUID de la alerta\n2. Ejecutar request con token válido\n3. Revisar latitud, longitud, tipo_emergencia, direccion_exacta y nivel_prioridad\n\nRESPUESTA:\n{\n  \"latitud\": -26.8072,\n  \"longitud\": -65.2927,\n  \"tipo_emergencia\": \"INCENDIO ESTRUCTURAL\",\n  \"direccion_exacta\": \"Av. Siempreviva 742\",\n  \"nivel_prioridad\": \"ALTA\"\n}\n\nERROR 404: El incidente no existe\nERROR 400: El incidente no tiene coordenadas válidas"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "POIS",
       "item": [
         {
@@ -2002,7 +2062,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/maps/pois",
+              "raw": "{{baseUrl}}/api/maps/pois?type=HIDRANTE",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -2010,9 +2070,16 @@
                 "api",
                 "maps",
                 "pois"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "HIDRANTE",
+                  "description": "Filtrar por categoría (opcional): HIDRANTE, SALUD, MATERIAL_PELIGROSO, CUARTEL_APOYO"
+                }
               ]
             },
-            "description": "LISTAR TODOS LOS PUNTOS DE INTERÉS (POIs)\n============================================\nObtiene todos los POIs activos registrados en el sistema.\n\nPASO A PASO:\n1. Ejecutar request con token de ADMIN\n2. Revisar array de POIs\n\nRESPUESTA:\n[\n  {\n    \"id\": \"uuid-poi\",\n    \"categoria\": \"HIDRANTE | SALUD | MATERIAL_PELIGROSO | CUARTEL_APOYO\",\n    \"nombre\": \"Hidrante Av. Corrientes\",\n    \"descripcion\": \"...\",\n    \"latitud\": -34.6040,\n    \"longitud\": -58.3820,\n    \"activo\": true,\n    \"creado_por\": \"uuid-admin\"\n  }\n]\n\nNOTA: Requiere token de ADMIN (middleware verificarRolAdmin)."
+            "description": "LISTAR TODOS LOS PUNTOS DE INTERÉS (POIs)\n============================================\nObtiene todos los POIs activos registrados en el sistema.\n\nPASO A PASO:\n1. Ejecutar request con token de ADMIN\n2. (Opcional) Agregar query param ?type= para filtrar por categoría\n3. Revisar array de POIs\n\nRESPUESTA:\n[\n  {\n    \"id\": \"uuid-poi\",\n    \"categoria\": \"HIDRANTE | SALUD | MATERIAL_PELIGROSO | CUARTEL_APOYO\",\n    \"nombre\": \"Hidrante Av. Corrientes\",\n    \"descripcion\": \"...\",\n    \"latitud\": -34.6040,\n    \"longitud\": -58.3820,\n    \"creado_por\": \"uuid-admin\"\n  }\n]\n\nNOTA: Requiere token de ADMIN (middleware verificarRolAdmin).\nERROR 400 si el tipo es inválido."
           },
           "response": []
         },

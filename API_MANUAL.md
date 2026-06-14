@@ -614,9 +614,12 @@ Registros del control semanal de herramientas del cuartel. Controla directamente
   {
     "sub_categoria_alerta_id": "uuid-subcategoria",
     "ubicacion": "Calle Falsa 123",
+    "latitud": -26.8072,
+    "longitud": -65.2927,
     "observaciones": "Incendio de pastizales pequeños",
     "fecha_hora": "2026-04-26T20:00:00.000Z",
-    "estado_alerta_id": "uuid-estado"
+    "estado_alerta_id": "uuid-estado",
+    "prioridad": "MEDIA"
   }
   ```
 
@@ -629,7 +632,10 @@ Registros del control semanal de herramientas del cuartel. Controla directamente
   {
     "sub_categoria_alerta_id": "uuid-subcategoria",
     "ubicacion": "Av. Siempreviva 742",
+    "latitud": -26.8072,
+    "longitud": -65.2927,
     "observaciones": "Fuego en estructura",
+    "prioridad": "ALTA",
     "destinatariosIds": ["uuid-usuario-1", "uuid-usuario-2"]
   }
   ```
@@ -662,20 +668,23 @@ Registros del control semanal de herramientas del cuartel. Controla directamente
 - **Headers Requeridos:** `Authorization: Bearer <token>`
 - **Permisos Requeridos:** `ADMIN` (requiere middleware `verificarRolAdmin`)
 - **Body request:** No requiere body (enviar `{}`)
-- **Respuesta (200 OK):**
-  ```json
-  {
-    "id": "uuid-alerta",
-    "sub_categoria_alerta_id": "uuid-subcategoria",
-    "ubicacion": "Av. Siempreviva 742",
-    "observaciones": "Fuego en estructura",
-    "estado_alerta_id": "uuid-estado-finalizado",
-    "fecha_hora": "2026-04-26T20:00:00.000Z",
-    "fecha_hora_finalizacion": "2026-04-26T22:30:00.000Z",
-    "duracion_total_alerta": 9000000,
-    "usuario_alta_alerta": "uuid-usuario"
-  }
-  ```
+  - **Respuesta (200 OK):**
+    ```json
+    {
+      "id": "uuid-alerta",
+      "sub_categoria_alerta_id": "uuid-subcategoria",
+      "ubicacion": "Av. Siempreviva 742",
+      "latitud": -26.8072,
+      "longitud": -65.2927,
+      "observaciones": "Fuego en estructura",
+      "estado_alerta_id": "uuid-estado-finalizado",
+      "fecha_hora": "2026-04-26T20:00:00.000Z",
+      "fecha_hora_finalizacion": "2026-04-26T22:30:00.000Z",
+      "duracion_total_alerta": 9000000,
+      "prioridad": "ALTA",
+      "usuario_alta_alerta": "uuid-usuario"
+    }
+    ```
 - **Posibles errores (500):**
   - `"Estado FINALIZADO no configurado en DB"` — No existe el registro `FINALIZADO` en la tabla `estados_alerta`.
   - `"No se encuentra la alerta"` — El `id_alerta` no corresponde a ninguna alerta existente.
@@ -941,7 +950,114 @@ Registros del control semanal de herramientas del cuartel. Controla directamente
 
 ---
 
-## 📄 16. Informes PDF (`/informes`)
+## 🗺️ 16. Mapa Operativo (`/api/maps`)
+
+### Obtener Configuración del Cuartel
+- **Ruta:** `GET /api/maps/config`
+- **Descripción:** Retorna las coordenadas (latitud y longitud) del cuartel configuradas en variables de entorno. Usado por el frontend para centrar el mapa operativo.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Respuesta (200 OK):**
+  ```json
+  {
+    "latitud": -26.80727053351925,
+    "longitud": -65.29278506048794
+  }
+  ```
+- **Posibles errores (500):**
+  - `"Coordenadas del cuartel no configuradas en variables de entorno"` — Faltan `CUARTEL_LAT` o `CUARTEL_LNG` en el `.env`.
+
+### Obtener Incidente por ID
+- **Ruta:** `GET /api/maps/incidents/:id`
+- **Descripción:** Retorna la ubicación formateada de una alerta para mostrarla en el mapa operativo. Requiere que la alerta tenga coordenadas (`latitud` y `longitud`).
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Respuesta (200 OK):**
+  ```json
+  {
+    "latitud": -26.8072,
+    "longitud": -65.2927,
+    "tipo_emergencia": "INCENDIO ESTRUCTURAL",
+    "direccion_exacta": "Av. Siempreviva 742",
+    "nivel_prioridad": "ALTA"
+  }
+  ```
+- **Posibles errores (404):**
+  - `{ "error": "El incidente no existe" }` — El `id` no corresponde a ninguna alerta.
+- **Posibles errores (400):**
+  - `{ "error": "El incidente no tiene coordenadas válidas" }` — La alerta existe pero no tiene `latitud`/`longitud`.
+
+---
+
+## 📍 18. POIs (`/api/maps/pois`)
+
+### Obtener POIs
+- **Ruta:** `GET /api/maps/pois`
+- **Descripción:** Obtiene todos los POIs activos registrados en el sistema. Opcionalmente se puede filtrar por categoría.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Query Params (opcional):**
+  - `type` (string): Filtra por categoría. Valores válidos: `HIDRANTE`, `SALUD`, `MATERIAL_PELIGROSO`, `CUARTEL_APOYO`.
+- **Ejemplo con filtro:** `GET /api/maps/pois?type=HIDRANTE`
+- **Respuesta (200 OK):**
+  ```json
+  [
+    {
+      "id": "uuid-poi",
+      "categoria": "HIDRANTE",
+      "nombre": "Hidrante Av. Corrientes",
+      "descripcion": "...",
+      "latitud": -34.6040,
+      "longitud": -58.3820,
+      "creado_por": "uuid-admin"
+    }
+  ]
+  ```
+- **Posibles errores (400):**
+  - `{ "error": "Categoria invalida. Debe ser una de: HIDRANTE, SALUD, MATERIAL_PELIGROSO, CUARTEL_APOYO" }`
+- **Nota:** Requiere token de ADMIN (middleware verificarRolAdmin).
+
+### Crear POI
+- **Ruta:** `POST /api/maps/pois`
+- **Descripción:** Registra un nuevo POI estratégico en el sistema.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Body request:**
+  ```json
+  {
+    "nombre": "Hidrante Av. Corrientes",
+    "categoria": "HIDRANTE",
+    "descripcion": "Hidrante de color rojo, entre Talcahuano y Uruguay",
+    "latitud": -34.6040,
+    "longitud": -58.3820
+  }
+  ```
+- **Nota:** Requiere token de ADMIN (middleware verificarRolAdmin). El `creado_por` se extrae automáticamente del JWT.
+
+### Actualizar POI
+- **Ruta:** `PATCH /api/maps/pois/:id`
+- **Descripción:** Actualiza los campos de un POI existente.
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Body request (todos opcionales):**
+  ```json
+  {
+    "nombre": "Hidrante renovado Av. Corrientes",
+    "descripcion": "Hidrante reemplazado en enero 2026",
+    "latitud": -34.6045,
+    "longitud": -58.3815
+  }
+  ```
+- **Nota:** Requiere token de ADMIN (middleware verificarRolAdmin). Error 404 si el POI no existe.
+
+### Eliminar POI
+- **Ruta:** `DELETE /api/maps/pois/:id`
+- **Descripción:** Marca un POI como inactivo (borrado lógico).
+- **Headers Requeridos:** `Authorization: Bearer <token>`
+- **Respuesta (200 OK):**
+  ```json
+  { "message": "POI eliminado correctamente" }
+  ```
+- **Nota:** Requiere token de ADMIN (middleware verificarRolAdmin). Error 404 si el POI no existe.
+
+---
+
+## 📄 19. Informes PDF (`/informes`)
 
 ### Generar PDF de Informe de Emergencia
 - **Ruta:** `GET /informes/:alertaId/pdf`
@@ -1020,6 +1136,17 @@ Registros del control semanal de herramientas del cuartel. Controla directamente
 ### Estado de Informe
 - `BORRADOR` - Informe en edición por el administrador
 - `FINALIZADO` - Informe listo para impresión
+
+### Categoría de POI
+- `HIDRANTE` - Punto de agua para abastecimiento
+- `SALUD` - Centro de salud / hospital
+- `MATERIAL_PELIGROSO` - Zona con riesgo químico o material peligroso
+- `CUARTEL_APOYO` - Cuartel de bomberos de apoyo
+
+### Nivel de Prioridad (Alertas)
+- `ALTA` - Emergencia crítica que requiere respuesta inmediata
+- `MEDIA` - Emergencia estándar (valor por defecto)
+- `BAJA` - Emergencia de baja urgencia
 
 ---
 

@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { AuthRequest } from '../../middlewares/auth.middleware';
 import { PoisService } from './pois.service';
 import { CrearPoiDTO, ActualizarPoiDTO } from './DTO/pois_dto';
+import { categoria_poi } from '@prisma/client';
 
 export class PoisController {
     private service = new PoisService();
@@ -21,7 +22,16 @@ export class PoisController {
 
     obtenerPOIs = async (req: AuthRequest, res: Response) => {
         try {
-            const resultado = await this.service.obtenerPois();
+            const type = req.query.type as string | undefined;
+
+            // Validar que el tipo sea válido si se envió
+            if (type && !Object.values(categoria_poi).includes(type as any)) {
+                return res.status(400).json({
+                    error: `Categoria invalida. Debe ser una de: ${Object.values(categoria_poi).join(', ')}`
+                });
+            }
+
+            const resultado = await this.service.obtenerPois(type as categoria_poi | undefined);
             return res.status(200).json(resultado);
         } catch (error: any) {
             console.error('Error al obtener POIs:', error);

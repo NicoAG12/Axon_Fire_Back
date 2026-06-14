@@ -12,9 +12,12 @@ export class AlertaRepositorio {
                 id: randomUUID(),
                 sub_categoria_alerta_id: data.sub_categoria_alerta_id,
                 ubicacion: data.ubicacion,
+                latitud: data.latitud,
+                longitud: data.longitud,
                 observaciones: data.observaciones,
                 fecha_hora: parseARTDate(data.fecha_hora),
                 estado_alerta_id: data.estado_alerta_id,
+                prioridad: data.prioridad || 'MEDIA',
                 usuario_alta_alerta: data.usuario_alta_alerta,
             }
         })
@@ -27,9 +30,12 @@ export class AlertaRepositorio {
                     id: randomUUID(),
                     sub_categoria_alerta_id: dataAlerta.sub_categoria_alerta_id,
                     ubicacion: dataAlerta.ubicacion,
+                    latitud: dataAlerta.latitud,
+                    longitud: dataAlerta.longitud,
                     observaciones: dataAlerta.observaciones,
                     fecha_hora: getLocalDate(),
                     estado_alerta_id: idEstadoInicial,
+                    prioridad: dataAlerta.prioridad || 'MEDIA',
                     usuario_alta_alerta: dataAlerta.usuario_alta_alerta,
                 }
             });

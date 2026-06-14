@@ -1,5 +1,6 @@
 import { PoisRepository } from "./pois.repository";
 import { CrearPoiDTO, ActualizarPoiDTO } from "./DTO/pois_dto";
+import { categoria_poi } from "@prisma/client";
 
 
 export class PoisService {
@@ -17,8 +18,8 @@ export class PoisService {
         return await this.repositorio.crearPoi(data, adminId);
     }
 
-    async obtenerPois() {
-        return await this.repositorio.obtenerPois();
+    async obtenerPois(categoria?: categoria_poi) {
+        return await this.repositorio.obtenerPois(categoria);
     }
 
     async actualizarPoi(id: string, data: ActualizarPoiDTO) {
