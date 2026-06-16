@@ -144,7 +144,7 @@ npx prisma migrate deploy
 | AX-S6-B3 | POIs | ✅ PASA | Filtrado por tipo, multi-cuartel, y estructura de array validados |
 | AX-S6-INFRA-2 | Infra | ✅ CORREGIDO | Migration `add_coords_and_prioridad_to_alerta` no aplicada → aplicada manualmente durante QA |
 | ~~AX-S6-BUG-1~~ | ~~Bug~~ | ~~🔴 CRÍTICO~~ | ~~`getConfig()` valida lat===0 && lng===0 como "no configurado" → imposible ubicar cuartel en (0,0)~~ — **DESCARTADO**: el mapa es solo para un cuartel de una ciudad pequeña, coordenadas (0,0) no aplican al dominio |
-| AX-S6-BUG-2 | Bug | 🟡 MEDIO | Faltan `CUARTEL_LAT` y `CUARTEL_LNG` en `.env` → endpoint `/api/maps/config` retorna 500 |
+| ~~AX-S6-BUG-2~~ | ~~Bug~~ | ~~🟡 MEDIO~~ | ~~Faltan `CUARTEL_LAT` y `CUARTEL_LNG` en `.env`~~ — **DESCARTADO**: `.env` es personal de cada repositorio, el DEV lo configura localmente |
 
 **Suite de tests:** `tests/ax_maps_sprint6_set2.test.ts`
 **Contrato de referencia:** `API_MANUAL.md` (Sección 16 — Mapa Operativo)
@@ -288,34 +288,7 @@ npx prisma migrate deploy
 
 <!-- AX-S6-BUG-1 descartado por decisión de QA: el mapa es para un cuartel de ciudad pequeña en Argentina, coordenadas (0,0) no son relevantes para el dominio. -->
 
-## 11. AX-S6-BUG-2: Variables `CUARTEL_LAT` y `CUARTEL_LNG` ausentes en `.env`
-
-### Descripción
-El archivo `.env` no incluye las variables `CUARTEL_LAT` y `CUARTEL_LNG`. Sin ellas, el endpoint `GET /api/maps/config` retorna 500:
-
-```json
-{ "error": "Coordenadas del cuartel no configuradas en variables de entorno" }
-```
-
-### Impacto
-- **Medio.** El frontend no puede centrar el mapa operativo. El error 500 impide la carga de la pantalla principal de mapa.
-
-### Solución sugerida
-Agregar las coordenadas reales del cuartel al `.env`:
-
-```diff
-  DATABASE_URL="postgresql://postgres:2060@localhost:5432/axion_fire_db?schema=public"
-  JWT_SECRET="JSONWEBTOKENSECRETCODE"
-  JWT_EXPIRES_IN="1h"
-+ CUARTEL_LAT=-26.80727053351925
-+ CUARTEL_LNG=-65.29278506048794
-```
-
-> **Nota:** Las coordenadas de ejemplo corresponden a la ubicación de San Miguel de Tucumán, Argentina. El DEV debe reemplazarlas con las coordenadas reales del cuartel.
-
----
-
-## Resultado Final de Tests Sprint 6
+<!-- AX-S6-BUG-2 descartado por decisión de QA: .env es personal de cada repositorio, no se trackea en git. El DEV lo configura localmente. -->## Resultado Final de Tests Sprint 6
 
 ### Set 1 (GESTION POIs)
 
