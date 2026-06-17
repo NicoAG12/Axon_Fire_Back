@@ -18,14 +18,13 @@ describe('AX-17: Exactitud Conteo RUBA - Verificación Matemática de Horas', ()
     expect(loginRes.status).toBe(200);
     adminToken = loginRes.body.token;
 
-    // Limpiar datos residuales de ejecuciones anteriores (forceExit puede cortar afterAll)
+    // Limpiar datos residuales por si forceExit cortó el afterAll en una ejecución anterior
     const residuales = await prisma.alerta.findMany({ where: { ubicacion: { startsWith: 'Test RUBA horas' } }, select: { id: true } });
     for (const r of residuales) {
       await prisma.respuestas_alertas.deleteMany({ where: { alerta_id: r.id } });
       await prisma.alerta.delete({ where: { id: r.id } });
     }
 
-    // Obtener mes/año actual para crear alertas en el mismo período
     const ahora = new Date();
     const anio = ahora.getFullYear();
     const mes = ahora.getMonth();
@@ -64,16 +63,16 @@ describe('AX-17: Exactitud Conteo RUBA - Verificación Matemática de Horas', ()
       }
     };
 
-    // Alerta 1: 2 horas exactas => duracion_total_alerta = 7,200,000 ms
+    // Alerta 1: 2h exactas = 7,200,000 ms
     await crearAlertaConDuracion(7_200_000, [adminUserId]);
-    // Alerta 2: 1.5 horas = 5,400,000 ms — con usuario adicional
+    // Alerta 2: 1.5h = 5,400,000 ms, con usuario adicional
     await crearAlertaConDuracion(5_400_000, [adminUserId, user2Id]);
-    // Alerta 3: 30 minutos = 1,800,000 ms — solo user2
+    // Alerta 3: 30 min = 1,800,000 ms, solo user2
     await crearAlertaConDuracion(1_800_000, [user2Id]);
   });
 
   afterAll(async () => {
-    // Doble limpieza: por lista + por patrón (cubre datos residuales si forceExit cortó la limpieza anterior)
+    // Doble limpieza: por lista + por patrón (por si forceExit cortó la limpieza anterior)
     for (const id of createdAlertas) {
       await prisma.respuestas_alertas.deleteMany({ where: { alerta_id: id } });
       await prisma.alerta.deleteMany({ where: { id } });
@@ -99,7 +98,6 @@ describe('AX-17: Exactitud Conteo RUBA - Verificación Matemática de Horas', ()
     expect(res.body).toHaveProperty('bomberos');
     expect(Array.isArray(res.body.bomberos)).toBe(true);
 
-    // Cálculos matemáticos esperados:
     // Admin (abc1): alerta_1 (2h) + alerta_2 (1.5h) = 3.5h
     const horasEsperadasAdmin = Math.round((7_200_000 + 5_400_000) / 3_600_000 * 100) / 100;
     const asistenciasEsperadasAdmin = 2;
@@ -117,12 +115,5 @@ describe('AX-17: Exactitud Conteo RUBA - Verificación Matemática de Horas', ()
     expect(bomberoUser2).toBeDefined();
     expect(bomberoUser2.total_horas).toBe(horasEsperadasUser2);
     expect(bomberoUser2.total_asistencias).toBe(asistenciasEsperadasUser2);
-
-    console.warn(
-      `[EXACTITUD RUBA VALIDADA]: Admin=${bomberoAdmin.total_horas}h/${bomberoAdmin.total_asistencias} asistencias ` +
-      `(esperado ${horasEsperadasAdmin}h/${asistenciasEsperadasAdmin}) | ` +
-      `User2=${bomberoUser2.total_horas}h/${bomberoUser2.total_asistencias} asistencias ` +
-      `(esperado ${horasEsperadasUser2}h/${asistenciasEsperadasUser2})`
-    );
   });
 });

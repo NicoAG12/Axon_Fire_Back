@@ -14,7 +14,6 @@ describe('AX-08/RUBA: Test de Integración - Verificación de Conteo de Asistenc
   const user3Id = 'abc3'; // TEST_3_USER
 
   beforeAll(async () => {
-    // 1. Obtener JWT legítimo para autorizar las peticiones
     const loginRes = await request(baseUrl)
       .post('/auth/login')
       .send({
@@ -27,7 +26,6 @@ describe('AX-08/RUBA: Test de Integración - Verificación de Conteo de Asistenc
   });
 
   afterEach(async () => {
-    // 2. Limpieza de datos creados en el test para no ensuciar la base de datos
     if (createdAlertaId) {
       await prisma.respuestas_alertas.deleteMany({
         where: { alerta_id: createdAlertaId }
@@ -45,7 +43,6 @@ describe('AX-08/RUBA: Test de Integración - Verificación de Conteo de Asistenc
   it('Debería retornar el conteo exacto de asistencias RUBA considerando únicamente las respuestas "ACEPTADO"', async () => {
     createdAlertaId = randomUUID();
 
-    // 1. Insertar una alerta de prueba
     await prisma.alerta.create({
       data: {
         id: createdAlertaId,
@@ -58,10 +55,10 @@ describe('AX-08/RUBA: Test de Integración - Verificación de Conteo de Asistenc
       }
     });
 
-    // 2. Insertar 3 respuestas controladas para esta alerta:
-    // - Usuario 1 (admin): ACEPTADO (Debe sumarse al conteo)
-    // - Usuario 2 (user2): RECHAZADO (No debe sumarse)
-    // - Usuario 3 (user3): PENDIENTE (No debe sumarse)
+    // 3 respuestas con diferentes estados:
+    // Admin (abc1): ACEPTADO → suma
+    // User2 (abc2): RECHAZADO → no suma
+    // User3 (abc3): PENDIENTE → no suma
     await prisma.respuestas_alertas.createMany({
       data: [
         {
@@ -88,19 +85,15 @@ describe('AX-08/RUBA: Test de Integración - Verificación de Conteo de Asistenc
       ]
     });
 
-    // 3. Consumir el endpoint de conteo de asistencia RUBA
     const res = await request(baseUrl)
       .get(`/respuestas_alertas/${createdAlertaId}/asistencias/count`)
       .set('Authorization', `Bearer ${token}`);
 
-    // 4. Validaciones de exactitud
     expect(res.status).toBe(200);
     expect(res.body).toBeDefined();
     expect(res.body).toHaveProperty('cantidad');
-    
-    // El total debe ser exactamente 1 (únicamente la respuesta 'ACEPTADO' califica como asistencia RUBA)
-    expect(res.body.cantidad).toBe(1);
 
-    console.warn(`[CONTEO RUBA VALIDADO]: La API reportó exactamente ${res.body.cantidad} asistentes (Esperado: 1). Conteo 100% exacto.`);
+    // Solo ACEPTADO califica como asistencia RUBA → debe ser 1
+    expect(res.body.cantidad).toBe(1);
   });
 });

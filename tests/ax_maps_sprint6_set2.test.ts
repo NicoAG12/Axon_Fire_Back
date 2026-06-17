@@ -25,13 +25,11 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
   });
 
   afterAll(async () => {
-    // Cleanup: eliminar POIs creados durante tests
     for (const id of createdPoiIds) {
       try {
         await prisma.puntos_interes.deleteMany({ where: { id } });
       } catch {}
     }
-    // Cleanup: eliminar alerta creada durante tests
     if (createdIncidentId) {
       try {
         await prisma.alerta.deleteMany({ where: { id: createdIncidentId } });
@@ -40,9 +38,7 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
     await prisma.$disconnect();
   });
 
-  // ─────────────────────────────────────────────────────────────────────────
   // B1 — Endpoint de configuración del mapa (GET /api/maps/config)
-  // ─────────────────────────────────────────────────────────────────────────
   describe('B1 — GET /api/maps/config', () => {
     it('401 sin token de autenticación', async () => {
       const res = await request(baseUrl).get('/api/maps/config');
@@ -63,9 +59,9 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
         .get('/api/maps/config')
         .set('Authorization', `Bearer ${adminToken}`);
 
-      // Si CUARTEL_LAT/LNG no están configurados, el servicio retorna 500
+      // CUARTEL_LAT/LNG sin configurar → el servicio devuelve 500
       if (res.status === 500) {
-        console.warn('⚠️ CUARTEL_LAT/CUARTEL_LNG no configurados en .env — test omite validaciones de coordenadas');
+        console.warn('CUARTEL_LAT/CUARTEL_LNG no configurados en .env — test omite validaciones de coordenadas');
         console.warn('   Body:', res.body);
         return;
       }
@@ -84,16 +80,13 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
 
       if (res.status !== 200) return;
 
-      // Las coordenadas deberían ser valores reales de Argentina
-      // Si son exactamente 0,0 es porque no se configuraron (el service tira error si ambas son 0)
+      // Si latitud y longitud son 0,0 es porque no se configuraron; el service ya falla si ambas son 0
       const ambasSonCero = res.body.latitud === 0 && res.body.longitud === 0;
       expect(ambasSonCero).toBe(false);
     });
   });
 
-  // ─────────────────────────────────────────────────────────────────────────
   // B2 — Endpoint de incidente activo (GET /api/maps/incidents/:id)
-  // ─────────────────────────────────────────────────────────────────────────
   describe('B2 — GET /api/maps/incidents/:id', () => {
     it('401 sin token de autenticación', async () => {
       const res = await request(baseUrl).get('/api/maps/incidents/1');
@@ -107,7 +100,6 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
 
       expect(res.status).toBe(404);
       expect(res.body).toHaveProperty('error');
-      // Verificar mensaje claro según contrato
       expect(res.body.error).toBe('El incidente no existe');
     });
 
@@ -123,7 +115,6 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
     });
 
     it('200 + JSON completo cuando el incidente existe con coordenadas', async () => {
-      // Crear una alerta con coordenadas para testear
       const fechaTest = new Date().toISOString();
       const crearRes = await request(baseUrl)
         .post('/alerta/crear')
@@ -139,9 +130,8 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
           prioridad: 'ALTA'
         });
 
-      // Si no se pudo crear, documentar y salir
       if (crearRes.status !== 200) {
-        console.warn('⚠️ No se pudo crear alerta de prueba:', crearRes.body);
+        console.warn('No se pudo crear alerta de prueba:', crearRes.body);
         return;
       }
 
@@ -154,32 +144,29 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
 
       expect(res.status).toBe(200);
 
-      // Verificar estructura completa del JSON según contrato
       expect(res.body).toHaveProperty('latitud');
       expect(res.body).toHaveProperty('longitud');
       expect(res.body).toHaveProperty('tipo_emergencia');
       expect(res.body).toHaveProperty('direccion_exacta');
       expect(res.body).toHaveProperty('nivel_prioridad');
 
-      // Verificar tipos de datos
       expect(typeof res.body.latitud).toBe('number');
       expect(typeof res.body.longitud).toBe('number');
       expect(typeof res.body.tipo_emergencia).toBe('string');
       expect(typeof res.body.direccion_exacta).toBe('string');
       expect(typeof res.body.nivel_prioridad).toBe('string');
 
-      // Verificar valores específicos
       expect(res.body.latitud).toBe(-26.8072);
       expect(res.body.longitud).toBe(-65.2927);
       expect(res.body.direccion_exacta).toBe('Av. Siempreviva 742, Springfield');
       expect(res.body.nivel_prioridad).toBe('ALTA');
-      // tipo_emergencia debería ser "INCENDIO ESTRUCTURAL" (subcategoría id='1')
+      // subcategoria_id '1' → "INCENDIO ESTRUCTURAL"
       expect(res.body.tipo_emergencia).toBe('INCENDIO ESTRUCTURAL');
     });
 
     it('200 — verify types are strictly number/string for geolocation fields', async () => {
       if (!createdIncidentId) {
-        console.warn('⚠️ No hay incidente creado — saltando test de tipos');
+        console.warn('No hay incidente creado — saltando test de tipos');
         return;
       }
 
@@ -189,7 +176,6 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
 
       expect(res.status).toBe(200);
 
-      // Re-verificar que no sean strings
       expect(typeof res.body.latitud).toBe('number');
       expect(typeof res.body.longitud).toBe('number');
       expect(Number.isFinite(res.body.latitud)).toBe(true);
@@ -200,11 +186,8 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
     });
   });
 
-  // ─────────────────────────────────────────────────────────────────────────
   // B3 — Endpoint de puntos de interés (POIs) — extendido
-  // ─────────────────────────────────────────────────────────────────────────
   describe('B3 — GET /api/maps/pois — filtrado, multi-cuartel, estructura', () => {
-    // Crear POIs de distintas categorías y con diferentes datos
     beforeAll(async () => {
       const poisParaCrear = [
         { nombre: 'Hidrante QA Norte', categoria: 'HIDRANTE', descripcion: 'Hidrante test norte', latitud: -34.60, longitud: -58.38 },
@@ -225,11 +208,11 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
       }
     });
 
-    // ── B3.1: Filtrado por tipo ───────────────────────────────────────────
+    // B3.1: Filtrado por tipo
     describe('B3.1 — Filtrado por tipo de POI via query param', () => {
       it('GET /api/maps/pois?type=HIDRANTE retorna solo HIDRANTES', async () => {
         if (createdPoiIds.length < 2) {
-          console.warn('⚠️ No hay suficientes POIs creados — saltando');
+          console.warn('No hay suficientes POIs creados — saltando');
           return;
         }
 
@@ -291,13 +274,12 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
         expect(Array.isArray(res.body)).toBe(true);
 
         const categorias = new Set(res.body.map((p: any) => p.categoria));
-        // Debería incluir al menos HIDRANTE y SALUD
         expect(categorias.has('HIDRANTE')).toBe(true);
         expect(categorias.has('SALUD')).toBe(true);
       });
     });
 
-    // ── B3.2: POIs de toda la red (multi-cuartel) ─────────────────────────
+    // B3.2: POIs de toda la red (multi-cuartel)
     describe('B3.2 — POIs de la red completa (multi-cuartel)', () => {
       it('GET /api/maps/pois incluye todos los POIS creados sin filtrar por creador', async () => {
         if (createdPoiIds.length < 2) return;
@@ -307,7 +289,6 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
           .set('Authorization', `Bearer ${adminToken}`);
 
         expect(res.status).toBe(200);
-        // Verificar que los POIs que creamos están todos en la lista
         const idsEncontrados = res.body.map((p: any) => p.id);
         for (const expectedId of createdPoiIds) {
           expect(idsEncontrados).toContain(expectedId);
@@ -315,8 +296,7 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
       });
 
       it('POIs de distintos creadores aparecen en el listado global', async () => {
-        // Solo hay un admin en seed data, pero verificamos que creado_por existe
-        // Si en el futuro hay múltiples admins, esto asegura que todos se vean
+        // Solo hay un admin en seed por ahora; si hay múltiples admins, todos deben verse
         const res = await request(baseUrl)
           .get('/api/maps/pois')
           .set('Authorization', `Bearer ${adminToken}`);
@@ -324,7 +304,6 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
         expect(res.status).toBe(200);
         expect(Array.isArray(res.body)).toBe(true);
 
-        // Todos deben tener creado_por
         res.body.forEach((p: any) => {
           expect(p).toHaveProperty('creado_por');
           expect(typeof p.creado_por).toBe('string');
@@ -332,19 +311,18 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
       });
 
       it('No existe filtro por cuartel que pueda ocultar POIs de otras estaciones', async () => {
-        // Test estructural: el endpoint NO acepta query param "cuartel_id"
-        // ni similar. Si existiera, sería un problema de diseño.
+        // El endpoint no acepta query param "cuartel_id"; si existiera sería un problema de diseño
         const res = await request(baseUrl)
           .get('/api/maps/pois?cuartel_id=otro')
           .set('Authorization', `Bearer ${adminToken}`);
 
-        // El API no define cuartel_id como parámetro → debería ignorarse
+        // El API ignora cuartel_id por diseño
         expect(res.status).toBe(200);
         expect(Array.isArray(res.body)).toBe(true);
       });
     });
 
-    // ── B3.3: Estructura del array de POIs ─────────────────────────────────
+    // B3.3: Estructura del array de POIs
     describe('B3.3 — Estructura del JSON de respuesta (array de POIs)', () => {
       it('Cada POI tiene todos los campos requeridos con tipos correctos', async () => {
         if (createdPoiIds.length < 2) return;
@@ -358,7 +336,6 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
         expect(res.body.length).toBeGreaterThanOrEqual(createdPoiIds.length);
 
         res.body.forEach((poi: any) => {
-          // Campos obligatorios
           expect(poi).toHaveProperty('id');
           expect(poi).toHaveProperty('categoria');
           expect(poi).toHaveProperty('nombre');
@@ -366,7 +343,6 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
           expect(poi).toHaveProperty('longitud');
           expect(poi).toHaveProperty('creado_por');
 
-          // Tipos de datos
           expect(typeof poi.id).toBe('string');
           expect(typeof poi.categoria).toBe('string');
           expect(typeof poi.nombre).toBe('string');
@@ -374,15 +350,13 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
           expect(typeof poi.longitud).toBe('number');
           expect(typeof poi.creado_por).toBe('string');
 
-          // Validar valores
           expect(poi.nombre.length).toBeGreaterThan(0);
           expect(Number.isFinite(poi.latitud)).toBe(true);
           expect(Number.isFinite(poi.longitud)).toBe(true);
 
-          // Categoría debe ser uno de los valores del enum
           expect(['HIDRANTE', 'SALUD', 'MATERIAL_PELIGROSO', 'CUARTEL_APOYO']).toContain(poi.categoria);
 
-          // descripcion es opcional — si existe, debe ser string
+          // descripcion es opcional; si existe debe ser string
           if (poi.descripcion !== undefined && poi.descripcion !== null) {
             expect(typeof poi.descripcion).toBe('string');
           }

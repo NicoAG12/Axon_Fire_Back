@@ -30,9 +30,7 @@ describe('AX-GESTION POIs — RBAC, CRUD y Validaciones Geográficas', () => {
     await prisma.$disconnect();
   });
 
-  // ─────────────────────────────────────────────────────────────────────────
   // AX-GESTION-B1: RBAC
-  // ─────────────────────────────────────────────────────────────────────────
   describe('AX-GESTION-B1 — RBAC: solo ADMIN accede a endpoints de POIs', () => {
     describe('Requests sin token — 401 Unauthorized', () => {
       it('GET /api/maps/pois sin token retorna 401', async () => {
@@ -104,9 +102,7 @@ describe('AX-GESTION POIs — RBAC, CRUD y Validaciones Geográficas', () => {
     });
   });
 
-  // ─────────────────────────────────────────────────────────────────────────
   // AX-GESTION-B2: CRUD de POIs
-  // ─────────────────────────────────────────────────────────────────────────
   describe('AX-GESTION-B2 — CRUD de POIs (ciclo de vida completo)', () => {
     const poiPayload = {
       nombre: 'Hidrante QA Test',
@@ -182,7 +178,7 @@ describe('AX-GESTION POIs — RBAC, CRUD y Validaciones Geográficas', () => {
       expect(res.body).toHaveProperty('descripcion', updatePayload.descripcion);
       expect(res.body).toHaveProperty('latitud', updatePayload.latitud);
       expect(res.body).toHaveProperty('longitud', updatePayload.longitud);
-      // categoria no se tocó — debe mantenerse
+      // categoria no se tocó, debe mantenerse
       expect(res.body).toHaveProperty('categoria', poiPayload.categoria);
     });
 
@@ -203,7 +199,7 @@ describe('AX-GESTION POIs — RBAC, CRUD y Validaciones Geográficas', () => {
         .delete(`/api/maps/pois/${createdPoiId}`)
         .set('Authorization', `Bearer ${adminToken}`);
 
-      // API contract define 200 para DELETE (borrado lógico)
+      // El contrato define 200 para DELETE (borrado lógico)
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty('message', 'POI eliminado correctamente');
     });
@@ -239,9 +235,7 @@ describe('AX-GESTION POIs — RBAC, CRUD y Validaciones Geográficas', () => {
     });
   });
 
-  // ─────────────────────────────────────────────────────────────────────────
   // AX-GESTION-B3: Validaciones geográficas (ahora con Zod middleware)
-  // ─────────────────────────────────────────────────────────────────────────
   describe('AX-GESTION-B3 — Validaciones geográficas', () => {
     const basePoi = {
       nombre: 'POI validación geográfica',

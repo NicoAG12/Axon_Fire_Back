@@ -16,7 +16,7 @@ describe('AX-15: Test de Generación de PDF de Informe de Emergencia', () => {
     expect(loginRes.status).toBe(200);
     token = loginRes.body.token;
 
-    // Crear una alerta FINALIZADA con datos completos para el PDF
+    // Crear alerta FINALIZADA con datos completos para generar PDF
     createdAlertaId = randomUUID();
     const ahora = new Date();
     const hace3h = new Date(ahora.getTime() - 3 * 3600 * 1000);
@@ -35,7 +35,7 @@ describe('AX-15: Test de Generación de PDF de Informe de Emergencia', () => {
       }
     });
 
-    // Agregar respuestas ACEPTADO para que aparezcan en el PDF
+    // Respuestas ACEPTADO para que aparezcan en el PDF
     await prisma.respuestas_alertas.createMany({
       data: [
         {
@@ -74,13 +74,10 @@ describe('AX-15: Test de Generación de PDF de Informe de Emergencia', () => {
     expect(res.headers['content-type']).toBe('application/pdf');
     expect(res.headers['content-disposition']).toContain('attachment; filename="informe_emergencia_');
 
-    // Validar que sea un PDF válido (cabecera %PDF)
     expect(Buffer.isBuffer(res.body) || typeof res.body === 'object').toBe(true);
     const pdfBuffer = Buffer.isBuffer(res.body) ? res.body : Buffer.from(res.body);
     expect(pdfBuffer.slice(0, 5).toString()).toBe('%PDF-');
     expect(pdfBuffer.length).toBeGreaterThan(1000);
-
-    console.warn(`[PDF GENERADO]: Tamaño=${pdfBuffer.length} bytes, tipo=${res.headers['content-type']}`);
   });
 
   it('GET /informes/:alertaId/pdf — Debería rechazar emergencias no finalizadas (estado PENDIENTE)', async () => {

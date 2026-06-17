@@ -15,7 +15,6 @@ describe('AX-08: Estructura Jerárquica del Camión e Historial del Día Anterio
   let createdChecklistId: string;
 
   beforeAll(async () => {
-    // 1. Obtener un token JWT legítimo para las llamadas del endpoint
     const loginRes = await request(baseUrl)
       .post('/auth/login')
       .send({
@@ -29,7 +28,6 @@ describe('AX-08: Estructura Jerárquica del Camión e Historial del Día Anterio
   });
 
   afterAll(async () => {
-    // Limpieza de datos creados durante el test de historial
     if (createdChecklistId) {
       await prisma.checklist_detalle.deleteMany({
         where: { checklist_id: createdChecklistId }
@@ -51,19 +49,15 @@ describe('AX-08: Estructura Jerárquica del Camión e Historial del Día Anterio
       expect(res.body).toBeDefined();
       expect(typeof res.body).toBe('object');
 
-      // Obtener las claves (sectores/compartimentos) devueltos
       const sectoresDevueltos = Object.keys(res.body);
       expect(sectoresDevueltos.length).toBeGreaterThan(0);
 
-      // Comprobar que contiene sectores válidos del camión 1 (según el seed)
       expect(sectoresDevueltos).toContain('Compartimento Lateral Izquierdo 1');
       expect(sectoresDevueltos).toContain('Compartimento Lateral Izquierdo 2');
 
-      // Comprobar que no contiene sectores que pertenecen exclusivamente a otros camiones (ej. camión 3)
+      // No debe incluir sectores exclusivos de otros camiones (ej. camión 3)
       expect(sectoresDevueltos).not.toContain('Compartimento Principal');
 
-      // Comprobar que los items dentro del sector tienen la estructura jerárquica esperada:
-      // { inventarioId, herramienta, cantidad }
       const itemsEnSector = res.body['Compartimento Lateral Izquierdo 1'];
       expect(Array.isArray(itemsEnSector)).toBe(true);
       expect(itemsEnSector.length).toBeGreaterThan(0);
@@ -78,22 +72,20 @@ describe('AX-08: Estructura Jerárquica del Camión e Historial del Día Anterio
 
   describe('Unit Test: Historial del día anterior se recupera correctamente', () => {
     it('Debería poder recuperar del historial un checklist creado el día anterior', async () => {
-      // 1. Simular la creación de un checklist fechado exactamente AYER (hace 24 horas)
       createdChecklistId = randomUUID();
       const fechaAyer = new Date();
-      fechaAyer.setDate(fechaAyer.getDate() - 1); // Restar 1 día
+      fechaAyer.setDate(fechaAyer.getDate() - 1);
 
-      // Insertar directo en la DB usando Prisma Client para forzar la fecha del pasado
+      // Insertar directo en DB con Prisma para forzar fecha en el pasado
       await prisma.checklist_camiones_diario.create({
         data: {
           id: createdChecklistId,
           camion_id: testCamionId,
           usuario_id: userId,
-          fecha_control: fechaAyer // Forzamos fecha de ayer
+          fecha_control: fechaAyer
         }
       });
 
-      // Insertar un detalle de herramienta para ese checklist
       await prisma.checklist_detalle.create({
         data: {
           id: randomUUID(),
@@ -104,10 +96,8 @@ describe('AX-08: Estructura Jerárquica del Camión e Historial del Día Anterio
         }
       });
 
-      // 2. Ejecutar la función del Service (Unit Test / Repository validation)
       const historial = await checklistService.obtenerHistorialPorCamion(testCamionId);
 
-      // 3. Validar que el historial no esté vacío y contenga nuestro checklist de ayer
       expect(historial).toBeDefined();
       expect(Array.isArray(historial)).toBe(true);
       expect(historial.length).toBeGreaterThan(0);
@@ -115,12 +105,10 @@ describe('AX-08: Estructura Jerárquica del Camión e Historial del Día Anterio
       const checklistRecuperado = historial.find(c => c.id === createdChecklistId);
       expect(checklistRecuperado).toBeDefined();
 
-      // Comprobar la exactitud de los datos recuperados
       expect(checklistRecuperado?.camion_id).toBe(testCamionId);
       expect(checklistRecuperado?.usuario_id).toBe(userId);
       expect(new Date(checklistRecuperado!.fecha_control).toDateString()).toBe(fechaAyer.toDateString());
 
-      // Verificar que incluye los detalles y la relación con el usuario (bombero) de forma correcta
       expect(checklistRecuperado?.detalles).toBeDefined();
       expect(checklistRecuperado?.detalles.length).toBe(1);
       expect(checklistRecuperado?.detalles[0].observaciones).toBe('Controlado el día de ayer');

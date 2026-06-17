@@ -19,7 +19,6 @@ describe('AX-09: Integration Test - CRUD de Inventario de Bolsos (bolsos_inventa
     expect(loginRes.status).toBe(200);
     token = loginRes.body.token;
 
-    // Buscar herramienta con suficiente stock para la prueba
     const herramientas = await prisma.herramientas.findMany({
       where: { cantidad_disponible: { gte: CANTIDAD_PRUEBA } },
       orderBy: { cantidad_disponible: 'desc' },

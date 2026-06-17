@@ -11,21 +11,19 @@ describe('AX-16: Validación de Permisos - Acceso a Borrador de Informes', () =>
   let createdAlertaId: string;
 
   beforeAll(async () => {
-    // 1. Obtener token de ADMIN
     const loginAdmin = await request(baseUrl)
       .post('/auth/login')
       .send({ nombre_usuario: 'TEST_1_ADMIN', password: 'TEST_1_PASSWORD' });
     expect(loginAdmin.status).toBe(200);
     adminToken = loginAdmin.body.token;
 
-    // 2. Obtener token de USER (rol aspirante)
     const loginUser = await request(baseUrl)
       .post('/auth/login')
       .send({ nombre_usuario: 'TEST_2_USER', password: 'TEST_1_PASSWORD' });
     expect(loginUser.status).toBe(200);
     userToken = loginUser.body.token;
 
-    // 3. Crear una alerta FINALIZADA para poder probar los endpoints de borrador
+    // Crear alerta FINALIZADA para probar los endpoints de borrador
     createdAlertaId = randomUUID();
     const ahora = new Date();
     const hace2h = new Date(ahora.getTime() - 2 * 3600 * 1000);
@@ -46,7 +44,6 @@ describe('AX-16: Validación de Permisos - Acceso a Borrador de Informes', () =>
   });
 
   afterAll(async () => {
-    // Limpieza
     if (createdAlertaId) {
       await prisma.informes_emergencia.deleteMany({ where: { alerta_id: createdAlertaId } });
       await prisma.alerta.deleteMany({ where: { id: createdAlertaId } });
