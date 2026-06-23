@@ -2197,6 +2197,107 @@
             "description": "ELIMINAR POI (BORRADO LÓGICO)\n================================\nMarca un POI como inactivo (activo = false). No se elimina físicamente.\n\nPASO A PASO:\n1. Reemplazar :id con UUID del POI\n2. Ejecutar request con token de ADMIN\n\nRESPUESTA:\n{ \"message\": \"POI eliminado correctamente\" }\n\nNOTA: Requiere token de ADMIN (middleware verificarRolAdmin).\nERROR 404: { \"error\": \"POI no encontrado\" }"
           },
           "response": []
+        },
+        {
+          "name": "3. Login User Regular (Test)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "if(jsonData.token) {",
+                  "    pm.collectionVariables.set(\"userToken\", jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre_usuario\": \"TEST_2_USER\",\n    \"password\": \"TEST_1_PASSWORD\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Crear POI (USER - 403 Forbidden)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403 Forbidden\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "pm.test(\"Mensaje de error es correcto\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.include('No tiene permisos de administrador');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Hidrante de prueba — debe ser rechazado\",\n    \"categoria\": \"HIDRANTE\",\n    \"latitud\": -34.6037,\n    \"longitud\": -58.3816\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/maps/pois",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "maps",
+                "pois"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     }
