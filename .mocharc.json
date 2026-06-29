@@ -1,0 +1,5 @@
+{
+  "extension": ["ts"],
+  "spec": ["tests/examen_fin/*.test.ts"],
+  "timeout": 10000
+}
