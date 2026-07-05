@@ -7,7 +7,7 @@ import { crearPoiSchema, actualizarPoiSchema } from '../modules/pois/DTO/pois_dt
 const router = express.Router();
 const controller = new PoisController();
 
-router.get('/', verificarHeaders, verificarRolAdmin, controller.obtenerPOIs);
+router.get('/', verificarHeaders, controller.obtenerPOIs);
 router.post('/', verificarHeaders, verificarRolAdmin, validateData(crearPoiSchema), controller.crearPOI);
 router.patch('/:id', verificarHeaders, verificarRolAdmin, validateData(actualizarPoiSchema), controller.actualizarPOI);
 router.delete('/:id', verificarHeaders, verificarRolAdmin, controller.eliminarPOI);
