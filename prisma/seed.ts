@@ -15,6 +15,9 @@ async function seed() {
   await prisma.checklist_detalle_bolso.deleteMany();
   await prisma.checklist_camiones_diario.deleteMany();
   await prisma.checklist_bolsos_emergencia.deleteMany();
+  await prisma.checklist_cuartel.deleteMany();
+  await prisma.control_fluidos.deleteMany();
+  await prisma.mantenimiento_herramientas.deleteMany();
   await prisma.camiones_inventario.deleteMany();
   await prisma.bolsos_inventario.deleteMany();
   await prisma.sectores_camion.deleteMany();
@@ -119,6 +122,10 @@ async function seed() {
       { id: 'herr_8', nombre_herramienta: 'Pinza cortacables', cantidad_disponible: 4 },
       { id: 'herr_9', nombre_herramienta: 'Barrena de rescate', cantidad_disponible: 2 },
       { id: 'herr_10', nombre_herramienta: 'Rescatador de aguas', cantidad_disponible: 3 },
+      { id: 'herr_11', nombre_herramienta: 'Cizalla hidráulica Holmatro', cantidad_disponible: 2 },
+      { id: 'herr_12', nombre_herramienta: 'Separador hidráulico Holmatro', cantidad_disponible: 2 },
+      { id: 'herr_13', nombre_herramienta: 'Cilindro expansor hidráulico (RAM)', cantidad_disponible: 2 },
+      { id: 'herr_14', nombre_herramienta: 'Bomba motriz hidráulica', cantidad_disponible: 1 },
     ],
   });
 

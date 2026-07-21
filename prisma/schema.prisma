@@ -74,6 +74,8 @@ model usuarios {
   checklistBolsosEmergencia checklist_bolsos_emergencia[]
   checklistsCuartel         checklist_cuartel[]
   pois_creados              puntos_interes[]
+  controles_fluidos         control_fluidos[]
+  mantenimientos            mantenimiento_herramientas[]
 
   @@map("users")
 }
@@ -161,9 +163,10 @@ model camiones {
   id            String                      @id @default(uuid())
   nombre_camion String
   estado        estado_camion
-  sectores      sectores_camion[]
-  inventario    camiones_inventario[]
-  checklists    checklist_camiones_diario[]
+  sectores            sectores_camion[]
+  inventario          camiones_inventario[]
+  checklists          checklist_camiones_diario[]
+  controles_fluidos   control_fluidos[]
 }
 
 model sectores_camion {
@@ -181,6 +184,7 @@ model herramientas {
   inventarios         camiones_inventario[]
   bolsos_inventarios  bolsos_inventario[]
   detalles_checklist  checklist_detalle_cuartel[]
+  mantenimientos      mantenimiento_herramientas[]
 }
 
 model camiones_inventario {
@@ -296,4 +300,32 @@ model puntos_interes {
   activo      Boolean       @default(true)
   creado_por  String
   usuario     usuarios      @relation(fields: [creado_por], references: [id])
+}
+
+model control_fluidos {
+  id                    String   @id @default(uuid())
+  camionId              camiones @relation(fields: [camion_id], references: [id])
+  camion_id             String
+  usuarioId             usuarios @relation(fields: [usuario_id], references: [id])
+  usuario_id            String
+  fecha_control         DateTime @default(now())
+  aceite_motor          String
+  liquido_refrigerante  String
+  liquido_frenos        String
+  liquido_direccion     String
+  observaciones         String?
+}
+
+model mantenimiento_herramientas {
+  id                  String       @id @default(uuid())
+  herramientaId       herramientas @relation(fields: [herramienta_id], references: [id])
+  herramienta_id      String
+  usuarioId           usuarios     @relation(fields: [usuario_id], references: [id])
+  usuario_id          String
+  fecha_mantenimiento DateTime     @default(now())
+  nivel_aceite        String
+  estado_mangueras    String
+  presion_trabajo     String
+  estado_limpieza     String
+  observaciones       String?
 }

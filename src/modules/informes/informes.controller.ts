@@ -10,6 +10,19 @@ export class InformesController {
         this.service = new InformesService();
     }
 
+    guardarInforme = async (req: AuthRequest, res: Response) => {
+        try {
+            const alertaId = req.params.alertaId as string;
+            const userId = (req.user as any).id_usuario;
+            const datos: ActualizarBorradorDTO = req.body;
+
+            const resultado = await this.service.guardarInforme(alertaId, datos, userId);
+            return res.json(resultado);
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
     generarPDF = async (req: AuthRequest, res: Response) => {
         try {
             const alertaId = req.params.alertaId as string;
@@ -35,32 +48,33 @@ export class InformesController {
             return res.status(500).json({ error: error.message });
         }
     }
-
-    obtenerBorrador = async (req: AuthRequest, res: Response) => {
-        try {
-            const alertaId = req.params.alertaId as string;
-            const usuarioId = (req.user as any).id_usuario;
-
-            if (!usuarioId) {
-                return res.status(401).json({ error: 'Usuario no autenticado en el token' });
+    /*
+        obtenerBorrador = async (req: AuthRequest, res: Response) => {
+            try {
+                const alertaId = req.params.alertaId as string;
+                const usuarioId = (req.user as any).id_usuario;
+    
+                if (!usuarioId) {
+                    return res.status(401).json({ error: 'Usuario no autenticado en el token' });
+                }
+    
+                const borrador = await this.service.obtenerOCrearBorrador(alertaId, usuarioId);
+                return res.json(borrador);
+            } catch (error: any) {
+                return res.status(500).json({ error: error.message });
             }
-
-            const borrador = await this.service.obtenerOCrearBorrador(alertaId, usuarioId);
-            return res.json(borrador);
-        } catch (error: any) {
-            return res.status(500).json({ error: error.message });
         }
-    }
-
-    actualizarBorrador = async (req: AuthRequest, res: Response) => {
-        try {
-            const alertaId = req.params.alertaId as string;
-            const datos: ActualizarBorradorDTO = req.body;
-
-            const borrador = await this.service.actualizarBorrador(alertaId, datos);
-            return res.json(borrador);
-        } catch (error: any) {
-            return res.status(500).json({ error: error.message });
+    
+        actualizarBorrador = async (req: AuthRequest, res: Response) => {
+            try {
+                const alertaId = req.params.alertaId as string;
+                const datos: ActualizarBorradorDTO = req.body;
+    
+                const borrador = await this.service.actualizarBorrador(alertaId, datos);
+                return res.json(borrador);
+            } catch (error: any) {
+                return res.status(500).json({ error: error.message });
+            }
         }
-    }
+            */
 }
