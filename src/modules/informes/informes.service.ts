@@ -1,16 +1,102 @@
 import { Response } from 'express';
 import PDFDocument from 'pdfkit';
+import path from 'path';
 import { InformesRepositorio } from "./informes.repository";
 import { ActualizarBorradorDTO } from "./DTO/informes_dto";
 import { formatToARTString } from "../../lib/utils";
+import { AlertaRepositorio } from '../alerta/alerta.repository';
 
 export class InformesService {
     private repo: InformesRepositorio;
+    private alertaRepo: AlertaRepositorio
 
     constructor() {
         this.repo = new InformesRepositorio();
+        this.alertaRepo = new AlertaRepositorio()
     }
 
+    guardarInforme = async (alertaId: string, data: ActualizarBorradorDTO, userId: string) => {
+        const alerta = await this.alertaRepo.buscarAlertaPorID(alertaId)
+        if (!alerta) return { success: false, message: 'Alerta no existente' }
+
+        if (alerta.estadoAlerta.nombre_estado != 'FINALIZADO') return { success: false, message: 'Alerta no finalizada' }
+
+        const resultado = await this.repo.actualizarInforme(alertaId, data, userId);
+        if (resultado) return { success: true, message: 'Informe guardado exitosamente' }
+        return { success: false, message: 'Error al guardar informe' }
+    }
+
+    generarPDF = async (alertaId: string, res: Response) => {
+        const informe = await this.repo.obtenerDatosParaInforme(alertaId);
+        if (!informe) throw new Error('Informe no encontrado');
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition',
+            `attachment; filename="informe_emergencia_${alertaId.substring(0, 8)}.pdf"`);
+        const doc = new PDFDocument({
+            size: 'A4',
+            margins: { top: 120, bottom: 50, left: 50, right: 50 },
+            info: {
+                Title: 'Informe de Emergencia',
+                Author: 'Axion Fire - Sistema de Gestión',
+            }
+        });
+
+        doc.pipe(res);
+
+        const addHeader = () => {
+            const originalY = doc.y;
+            const originalX = doc.x;
+
+            // 1. Center image (dibujada antes para quedar como fondo)
+            const centerImageWidth = 250;
+            const centerX = (doc.page.width / 2) - (centerImageWidth / 2);
+            doc.image(path.join(process.cwd(), 'utils', 'prueba_2.png'), centerX, 15, { width: centerImageWidth });
+
+            // 2. Left image
+            doc.image(path.join(process.cwd(), 'utils', 'prueba.png'), 50, 25, { width: 60 });
+
+            // 3. Leyenda superior (texto un poco más grande)
+            doc.fontSize(9).font('Helvetica-Bold');
+            doc.text('ASOCIACIÓN CUERPO DE RESCATE Y BOMBEROS VOLUNTARIOS DE YERBA BUENA', 0, 28, { align: 'center', width: doc.page.width });
+            doc.fontSize(8).font('Helvetica');
+            doc.text('DOMICILIO: PERU ESQ J.I. THAMES – TELEFONO: 0381-4252670', 0, 42, { align: 'center', width: doc.page.width });
+            doc.text('RESOLUCION: D.P.J. 228/08', 0, 54, { align: 'center', width: doc.page.width });
+
+            // Separator line for header
+            doc.moveTo(50, 115).lineTo(545, 115).stroke();
+
+            // Restaurar coordenadas para que el contenido de la página no empiece pegado al borde izquierdo
+            doc.y = originalY;
+            doc.x = 50;
+        };
+
+        doc.on('pageAdded', addHeader);
+        addHeader();
+
+        // Fecha a la derecha
+        const fechaActual = new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+        doc.fontSize(10).font('Helvetica')
+            .text(`Ciudad de Yerba Buena, ${fechaActual}`, { align: 'right' });
+        doc.moveDown(2);
+
+        // Title
+        doc.fontSize(20).font('Helvetica-Bold')
+            .text('Constancia de intervencion', { align: 'center' });
+        doc.moveDown(2);
+
+        // Informe details
+        if (informe.observaciones_admin) {
+            doc.moveDown(0.5);
+            doc.fontSize(11).font('Helvetica').text(informe.observaciones_admin, { align: 'justify' });
+            doc.moveDown(1);
+        }
+
+
+        doc.end();
+    }
+
+    /* 
+    --Se comento por logica vieja. Se arma de nuevo el metodo
     generarPDF = async (alertaId: string, res: Response) => {
         // 1. Obtener todos los datos
         const alerta = await this.repo.obtenerDatosParaInforme(alertaId);
@@ -109,7 +195,7 @@ export class InformesService {
                 doc.text(bombero?.rangoBombero?.nombre_rol || 'N/A', col4, y);
                 doc.moveDown(0.2);
             });
-            
+
             // Restablecer el cursor X al margen izquierdo después de la tabla
             doc.x = 50;
         }
@@ -151,29 +237,33 @@ export class InformesService {
         // 5. Cerrar el documento (obligatorio)
         doc.end();
     }
+        */
 
     obtenerDatosInforme = async (alertaId: string) => {
         const alerta = await this.repo.obtenerDatosParaInforme(alertaId);
         if (!alerta) throw new Error('Alerta no encontrada');
         return alerta;
     }
+    /*
 
-    obtenerOCrearBorrador = async (alertaId: string, usuarioId: string) => {
-        // Verificar que la alerta existe
-        const alerta = await this.repo.obtenerDatosParaInforme(alertaId);
-        if (!alerta) throw new Error('Alerta no encontrada');
-
-        if (alerta.estadoAlerta.nombre_estado !== 'FINALIZADO') {
-            throw new Error('Solo se pueden crear informes de emergencias finalizadas');
+    --SE COMENTA POR LOGICA VIEJA.
+        obtenerOCrearBorrador = async (alertaId: string, usuarioId: string) => {
+            // Verificar que la alerta existe
+            const alerta = await this.repo.obtenerDatosParaInforme(alertaId);
+            if (!alerta) throw new Error('Alerta no encontrada');
+    
+            if (alerta.estadoAlerta.nombre_estado !== 'FINALIZADO') {
+                throw new Error('Solo se pueden crear informes de emergencias finalizadas');
+            }
+    
+            return await this.repo.crearOObtenerBorrador(alertaId, usuarioId);
         }
-
-        return await this.repo.crearOObtenerBorrador(alertaId, usuarioId);
-    }
-
-    actualizarBorrador = async (alertaId: string, datos: ActualizarBorradorDTO) => {
-        const borrador = await this.repo.obtenerBorradorPorAlerta(alertaId);
-        if (!borrador) throw new Error('No existe un borrador para esta alerta. Primero obtenga el borrador con GET.');
-
-        return await this.repo.actualizarBorrador(alertaId, datos);
-    }
+    
+        actualizarBorrador = async (alertaId: string, datos: ActualizarBorradorDTO) => {
+            const borrador = await this.repo.obtenerBorradorPorAlerta(alertaId);
+            if (!borrador) throw new Error('No existe un borrador para esta alerta. Primero obtenga el borrador con GET.');
+    
+            return await this.repo.actualizarBorrador(alertaId, datos);
+        }
+    */
 }
