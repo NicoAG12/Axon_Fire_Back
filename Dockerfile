@@ -17,5 +17,6 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.ts ./
 EXPOSE 3000
-CMD sh -c 'echo "=== ENVIROMENT ===" && env | sort && echo "=== CHECKING DATABASE_URL ===" && printenv DATABASE_URL || echo "NOT SET" && echo "=== RUNNING MIGRATIONS ===" && npx prisma migrate deploy && node dist/index.js'
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/index.js"]
