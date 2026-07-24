@@ -4,6 +4,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
+
+ARG DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy?schema=public
+
+
 RUN npx prisma generate
 RUN npm run build
 
