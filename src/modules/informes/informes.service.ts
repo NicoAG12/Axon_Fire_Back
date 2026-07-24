@@ -26,73 +26,78 @@ export class InformesService {
         return { success: false, message: 'Error al guardar informe' }
     }
 
-    generarPDF = async (alertaId: string, res: Response) => {
-        const informe = await this.repo.obtenerDatosParaInforme(alertaId);
-        if (!informe) throw new Error('Informe no encontrado');
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition',
-            `attachment; filename="informe_emergencia_${alertaId.substring(0, 8)}.pdf"`);
-        const doc = new PDFDocument({
-            size: 'A4',
-            margins: { top: 120, bottom: 50, left: 50, right: 50 },
-            info: {
-                Title: 'Informe de Emergencia',
-                Author: 'Axion Fire - Sistema de Gestión',
+    generarPDF = (alertaId: string, res: Response) => {
+        return new Promise<void>(async (resolve, reject) => {
+            try {
+                const informe = await this.repo.obtenerDatosParaInforme(alertaId);
+                if (!informe) return reject(new Error('Informe no encontrado'));
+
+                const buffers: Buffer[] = [];
+                const doc = new PDFDocument({
+                    size: 'A4',
+                    margins: { top: 120, bottom: 50, left: 50, right: 50 },
+                    info: {
+                        Title: 'Informe de Emergencia',
+                        Author: 'Axion Fire - Sistema de Gestión',
+                    },
+                });
+
+                doc.on('data', (chunk: Buffer) => buffers.push(chunk));
+                doc.on('end', () => {
+                    const pdfBuffer = Buffer.concat(buffers);
+                    res.setHeader('Content-Type', 'application/pdf');
+                    res.setHeader('Content-Disposition',
+                        `attachment; filename="informe_emergencia_${alertaId.substring(0, 8)}.pdf"`);
+                    res.end(pdfBuffer);
+                    resolve();
+                });
+                doc.on('error', reject);
+
+                const addHeader = () => {
+                    const originalY = doc.y;
+                    const originalX = doc.x;
+
+                    const centerImageWidth = 250;
+                    const centerX = (doc.page.width / 2) - (centerImageWidth / 2);
+                    doc.image(path.join(process.cwd(), 'utils', 'prueba_2.png'), centerX, 15, { width: centerImageWidth });
+
+                    doc.image(path.join(process.cwd(), 'utils', 'prueba.png'), 50, 25, { width: 60 });
+
+                    doc.fontSize(9).font('Helvetica-Bold');
+                    doc.text('ASOCIACIÓN CUERPO DE RESCATE Y BOMBEROS VOLUNTARIOS DE YERBA BUENA', 0, 28, { align: 'center', width: doc.page.width });
+                    doc.fontSize(8).font('Helvetica');
+                    doc.text('DOMICILIO: PERU ESQ J.I. THAMES – TELEFONO: 0381-4252670', 0, 42, { align: 'center', width: doc.page.width });
+                    doc.text('RESOLUCION: D.P.J. 228/08', 0, 54, { align: 'center', width: doc.page.width });
+
+                    doc.moveTo(50, 115).lineTo(545, 115).stroke();
+
+                    doc.y = originalY;
+                    doc.x = 50;
+                };
+
+                doc.on('pageAdded', addHeader);
+                addHeader();
+
+                const fechaActual = new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+                doc.fontSize(10).font('Helvetica')
+                    .text(`Ciudad de Yerba Buena, ${fechaActual}`, { align: 'right' });
+                doc.moveDown(2);
+
+                doc.fontSize(20).font('Helvetica-Bold')
+                    .text('Constancia de intervencion', { align: 'center' });
+                doc.moveDown(2);
+
+                if (informe.observaciones_admin) {
+                    doc.moveDown(0.5);
+                    doc.fontSize(11).font('Helvetica').text(informe.observaciones_admin, { align: 'justify' });
+                    doc.moveDown(1);
+                }
+
+                doc.end();
+            } catch (err) {
+                reject(err);
             }
         });
-
-        doc.pipe(res);
-
-        const addHeader = () => {
-            const originalY = doc.y;
-            const originalX = doc.x;
-
-            // 1. Center image (dibujada antes para quedar como fondo)
-            const centerImageWidth = 250;
-            const centerX = (doc.page.width / 2) - (centerImageWidth / 2);
-            doc.image(path.join(process.cwd(), 'utils', 'prueba_2.png'), centerX, 15, { width: centerImageWidth });
-
-            // 2. Left image
-            doc.image(path.join(process.cwd(), 'utils', 'prueba.png'), 50, 25, { width: 60 });
-
-            // 3. Leyenda superior (texto un poco más grande)
-            doc.fontSize(9).font('Helvetica-Bold');
-            doc.text('ASOCIACIÓN CUERPO DE RESCATE Y BOMBEROS VOLUNTARIOS DE YERBA BUENA', 0, 28, { align: 'center', width: doc.page.width });
-            doc.fontSize(8).font('Helvetica');
-            doc.text('DOMICILIO: PERU ESQ J.I. THAMES – TELEFONO: 0381-4252670', 0, 42, { align: 'center', width: doc.page.width });
-            doc.text('RESOLUCION: D.P.J. 228/08', 0, 54, { align: 'center', width: doc.page.width });
-
-            // Separator line for header
-            doc.moveTo(50, 115).lineTo(545, 115).stroke();
-
-            // Restaurar coordenadas para que el contenido de la página no empiece pegado al borde izquierdo
-            doc.y = originalY;
-            doc.x = 50;
-        };
-
-        doc.on('pageAdded', addHeader);
-        addHeader();
-
-        // Fecha a la derecha
-        const fechaActual = new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
-        doc.fontSize(10).font('Helvetica')
-            .text(`Ciudad de Yerba Buena, ${fechaActual}`, { align: 'right' });
-        doc.moveDown(2);
-
-        // Title
-        doc.fontSize(20).font('Helvetica-Bold')
-            .text('Constancia de intervencion', { align: 'center' });
-        doc.moveDown(2);
-
-        // Informe details
-        if (informe.observaciones_admin) {
-            doc.moveDown(0.5);
-            doc.fontSize(11).font('Helvetica').text(informe.observaciones_admin, { align: 'justify' });
-            doc.moveDown(1);
-        }
-
-
-        doc.end();
     }
 
     /* 

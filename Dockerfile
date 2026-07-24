@@ -18,5 +18,6 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./
+COPY --from=builder /app/utils ./utils
 EXPOSE 3000
 CMD ["sh", "-c", "npx prisma migrate deploy && node dist/index.js"]
