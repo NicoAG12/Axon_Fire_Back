@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import request from 'supertest';
 import { prisma } from '../src/lib/prisma';
+import { randomUUID } from 'crypto';
 
 const baseUrl = process.env.TEST_URL || 'http://localhost:3000';
 
@@ -9,6 +10,10 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
   let userToken: string;
   let createdIncidentId: string;
   let createdPoiIds: string[] = [];
+  let alertaSinCoordId: string;
+  let estadoPendienteId: string;
+  let subcategoriaId: string;
+  let categoriaId: string;
 
   beforeAll(async () => {
     const loginAdmin = await request(baseUrl)
@@ -22,6 +27,43 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
       .send({ nombre_usuario: 'TEST_2_USER', password: 'TEST_1_PASSWORD' });
     expect(loginUser.status).toBe(200);
     userToken = loginUser.body.token;
+
+    // Create FK lookup data for alertas (estados_alerta, categorias/subcategorias)
+    // Use get-or-create to avoid unique constraint conflicts across parallel test suites
+    estadoPendienteId = randomUUID();
+    categoriaId = randomUUID();
+    subcategoriaId = randomUUID();
+
+    const existingEstado = await prisma.estados_alerta.findFirst({ where: { nombre_estado: 'PENDIENTE' } });
+    estadoPendienteId = existingEstado ? existingEstado.id : (await prisma.estados_alerta.create({ data: { id: estadoPendienteId, nombre_estado: 'PENDIENTE' } })).id;
+
+    const existingCat = await prisma.categorias_alerta.findFirst({ where: { nombre_categoria: 'INCENDIO' } });
+    categoriaId = existingCat ? existingCat.id : (await prisma.categorias_alerta.create({ data: { id: categoriaId, nombre_categoria: 'INCENDIO' } })).id;
+
+    const existingSub = await prisma.subcategoria_alerta.findFirst({
+      where: { nombre_sub_categoria: 'INCENDIO ESTRUCTURAL' }
+    });
+    if (existingSub) {
+      subcategoriaId = existingSub.id;
+    } else {
+      await prisma.subcategoria_alerta.create({
+        data: { id: subcategoriaId, categoria_alerta_id: categoriaId, nombre_sub_categoria: 'INCENDIO ESTRUCTURAL' }
+      });
+    }
+
+    // Create an alerta WITHOUT lat/lng for the "no coordinates" test
+    alertaSinCoordId = randomUUID();
+    await prisma.alerta.create({
+      data: {
+        id: alertaSinCoordId,
+        sub_categoria_alerta_id: subcategoriaId,
+        ubicacion: 'Test sin coordenadas',
+        observaciones: 'Alerta sin lat/lng para test de maps',
+        fecha_hora: new Date(),
+        estado_alerta_id: estadoPendienteId,
+        usuario_alta_alerta: 'abc1'
+      }
+    });
   });
 
   afterAll(async () => {
@@ -34,6 +76,9 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
       try {
         await prisma.alerta.deleteMany({ where: { id: createdIncidentId } });
       } catch {}
+    }
+    if (alertaSinCoordId) {
+      await prisma.alerta.deleteMany({ where: { id: alertaSinCoordId } });
     }
     await prisma.$disconnect();
   });
@@ -104,9 +149,8 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
     });
 
     it('400 cuando el incidente no tiene coordenadas válidas (lat/lng null)', async () => {
-      // La alerta seed '1' no tiene latitud/longitud
       const res = await request(baseUrl)
-        .get('/api/maps/incidents/1')
+        .get(`/api/maps/incidents/${alertaSinCoordId}`)
         .set('Authorization', `Bearer ${adminToken}`);
 
       expect(res.status).toBe(400);
@@ -120,13 +164,13 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
         .post('/alerta/crear')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          sub_categoria_alerta_id: '1',
+          sub_categoria_alerta_id: subcategoriaId,
           ubicacion: 'Av. Siempreviva 742, Springfield',
           latitud: -26.8072,
           longitud: -65.2927,
           observaciones: 'Incendio estructural en vivienda',
           fecha_hora: fechaTest,
-          estado_alerta_id: '1',
+          estado_alerta_id: estadoPendienteId,
           prioridad: 'ALTA'
         });
 
@@ -160,7 +204,7 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
       expect(res.body.longitud).toBe(-65.2927);
       expect(res.body.direccion_exacta).toBe('Av. Siempreviva 742, Springfield');
       expect(res.body.nivel_prioridad).toBe('ALTA');
-      // subcategoria_id '1' → "INCENDIO ESTRUCTURAL"
+      // subcategoria INCENDIO ESTRUCTURAL
       expect(res.body.tipo_emergencia).toBe('INCENDIO ESTRUCTURAL');
     });
 
@@ -296,7 +340,6 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
       });
 
       it('POIs de distintos creadores aparecen en el listado global', async () => {
-        // Solo hay un admin en seed por ahora; si hay múltiples admins, todos deben verse
         const res = await request(baseUrl)
           .get('/api/maps/pois')
           .set('Authorization', `Bearer ${adminToken}`);
@@ -311,12 +354,10 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
       });
 
       it('No existe filtro por cuartel que pueda ocultar POIs de otras estaciones', async () => {
-        // El endpoint no acepta query param "cuartel_id"; si existiera sería un problema de diseño
         const res = await request(baseUrl)
           .get('/api/maps/pois?cuartel_id=otro')
           .set('Authorization', `Bearer ${adminToken}`);
 
-        // El API ignora cuartel_id por diseño
         expect(res.status).toBe(200);
         expect(Array.isArray(res.body)).toBe(true);
       });
@@ -356,7 +397,6 @@ describe('AX-S6-SET2 — Maps Config, Incidents y POIs extendido', () => {
 
           expect(['HIDRANTE', 'SALUD', 'MATERIAL_PELIGROSO', 'CUARTEL_APOYO']).toContain(poi.categoria);
 
-          // descripcion es opcional; si existe debe ser string
           if (poi.descripcion !== undefined && poi.descripcion !== null) {
             expect(typeof poi.descripcion).toBe('string');
           }

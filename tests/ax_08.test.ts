@@ -9,10 +9,11 @@ const baseUrl = process.env.TEST_URL || 'http://localhost:3000';
 describe('AX-08: Estructura Jerárquica del Camión e Historial del Día Anterior', () => {
   let token: string;
   const checklistService = new ChecklistService();
-  const testCamionId = 'camion_1'; // Camión de Rescate 1 (del seed)
-  const otherCamionId = 'camion_3'; // Camión de apoyo (del seed)
-  const userId = 'abc2'; // TEST_2_USER
+  let testCamionId: string;
+  let createdInventarioId: string;
   let createdChecklistId: string;
+  let createdHerramientaId: string;
+  const userId = 'abc2'; // TEST_2_USER
 
   beforeAll(async () => {
     const loginRes = await request(baseUrl)
@@ -25,6 +26,39 @@ describe('AX-08: Estructura Jerárquica del Camión e Historial del Día Anterio
     expect(loginRes.status).toBe(200);
     token = loginRes.body.token;
     expect(token).toBeDefined();
+
+    testCamionId = randomUUID();
+    createdHerramientaId = randomUUID();
+    createdInventarioId = randomUUID();
+    const sector1Id = randomUUID();
+    const sector2Id = randomUUID();
+    const herr2Id = randomUUID();
+    const inv2Id = randomUUID();
+
+    await prisma.camiones.create({
+      data: { id: testCamionId, nombre_camion: 'Test Camion QA', estado: 'ACTIVO' }
+    });
+
+    await prisma.herramientas.createMany({
+      data: [
+        { id: createdHerramientaId, nombre_herramienta: 'Extintor 2.5kg', cantidad_disponible: 10 },
+        { id: herr2Id, nombre_herramienta: 'Manguera 70mm', cantidad_disponible: 20 },
+      ]
+    });
+
+    await prisma.sectores_camion.createMany({
+      data: [
+        { id: sector1Id, camion_id: testCamionId, nombre_sector: 'Compartimento Lateral Izquierdo 1' },
+        { id: sector2Id, camion_id: testCamionId, nombre_sector: 'Compartimento Lateral Izquierdo 2' },
+      ]
+    });
+
+    await prisma.camiones_inventario.createMany({
+      data: [
+        { id: createdInventarioId, camion_id: testCamionId, sector_id: sector1Id, herramienta_id: createdHerramientaId, cantidad_herramienta: 2 },
+        { id: inv2Id, camion_id: testCamionId, sector_id: sector2Id, herramienta_id: herr2Id, cantidad_herramienta: 4 },
+      ]
+    });
   });
 
   afterAll(async () => {
@@ -36,6 +70,10 @@ describe('AX-08: Estructura Jerárquica del Camión e Historial del Día Anterio
         where: { id: createdChecklistId }
       });
     }
+    await prisma.camiones_inventario.deleteMany({ where: { camion_id: testCamionId } });
+    await prisma.sectores_camion.deleteMany({ where: { camion_id: testCamionId } });
+    try { await prisma.herramientas.deleteMany({ where: { id: createdHerramientaId } }); } catch {}
+    await prisma.camiones.deleteMany({ where: { id: testCamionId } });
     await prisma.$disconnect();
   });
 
@@ -55,7 +93,6 @@ describe('AX-08: Estructura Jerárquica del Camión e Historial del Día Anterio
       expect(sectoresDevueltos).toContain('Compartimento Lateral Izquierdo 1');
       expect(sectoresDevueltos).toContain('Compartimento Lateral Izquierdo 2');
 
-      // No debe incluir sectores exclusivos de otros camiones (ej. camión 3)
       expect(sectoresDevueltos).not.toContain('Compartimento Principal');
 
       const itemsEnSector = res.body['Compartimento Lateral Izquierdo 1'];
@@ -76,7 +113,6 @@ describe('AX-08: Estructura Jerárquica del Camión e Historial del Día Anterio
       const fechaAyer = new Date();
       fechaAyer.setDate(fechaAyer.getDate() - 1);
 
-      // Insertar directo en DB con Prisma para forzar fecha en el pasado
       await prisma.checklist_camiones_diario.create({
         data: {
           id: createdChecklistId,
@@ -90,7 +126,7 @@ describe('AX-08: Estructura Jerárquica del Camión e Historial del Día Anterio
         data: {
           id: randomUUID(),
           checklist_id: createdChecklistId,
-          inventario_id: 'inv_1', // Extintor 2.5kg en sector 1 de camion 1
+          inventario_id: createdInventarioId,
           controlado: 'CHEQUEADO',
           observaciones: 'Controlado el día de ayer'
         }

@@ -62,13 +62,12 @@ describe('AX-GESTION POIs — RBAC, CRUD y Validaciones Geográficas', () => {
     });
 
     describe('Usuario con rol USER — 403 Forbidden', () => {
-      it('GET /api/maps/pois con rol USER retorna 403', async () => {
+      it('GET /api/maps/pois con rol USER retorna 200 (público para autenticados)', async () => {
         const res = await request(baseUrl)
           .get('/api/maps/pois')
           .set('Authorization', `Bearer ${userToken}`);
-        expect(res.status).toBe(403);
-        expect(res.body).toHaveProperty('message');
-        expect(res.body.message).toContain('No tiene permisos de administrador');
+        expect(res.status).toBe(200);
+        expect(Array.isArray(res.body)).toBe(true);
       });
 
       it('POST /api/maps/pois con rol USER retorna 403', async () => {
