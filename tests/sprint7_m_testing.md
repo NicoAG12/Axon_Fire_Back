@@ -178,7 +178,36 @@ El contrato (`alertas-comunicacion-api.yaml:136`) especifica respuesta `'200'` p
 
 ---
 
-### 🟡 H-5: Seed script — Falta limpieza de `control_fluidos` y `mantenimiento_herramientas`
+### 🔴 H-5: Seed script roto — import desde `../generated/client` en vez de `@prisma/client`
+
+**Impacto:** Alto — Impide completamente el paso 4 del setup del README. El seed nunca ejecuta.
+
+**Descripción:** `prisma/seed.ts` importa `PrismaClient` desde `../generated/client` en vez de `@prisma/client`. Ese generated client es un path custom que quedó desactualizado — no incluye los modelos `control_fluidos` ni `mantenimiento_herramientas`. Al ejecutar `npm run db:seed`, falla con `Cannot read properties of undefined (reading 'deleteMany')` en la línea 19. La app en sí importa correctamente desde `@prisma/client` (vía `src/lib/prisma.ts`), pero el seed quedó apuntando al path equivocado.
+
+Además, el seed endpoint (`GET /seed/execute` en `seed.controller.ts`) tiene el mismo problema de orden de limpieza documentado en Sprint 7 (H-1): no elimina `puntos_interes`, `control_fluidos` ni `mantenimiento_herramientas` antes de `usuarios`.
+
+**Pasos para reproducir:**
+```bash
+npx tsx prisma/seed.ts
+# → TypeError: Cannot read properties of undefined (reading 'deleteMany')
+```
+
+**Solución sugerida — cambiar el import del seed:**
+
+**Archivo:** `prisma/seed.ts`
+```diff
+- import { PrismaClient } from '../generated/client';
+- import { PrismaPg } from '@prisma/adapter-pg';
+- const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+- const prisma = new PrismaClient({ adapter });
++ import { prisma } from '../src/lib/prisma';
+```
+
+Y agregar limpieza de `puntos_interes`, `control_fluidos` y `mantenimiento_herramientas` en el orden correcto. Ver H-1 de sprint 7 y H-6 abajo.
+
+---
+
+### 🟡 H-6: Seed endpoint — Falta limpieza de `control_fluidos` y `mantenimiento_herramientas`
 
 **Impacto:** Bajo — Tests pueden dejar datos residuales en estas tablas.
 
@@ -192,6 +221,32 @@ El contrato (`alertas-comunicacion-api.yaml:136`) especifica respuesta `'200'` p
 + await prisma.mantenimiento_herramientas.deleteMany();
 + await prisma.control_fluidos.deleteMany();
   await prisma.registros_comunicacion.deleteMany();
+```
+
+---
+
+### 📘 H-7: README.md no documenta cómo correr tests
+
+**Impacto:** Bajo — Dificulta la incorporación de nuevos devs/QA al proyecto.
+
+**Descripción:** El `README.md` cubre setup, migraciones, seed y dev server, pero no tiene ninguna sección sobre testing. No menciona:
+- `npm test` o `npx jest`
+- Que los tests son de integración y requieren servidor corriendo
+- La variable `TEST_URL` para apuntar a entorno de testing
+- Los contratos en `tests/api-contracts/`
+
+**Solución sugerida:** Agregar una sección "Tests" al README:
+```md
+## Tests
+
+```bash
+# Servidor debe estar corriendo (npm run dev)
+npm test
+# O apuntando a otro entorno:
+TEST_URL=http://localhost:3001 npm test
+```
+
+Los contratos de API están en `tests/api-contracts/`. Ver `tests/sprint*_testing.md` para resultados de QA.
 ```
 
 ---
