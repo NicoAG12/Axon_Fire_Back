@@ -86,7 +86,41 @@ export class RespuestasAlertasRepositorio {
                 where: { alerta_id: alertaId, usuario_id: usuarioId }
             });
 
-            if (!respuestaActual) throw new Error("Aviso no encontrado");
+            if (!respuestaActual) {
+                const nuevaRespuesta = await tx.respuestas_alertas.create({
+                    data: {
+                        alerta_id: alertaId,
+                        usuario_id: usuarioId,
+                        estado_respuesta: data.estado_respuesta,
+                        fecha_hora: new Date(data.fecha_hora)
+                    }
+                });
+                if (data.estado_respuesta !== 'ACEPTADO') return nuevaRespuesta;
+
+                const alerta = await tx.alerta.findUnique({ where: { id: alertaId } });
+                const estadoInicial = await tx.estados_alerta.findUnique({ where: { nombre_estado: 'PENDIENTE' } });
+                const estadoEnCurso = await tx.estados_alerta.findUnique({ where: { nombre_estado: 'EN CURSO' } });
+                const estadoFinalizado = await tx.estados_alerta.findUnique({ where: { nombre_estado: 'FINALIZADO' } })
+                if (alerta?.estado_alerta_id === estadoFinalizado?.id) {
+                    throw new Error("No se puede responder una alerta ya finalizada")
+                }
+                if (alerta && estadoInicial && estadoEnCurso && alerta.estado_alerta_id === estadoInicial.id) {
+                    await tx.alerta.update({
+                        where: { id: alertaId },
+                        data: { estado_alerta_id: estadoEnCurso.id }
+                    });
+                    await tx.registros_comunicacion.create({
+                        data: {
+                            alerta_id: alertaId,
+                            usuario_id: usuarioId,
+                            mensaje: `El bombero aceptó. Estado cambiado a En Curso.`,
+                            tipo_comunicacion: 'INFORMACION' as tipos_comunicacion,
+                            fecha_hora: new Date()
+                        }
+                    });
+                }
+                return nuevaRespuesta;
+            }
 
             const respuestaActualizada = await tx.respuestas_alertas.update({
                 where: { id: respuestaActual.id },
