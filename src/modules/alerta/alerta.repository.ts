@@ -23,7 +23,13 @@ export class AlertaRepositorio {
         })
     }
 
-    async crearAlertaCompletaTx(dataAlerta: crearAlertaConNotificacionDTO, idsBomberos: string[], idEstadoInicial: string) {
+    async crearAlertaCompletaTx(
+        dataAlerta: crearAlertaConNotificacionDTO,
+        idsBomberos: string[],
+        idEstadoInicial: string,
+        creatorId?: string,
+        estadoCreador?: string
+    ) {
         return await prisma.$transaction(async (tx) => {
             const alerta = await tx.alerta.create({
                 data: {
@@ -50,6 +56,17 @@ export class AlertaRepositorio {
             await tx.respuestas_alertas.createMany({
                 data: respuestasPendientes
             });
+
+            if (creatorId && estadoCreador) {
+                await tx.respuestas_alertas.create({
+                    data: {
+                        alerta_id: alerta.id,
+                        usuario_id: creatorId,
+                        estado_respuesta: estadoCreador as tipos_respuesta,
+                        fecha_hora: new Date()
+                    }
+                });
+            }
 
             return alerta;
         });

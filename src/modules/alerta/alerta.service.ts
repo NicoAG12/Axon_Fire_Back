@@ -33,9 +33,19 @@ export class AlertaService {
             data.sub_categoria_alerta_id = '3'; // Default to OTRO TIPO
         }
 
-        const nuevaAlerta = await this.alertaRepo.crearAlertaCompletaTx(data, idsNotificar, estadoInicial.id);
+        const creatorId = data.usuario_alta_alerta;
+        const idsSinCreador = idsNotificar.filter(id => id !== creatorId);
+        const estadoCreador = data.auto_asistir === true ? 'ACEPTADO' : 'PENDIENTE';
 
-        this.notiService.enviarPush(idsNotificar, nuevaAlerta).catch(console.error);
+        const nuevaAlerta = await this.alertaRepo.crearAlertaCompletaTx(
+            data,
+            idsSinCreador,
+            estadoInicial.id,
+            creatorId,
+            estadoCreador
+        );
+
+        this.notiService.enviarPush(idsSinCreador, nuevaAlerta).catch(console.error);
 
         return nuevaAlerta;
     }

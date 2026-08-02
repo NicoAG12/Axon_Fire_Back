@@ -19,4 +19,5 @@ export interface crearAlertaConNotificacionDTO {
     prioridad?: 'ALTA' | 'MEDIA' | 'BAJA';
     usuario_alta_alerta: string;
     destinatariosIds?: string[];
+    auto_asistir?: boolean;
 }
