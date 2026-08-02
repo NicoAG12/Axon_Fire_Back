@@ -241,8 +241,8 @@ model checklist_bolsos_emergencia {
   fecha_control DateTime                  @default(now())
   usuarioId     usuarios                  @relation(fields: [usuario_id], references: [id])
   usuario_id    String
-  alertaId      alerta                    @relation(fields: [alerta_id], references: [id])
-  alerta_id     String
+  alertaId      alerta?                   @relation(fields: [alerta_id], references: [id])
+  alerta_id     String?
   bolsoId       bolsos                    @relation(fields: [bolso_id], references: [id])
   bolso_id      String
   detalles      checklist_detalle_bolso[]

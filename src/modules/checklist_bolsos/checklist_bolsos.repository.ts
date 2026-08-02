@@ -11,7 +11,7 @@ export class ChecklistBolsosRepositorio {
                     id: randomUUID(),
                     bolso_id: data.bolsoId,
                     usuario_id: data.usuarioId,
-                    alerta_id: data.alertaId,
+                    alerta_id: data.alertaId || null,
                     fecha_control: getLocalDate()
                 }
             });

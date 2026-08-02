@@ -1,7 +1,7 @@
 export interface GuardarChecklistBolsoDTO {
     bolsoId: string;
     usuarioId: string;
-    alertaId: string;
+    alertaId?: string;
     detalles: DetalleChecklistBolsoDTO[];
 }
 

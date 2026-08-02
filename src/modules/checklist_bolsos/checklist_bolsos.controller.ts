@@ -13,8 +13,8 @@ export class ChecklistBolsosController {
                 return res.status(401).json({ error: 'Usuario no autenticado en el token' });
             }
             const data: GuardarChecklistBolsoDTO = req.body;
-            if (!data.bolsoId || !data.alertaId || !data.detalles || !Array.isArray(data.detalles)) {
-                return res.status(400).json({ error: 'bolsoId, alertaId y detalles[] son requeridos' });
+            if (!data.bolsoId || !data.detalles || !Array.isArray(data.detalles)) {
+                return res.status(400).json({ error: 'bolsoId y detalles[] son requeridos' });
             }
             if (data.detalles.length === 0) {
                 return res.status(400).json({ error: 'El array de detalles no puede estar vacío' });
