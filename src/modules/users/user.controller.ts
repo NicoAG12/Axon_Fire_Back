@@ -35,4 +35,15 @@ export class UsuarioController {
             return res.status(500).json({ error: error.message });
         }
     }
+
+    toggleActivo = async (req: Request, res: Response) => {
+        try {
+            const id = req.params.id as string;
+            const resultado = await this.usuarioService.toggleActivo(id);
+            const estado = resultado.activo ? 'activado' : 'desactivado';
+            return res.json({ msj: `Usuario ${estado} correctamente`, ...resultado });
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
 }

@@ -104,7 +104,7 @@ export class NotificacionesService {
             to: token,
             title: payload.title || payload.sub_categoria_alerta_id,
             body: payload.body || `Ubicación: ${payload.ubicacion}`,
-            sound: (payload.silent ? null : 'default') as any,
+            sound: (payload.silent ? null : 'siren.mp3') as any,
             priority: (payload.silent ? 'normal' : 'high') as any,
             channelId: payload.silent ? 'default' : 'emergency',
             data: { alertaId: payload.id, silent: !!payload.silent }

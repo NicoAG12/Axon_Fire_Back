@@ -25,6 +25,11 @@ export class AuthService {
         if (!esCorrecto) {
             throw new Error("La contraseña es incorrecta")
         }
+
+        if (usuario.activo === false) {
+            throw new Error("Tu cuenta ha sido desactivada. Contactá a un administrador.")
+        }
+
         return usuario;
     }
     generarToken = async (usuario: tokenDTO) => {

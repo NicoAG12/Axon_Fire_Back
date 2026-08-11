@@ -65,6 +65,7 @@ model usuarios {
   nombre_usuario            String                        @unique
   password                  String
   rol                       user_roles
+  activo                    Boolean                       @default(true)
   bombero                   bomberos?
   respuestas_alertas        respuestas_alertas[]
   registros_comunicacion    registros_comunicacion[]

@@ -44,12 +44,35 @@ export class UsuarioRepositorio {
       include: {
         usuarioId: {
           select: {
+            id: true,
             nombre_usuario: true,
-            rol: true
+            rol: true,
+            activo: true
           }
         },
         rangoBombero: true
       }
+    });
+  }
+
+  async toggleActivo(id: string) {
+    const usuario = await prisma.usuarios.findUnique({
+      where: { id },
+      select: { activo: true, rol: true }
+    });
+
+    if (!usuario) {
+      throw new Error("Usuario no encontrado");
+    }
+
+    if (usuario.rol === 'ADMIN') {
+      throw new Error("No se puede desactivar a un administrador");
+    }
+
+    return prisma.usuarios.update({
+      where: { id },
+      data: { activo: !usuario.activo },
+      select: { id: true, activo: true }
     });
   }
 

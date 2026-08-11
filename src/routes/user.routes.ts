@@ -7,5 +7,6 @@ const usuarioController = new UsuarioController();
 
 router.post('/crear', verificarHeaders, verificarRolAdmin, usuarioController.crearUsuario);
 router.get('/bomberos', verificarHeaders, verificarRolAdmin, usuarioController.obtenerBomberos);
+router.patch('/:id/toggle-activo', verificarHeaders, verificarRolAdmin, usuarioController.toggleActivo);
 
 export default router;

@@ -20,4 +20,8 @@ export class UsuarioService {
     obtenerBomberos = async () => {
         return await this.usuarioRepo.obtenerBomberos();
     }
+
+    toggleActivo = async (id: string) => {
+        return await this.usuarioRepo.toggleActivo(id);
+    }
 } 
